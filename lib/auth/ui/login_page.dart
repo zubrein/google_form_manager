@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_form_manager/auth/ui/login_cubit.dart';
+import 'package:google_form_manager/auth/ui/cubit/login_cubit.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
+import 'package:google_form_manager/form_list/ui/form_list_page.dart';
 import 'package:google_form_manager/util/utility.dart';
 
 import '../../core/helper/google_auth_helper.dart';
@@ -29,16 +30,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildBody() {
-    return BlocBuilder<LoginCubit, LoginState>(
-      bloc: _loginCubit,
-      builder: (context, state) {
-        if (state is LoginSuccessState) {
-          return Text(
-              'name: ${userProfile().displayName} \nid: ${userProfile().id.toString()} \nEmail: ${userProfile().email.toString()}');
-        } else {
-          return const Text('No user');
-        }
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        if (state is LoginSuccessState) {}
       },
+      child: BlocBuilder<LoginCubit, LoginState>(
+        bloc: _loginCubit,
+        builder: (context, state) {
+          if (state is LoginSuccessState) {
+            return Text(
+                'name: ${userProfile().displayName} \nid: ${userProfile().id.toString()} \nEmail: ${userProfile().email.toString()}');
+          } else {
+            return const Text('No user');
+          }
+        },
+      ),
     );
   }
 
@@ -55,19 +61,7 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
   //
-  // Future<void> getList() async {
-  //   var httpClient = await googleSignIn.authenticatedClient();
-  //
-  //   if (httpClient != null) {
-  //     final list = await DriveApi(httpClient)
-  //         .files
-  //         .list(q: "mimeType = 'application/vnd.google-apps.form'");
-  //
-  //     list.items?.forEach((element) {
-  //       print("DBG: ${element.title}  ${element.id}");
-  //     });
-  //   }
-  // }
+
   //
   // Future<void> batchUpdate() async {
   //   var httpClient = await googleSignIn.authenticatedClient();
@@ -114,50 +108,50 @@ class _LoginPageState extends State<LoginPage> {
         appBar: AppBar(
           title: const Text('Login'),
         ),
-        body: SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _loginCubit.signingIn();
-                },
-                child: Container(
-                  height: 50,
-                  width: 200,
-                  color: Colors.blue,
-                  child: const Center(
-                    child: Text('login'),
-                  ),
+        body: BlocListener<LoginCubit, LoginState>(
+          bloc: _loginCubit,
+          listener: (context, state) {
+            if (state is LoginSuccessState) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FormListPage()),
+              );
+            }
+          },
+          child: Center(
+            child: GestureDetector(
+              onTap: () {
+                _loginCubit.signingIn();
+              },
+              child: Container(
+                height: 50,
+                width: 200,
+                color: Colors.blue,
+                child: const Center(
+                  child: Text('login'),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              GestureDetector(
-                onTap: () {
-                  // _loginCubit.logout();
-                  _loadingHudCubit.showError();
-                },
-                child: Container(
-                  height: 50,
-                  width: 200,
-                  color: Colors.blue,
-                  child: const Center(
-                    child: Text('logout'),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              buildBody()
-            ],
+            ),
           ),
         ),
       ),
     );
   }
+
+// createForm() async {
+//   var httpClient = await googleSigning.authenticatedClient();
+//
+//   if (httpClient != null) {
+//     final list = await DriveApi(httpClient)
+//         .files
+//         .list(q: "mimeType = 'application/vnd.google-apps.form'");
+//
+//     final newFile = drive.File()..title = 'My Form';
+//
+//     final file = await DriveApi(httpClient)
+//         .files
+//         .update(newFile, '1y3_g7lKgoPVX15rBObqeuK4F6yvQO8DxzWa-81DG3v0');
+//     print('Created file ID: ${file.id}');
+//   }
+// }
 }
