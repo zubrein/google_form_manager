@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_form_manager/auth/ui/cubit/login_cubit.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
+import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
-import 'package:google_form_manager/form_list/ui/form_list_page.dart';
-import 'package:google_form_manager/util/utility.dart';
 
-import '../../core/helper/google_auth_helper.dart';
+import '../../form_list/ui/form_list_page.dart';
+import 'cubit/login_cubit.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,25 +26,6 @@ class _LoginPageState extends State<LoginPage> {
     _loginCubit = sl<LoginCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
     _loginCubit.listenUserLoginState();
-  }
-
-  Widget buildBody() {
-    return BlocListener<LoginCubit, LoginState>(
-      listener: (context, state) {
-        if (state is LoginSuccessState) {}
-      },
-      child: BlocBuilder<LoginCubit, LoginState>(
-        bloc: _loginCubit,
-        builder: (context, state) {
-          if (state is LoginSuccessState) {
-            return Text(
-                'name: ${userProfile().displayName} \nid: ${userProfile().id.toString()} \nEmail: ${userProfile().email.toString()}');
-          } else {
-            return const Text('No user');
-          }
-        },
-      ),
-    );
   }
 
   // Future<void> handleOp() async {
@@ -112,10 +92,10 @@ class _LoginPageState extends State<LoginPage> {
           bloc: _loginCubit,
           listener: (context, state) {
             if (state is LoginSuccessState) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FormListPage()),
-              );
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FormListPage()),
+                  ModalRoute.withName('/'));
             }
           },
           child: Center(

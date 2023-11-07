@@ -1,5 +1,6 @@
-import 'package:google_form_manager/auth/domain/entities/user_profile_entity.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
+
+import '../feature/auth/domain/entities/user_profile_entity.dart';
 
 UserProfile userProfile() {
   if (googleSigning.currentUser != null) {

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_form_manager/core/helper/google_auth_helper.dart';
-
-import 'auth/ui/login_page.dart';
 import 'core/di/dependency_initializer.dart';
 import 'core/helper/logger.dart';
+import 'feature/auth/ui/login_page.dart';
 
 void main() {
   configureDependencies();

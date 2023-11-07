@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../core/helper/google_auth_helper.dart';
 import '../../domain/usecases/logout_use_case.dart';
 import '../../domain/usecases/signing_in_use_case.dart';
 

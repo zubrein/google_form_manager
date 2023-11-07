@@ -1,6 +1,6 @@
 import 'package:google_form_manager/core/helper/google_apis_helper.dart';
 import 'package:google_form_manager/core/helper/logger.dart';
-import 'package:google_form_manager/form_list/domain/repositories/form_list_repository.dart';
+import 'package:google_form_manager/feature/form_list/domain/repositories/form_list_repository.dart';
 import 'package:googleapis/drive/v2.dart';
 import 'package:injectable/injectable.dart';
 

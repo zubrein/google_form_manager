@@ -1,5 +1,6 @@
-import 'package:google_form_manager/auth/domain/repositories/user_authentication_repository.dart';
 import 'package:injectable/injectable.dart';
+
+import '../repositories/user_authentication_repository.dart';
 
 @injectable
 class SigningInUseCase {
