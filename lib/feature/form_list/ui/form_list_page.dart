@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
+import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
 
 import 'cubit/form_list_cubit.dart';
@@ -45,8 +46,13 @@ class _FormListPageState extends State<FormListPage> {
               }
             }),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TemplatePage()),
+        ).then((value) {
+          _formListCubit.fetchFormList();
+        });
       }),
     );
   }

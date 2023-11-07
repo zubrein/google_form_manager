@@ -20,12 +20,12 @@ class GoogleApisHelper {
   static Future<FormsApi?> getFormApi() async {
     var httpClient = await googleSigning.authenticatedClient();
 
-    FormsApi? driveApi;
+    FormsApi? formsApi;
 
     if (httpClient != null) {
-      driveApi = FormsApi(httpClient);
+      formsApi = FormsApi(httpClient);
     }
 
-    return driveApi;
+    return formsApi;
   }
 }

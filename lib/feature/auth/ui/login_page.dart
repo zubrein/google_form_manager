@@ -28,20 +28,6 @@ class _LoginPageState extends State<LoginPage> {
     _loginCubit.listenUserLoginState();
   }
 
-  // Future<void> handleOp() async {
-
-  //   var httpClient = await googleSignIn.authenticatedClient();
-  //
-  //   final form = gf.Form(info: Info(title: 'Hello from App'));
-  //
-  //   if (httpClient != null) {
-  //     await FormsApi(httpClient).forms.create(form).then((value) {
-  //       print("DBG: $value");
-  //     });
-  //   }
-  // }
-  //
-
   //
   // Future<void> batchUpdate() async {
   //   var httpClient = await googleSignIn.authenticatedClient();
@@ -118,20 +104,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-// createForm() async {
-//   var httpClient = await googleSigning.authenticatedClient();
-//
-//   if (httpClient != null) {
-//     final list = await DriveApi(httpClient)
-//         .files
-//         .list(q: "mimeType = 'application/vnd.google-apps.form'");
-//
-//     final newFile = drive.File()..title = 'My Form';
-//
-//     final file = await DriveApi(httpClient)
-//         .files
-//         .update(newFile, '1y3_g7lKgoPVX15rBObqeuK4F6yvQO8DxzWa-81DG3v0');
-//     print('Created file ID: ${file.id}');
-//   }
-// }
+
 }
