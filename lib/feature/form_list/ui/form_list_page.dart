@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
+import 'package:google_form_manager/feature/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
 
@@ -58,32 +59,40 @@ class _FormListPageState extends State<FormListPage> {
   }
 
   Widget _buildFormListItem(File item) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          SizedBox(
-            height: 100,
-            width: 70,
-            child: Image.network(
-              item.thumbnailLink!,
-              headers: <String, String>{
-                'Authorization': 'Bearer ${_formListCubit.token}',
-                'Custom-Header': 'Custom-Value',
-              },
-              fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EditFormPage(formId: item.id!)));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            SizedBox(
+              height: 100,
+              width: 70,
+              child: Image.network(
+                item.thumbnailLink!,
+                headers: <String, String>{
+                  'Authorization': 'Bearer ${_formListCubit.token}',
+                  'Custom-Header': 'Custom-Value',
+                },
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
-          const Gap(16),
-          Expanded(
-            child: Column(
-              children: [
-                Text(item.title.toString()),
-                Text(item.createdDate.toString()),
-              ],
-            ),
-          )
-        ],
+            const Gap(16),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(item.title.toString()),
+                  Text(item.createdDate.toString()),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

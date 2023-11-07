@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'core/di/dependency_initializer.dart';
 import 'core/helper/logger.dart';
 import 'feature/auth/ui/login_page.dart';
@@ -14,10 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Google form manager',
-      home: LoginPage(),
+      theme: ThemeData(
+          textTheme: GoogleFonts.robotoTextTheme(
+              Theme.of(context).textTheme)),
+      home: const LoginPage(),
     );
   }
 }
