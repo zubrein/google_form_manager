@@ -6,6 +6,7 @@ class EditTextWidget extends StatelessWidget {
   final double fontSize;
   final Color fontColor;
   final FontWeight fontWeight;
+  final Function(String value)? onChange;
 
   const EditTextWidget({
     super.key,
@@ -14,6 +15,7 @@ class EditTextWidget extends StatelessWidget {
     this.fontSize = 15.0,
     this.fontColor = Colors.black54,
     this.fontWeight = FontWeight.w500,
+    this.onChange,
   });
 
   @override
@@ -40,6 +42,7 @@ class EditTextWidget extends StatelessWidget {
           borderSide: BorderSide(color: Colors.black),
         ),
       ),
+      onChanged: onChange ?? (_) {},
     );
   }
 }

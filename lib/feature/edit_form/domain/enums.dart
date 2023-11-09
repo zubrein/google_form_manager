@@ -39,3 +39,5 @@ Map<QuestionType, IconData> questionTypeIconMap = {
   QuestionType.multipleChoiceGrid: Icons.grid_view_rounded,
   QuestionType.checkboxGrid: Icons.grid_view_outlined,
 };
+
+enum OperationType { create, delete, update }

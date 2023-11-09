@@ -1,11 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
-import 'package:google_form_manager/feature/edit_form/ui/widgets/paragraph_widget.dart';
-import 'package:google_form_manager/feature/edit_form/ui/widgets/short_answer_widget.dart';
+import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/feature/edit_form/ui/cubit/batch_update_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/short_answer/short_answer_widget.dart';
 import 'package:googleapis/forms/v1.dart';
+
 import 'cubit/edit_form_cubit.dart';
 
 class EditFormPage extends StatefulWidget {
@@ -19,17 +19,16 @@ class EditFormPage extends StatefulWidget {
 
 class _EditFormPageState extends State<EditFormPage> {
   late EditFormCubit _editFormCubit;
-  late StreamSubscription _editFormCubitSubscription;
+  late BatchUpdateCubit _batchUpdateCubit;
 
   @override
   void initState() {
     super.initState();
     _editFormCubit = sl<EditFormCubit>();
-    _editFormCubitSubscription = _editFormCubit.stream.listen(_onListen);
+    _batchUpdateCubit = sl<BatchUpdateCubit>();
     _editFormCubit.fetchForm(widget.formId);
+    _batchUpdateCubit.prepareRequestInitialList();
   }
-
-  void _onListen(EditFormState state) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +36,7 @@ class _EditFormPageState extends State<EditFormPage> {
       appBar: AppBar(title: const Text('Edit form')),
       body: Column(
         children: [
+          _buildTopPanel(),
           Expanded(
             child: BlocBuilder<EditFormCubit, EditFormState>(
               bloc: _editFormCubit,
@@ -49,9 +49,12 @@ class _EditFormPageState extends State<EditFormPage> {
                         itemBuilder: (context, position) {
                           final formItem = state.form.items?[position];
                           if (isShortAnswer(formItem)) {
-                            return _buildShortAnswerWidget(position, formItem);
+                            return _buildShortAnswerWidget(
+                                position, formItem, OperationType.update);
                           } else if (isParagraph(formItem)) {
-                            return _buildParagraphWidget(position, formItem);
+                            return _buildShortAnswerWidget(
+                                position, formItem, OperationType.update,
+                                isParagraph: true);
                           } else {
                             return const SizedBox.shrink();
                           }
@@ -68,19 +71,42 @@ class _EditFormPageState extends State<EditFormPage> {
     );
   }
 
-  ParagraphWidget _buildParagraphWidget(int position, Item? textQuestion) {
-    return ParagraphWidget(
-      index: position,
-      title: textQuestion?.title ?? '',
-      description: textQuestion?.description ?? '',
+  Widget _buildTopPanel() {
+    return SizedBox(
+      height: 50,
+      width: double.infinity,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.blueGrey,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _batchUpdateCubit.submitForm(widget.formId);
+                },
+                child: const Icon(
+                  Icons.check,
+                  size: 20,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  ShortAnswerWidget _buildShortAnswerWidget(int position, Item? textQuestion) {
+  Widget _buildShortAnswerWidget(
+      int position, Item? textQuestion, OperationType type,
+      {bool isParagraph = false}) {
     return ShortAnswerWidget(
       index: position,
-      title: textQuestion?.title ?? '',
-      description: textQuestion?.description ?? '',
+      item: textQuestion,
+      operationType: type,
     );
   }
 
