@@ -12,6 +12,7 @@ enum QuestionType {
   time,
   multipleChoiceGrid,
   checkboxGrid,
+  unknown,
 }
 
 Map<QuestionType, String> questionTypeNameMap = {

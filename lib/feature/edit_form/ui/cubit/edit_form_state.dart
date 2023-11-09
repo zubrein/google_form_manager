@@ -14,10 +14,10 @@ class FetchFormInitiatedState extends EditFormState {
   List<Object?> get props => [];
 }
 
-class FetchFormSuccessState extends EditFormState {
-  final Form form;
+class FormListUpdateState extends EditFormState {
+  final List<Item> items;
 
-  const FetchFormSuccessState(this.form);
+  const FormListUpdateState(this.items);
 
   @override
   List<Object?> get props => [];
