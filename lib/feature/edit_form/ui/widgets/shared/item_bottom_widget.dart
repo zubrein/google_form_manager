@@ -3,7 +3,11 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/switch_widget.dart';
 
 class ItemBottomWidget extends StatefulWidget {
-  const ItemBottomWidget({super.key});
+  final void Function(bool val) onSwitchToggle;
+  final bool? isRequired;
+
+  const ItemBottomWidget(
+      {super.key, required this.onSwitchToggle, this.isRequired});
 
   @override
   State<ItemBottomWidget> createState() => _ItemBottomWidgetState();
@@ -27,11 +31,14 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
     );
   }
 
-  Row _buildSwitchWidget() {
-    return const Row(children: [
-      Text('Required'),
-      Gap(4),
-      SwitchWidget(),
+  Widget _buildSwitchWidget() {
+    return Row(children: [
+      const Text('Required'),
+      const Gap(4),
+      SwitchWidget(
+        onToggle: widget.onSwitchToggle,
+        isRequired: widget.isRequired,
+      ),
     ]);
   }
 

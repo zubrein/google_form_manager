@@ -7,6 +7,7 @@ class EditTextWidget extends StatelessWidget {
   final Color fontColor;
   final FontWeight fontWeight;
   final Function(String value)? onChange;
+  final bool autofocus;
 
   const EditTextWidget({
     super.key,
@@ -16,12 +17,14 @@ class EditTextWidget extends StatelessWidget {
     this.fontColor = Colors.black54,
     this.fontWeight = FontWeight.w500,
     this.onChange,
+    this.autofocus = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      autofocus: autofocus,
       style: TextStyle(
         fontSize: fontSize,
         color: fontColor,

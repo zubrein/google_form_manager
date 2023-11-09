@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
@@ -13,7 +14,7 @@ part 'edit_form_state.dart';
 class EditFormCubit extends Cubit<EditFormState> {
   FetchFormUseCase fetchFormUseCase;
   CheckQuestionTypeUseCase checkQuestionTypeUseCase;
-  List<Item> items = [];
+  List<BaseItemEntity> baseItemList = [];
 
   EditFormCubit(
     this.fetchFormUseCase,
@@ -24,8 +25,13 @@ class EditFormCubit extends Cubit<EditFormState> {
     emit(FetchFormInitiatedState());
     final response = await fetchFormUseCase(formId);
     if (response != null) {
-      items.addAll(response.items ?? []);
-      emit(FormListUpdateState(items));
+      final remoteItems = response.items;
+      if (remoteItems != null) {
+        baseItemList.addAll(remoteItems.map((item) {
+          return BaseItemEntity(item, OperationType.update);
+        }));
+      }
+      emit(FormListUpdateState(baseItemList));
     } else {
       emit(FetchFormFailedState());
     }
@@ -36,12 +42,12 @@ class EditFormCubit extends Cubit<EditFormState> {
   }
 
   void addItem(Item item) {
-    items.add(item);
-    emit(FormListUpdateState(items));
+    baseItemList.add(BaseItemEntity(item, OperationType.create));
+    emit(FormListUpdateState(baseItemList));
   }
 
   void deleteItem(int index) {
-    items.removeAt(index);
-    emit(FormListUpdateState(items));
+    baseItemList.removeAt(index);
+    emit(FormListUpdateState(baseItemList));
   }
 }

@@ -15,12 +15,12 @@ class FetchFormInitiatedState extends EditFormState {
 }
 
 class FormListUpdateState extends EditFormState {
-  final List<Item> items;
+  final List<BaseItemEntity> baseItem;
 
-  const FormListUpdateState(this.items);
+  const FormListUpdateState(this.baseItem);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [baseItem, DateTime.now()];
 }
 
 class FetchFormFailedState extends EditFormState {

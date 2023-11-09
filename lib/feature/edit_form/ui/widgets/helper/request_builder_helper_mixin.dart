@@ -1,6 +1,7 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
+import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
 
@@ -16,6 +17,10 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   OperationType get operationType;
 
   Duration debounceDuration = const Duration(milliseconds: 500);
+
+  bool? get isRequired;
+
+  final Set<String> updateMask = {};
 
   Widget body();
 
@@ -36,6 +41,13 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   Widget build(BuildContext context) {
     return BaseItemWidget(
       questionType: questionType,
+      onRequiredSwitchToggle: (value) {
+        updateMask.add(Constants.required);
+        request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+        request.updateItem?.item?.questionItem?.question?.required = value;
+        addRequest();
+      },
+      isRequired: isRequired,
       childWidget: body(),
     );
   }
@@ -70,9 +82,13 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
         : '';
   }
 
-  void addRequest(String debounceTag) {
-    EasyDebounce.debounce(debounceTag, debounceDuration, () {
+  void addRequest({String? debounceTag}) {
+    if (debounceTag != null) {
+      EasyDebounce.debounce(debounceTag, debounceDuration, () {
+        _batchUpdateCubit.addRequest(request, widgetIndex);
+      });
+    } else {
       _batchUpdateCubit.addRequest(request, widgetIndex);
-    });
+    }
   }
 }

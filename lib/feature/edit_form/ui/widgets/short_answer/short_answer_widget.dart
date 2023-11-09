@@ -30,7 +30,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
   final TextEditingController _questionController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  final Set<String> _updateMask = {};
+
 
   @override
   void init() {
@@ -56,6 +56,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
       fontColor: Colors.black,
       fontWeight: FontWeight.w700,
       onChange: _onChangeTitleText,
+      hint: 'Question',
     );
   }
 
@@ -63,9 +64,9 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
     String titleDebounceTag = '${widget.index} title';
     if (widget.operationType == OperationType.update) {
       request.updateItem?.item?.title = value;
-      _updateMask.add(Constants.title);
-      request.updateItem?.updateMask = updateMaskBuilder(_updateMask);
-      addRequest(titleDebounceTag);
+      updateMask.add(Constants.title);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+      addRequest(debounceTag: titleDebounceTag);
     }
   }
 
@@ -73,6 +74,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
     return EditTextWidget(
       controller: _descriptionController,
       onChange: _onChangeDescriptionText,
+      hint: 'Short-answer text',
     );
   }
 
@@ -81,9 +83,9 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
 
     if (widget.operationType == OperationType.update) {
       request.updateItem?.item?.description = value;
-      _updateMask.add('description');
-      request.updateItem?.updateMask = updateMaskBuilder(_updateMask);
-      addRequest(descriptionDebounceTag);
+      updateMask.add(Constants.description);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+      addRequest(debounceTag: descriptionDebounceTag);
     }
   }
 
@@ -95,4 +97,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
 
   @override
   OperationType get operationType => widget.operationType;
+
+  @override
+  bool? get isRequired => widget.item?.questionItem?.question?.required;
 }

@@ -7,9 +7,15 @@ import 'item_bottom_widget.dart';
 class BaseItemWidget extends StatelessWidget {
   final Widget childWidget;
   final QuestionType questionType;
+  final void Function(bool val) onRequiredSwitchToggle;
+  final bool? isRequired;
 
   const BaseItemWidget(
-      {super.key, required this.childWidget, required this.questionType});
+      {super.key,
+      required this.childWidget,
+      required this.questionType,
+      required this.onRequiredSwitchToggle,
+      this.isRequired});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,10 @@ class BaseItemWidget extends StatelessWidget {
                       children: [
                         ItemTopWidget(questionType: questionType),
                         childWidget,
-                        const ItemBottomWidget()
+                        ItemBottomWidget(
+                          onSwitchToggle: onRequiredSwitchToggle,
+                          isRequired: isRequired,
+                        )
                       ],
                     ),
                   )),

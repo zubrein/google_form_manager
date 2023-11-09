@@ -14,6 +14,7 @@ class UpdateRequestBuilderHelper {
               question: Question(
                 textQuestion:
                     TextQuestion(paragraph: isParagraph ? true : null),
+                required: false
               ),
             ),
           ),

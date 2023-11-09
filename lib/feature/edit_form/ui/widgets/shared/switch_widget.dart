@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 class SwitchWidget extends StatefulWidget {
-  const SwitchWidget({super.key});
+  final bool? isRequired;
+  final void Function(bool val) onToggle;
+
+  const SwitchWidget({super.key, this.isRequired, required this.onToggle});
 
   @override
   State<SwitchWidget> createState() => _SwitchWidgetState();
@@ -10,6 +13,12 @@ class SwitchWidget extends StatefulWidget {
 
 class _SwitchWidgetState extends State<SwitchWidget> {
   bool status = false;
+
+  @override
+  void initState() {
+    super.initState();
+    status = widget.isRequired ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +35,7 @@ class _SwitchWidgetState extends State<SwitchWidget> {
         setState(() {
           status = val;
         });
+        widget.onToggle(val);
       },
     );
   }

@@ -24,6 +24,7 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
         update Mask : ${_request[index]?.updateItem?.updateMask}
         title : ${_request[index]?.updateItem?.item?.title}
         description : ${_request[index]?.updateItem?.item?.description}
+        required: ${_request[index]?.updateItem?.item?.questionItem?.question?.required}
         ''');
   }
 
