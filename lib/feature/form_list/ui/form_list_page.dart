@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
 
+import '../../../core/loading_hud/loading_hud_cubit.dart';
 import 'cubit/form_list_cubit.dart';
 
 class FormListPage extends StatefulWidget {
@@ -17,24 +19,34 @@ class FormListPage extends StatefulWidget {
 
 class _FormListPageState extends State<FormListPage> {
   late FormListCubit _formListCubit;
+  late LoadingHudCubit _loadingHudCubit;
 
   @override
   void initState() {
     super.initState();
+    _loadingHudCubit = sl<LoadingHudCubit>();
     _formListCubit = sl<FormListCubit>();
+    _loadingHudCubit.show();
     _formListCubit.fetchFormList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Form list'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: BlocBuilder(
+    return Base(
+      loadingHudCubit: _loadingHudCubit,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Form list'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: BlocConsumer(
             bloc: _formListCubit,
+            listener: (BuildContext context, Object? state) {
+              if (state is FormListFetchSuccessState) {
+                _loadingHudCubit.cancel();
+              }
+            },
             builder: (context, state) {
               if (state is FormListFetchSuccessState) {
                 return ListView.builder(
@@ -43,18 +55,20 @@ class _FormListPageState extends State<FormListPage> {
                       return _buildFormListItem(state.formList[position]);
                     });
               } else {
-                return const Text('Fetching');
+                return const SizedBox.shrink();
               }
-            }),
+            },
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TemplatePage()),
+          ).then((value) {
+            _formListCubit.fetchFormList();
+          });
+        }),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const TemplatePage()),
-        ).then((value) {
-          _formListCubit.fetchFormList();
-        });
-      }),
     );
   }
 

@@ -25,6 +25,7 @@ class _BaseState extends State<Base> {
                   widget.child,
                   _buildBarrier(state),
                   _buildMessageBox(state),
+                  _buildAnimation(state),
                 ],
               );
             }),
@@ -34,7 +35,7 @@ class _BaseState extends State<Base> {
 
   Widget _buildBarrier(LoadingHudState state) {
     return Visibility(
-      visible: state is ShowError ? true : false,
+      visible: state is ShowError || state is ShowAnimation,
       child: const Opacity(
         opacity: 0.7,
         child: ModalBarrier(
@@ -49,6 +50,12 @@ class _BaseState extends State<Base> {
     return state is ShowError
         ? _buildErrorMessageBanner(state)
         : const SizedBox();
+  }
+
+  Widget _buildAnimation(state) {
+    return state is ShowAnimation
+        ? const Center(child: CircularProgressIndicator())
+        : const SizedBox.shrink();
   }
 
   Widget _buildErrorMessageBanner(ShowError state) {

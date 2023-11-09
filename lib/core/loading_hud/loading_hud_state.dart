@@ -18,7 +18,12 @@ class ShowError extends LoadingHudState {
   List<Object?> get props => [message];
 }
 
-class DismissLoadingHud extends LoadingHudState {
+class ShowAnimation extends LoadingHudState {
+  @override
+  List<Object?> get props => [];
+
+
+}class DismissLoadingHud extends LoadingHudState {
   @override
   List<Object?> get props => [];
 }

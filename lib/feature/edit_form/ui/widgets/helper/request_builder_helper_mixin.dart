@@ -7,6 +7,7 @@ import 'package:googleapis/forms/v1.dart';
 
 import '../../cubit/batch_update_cubit.dart';
 import '../shared/base_item_widget.dart';
+import 'create_request_builder_helper.dart';
 import 'update_request_builder_helper.dart';
 
 mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
@@ -32,6 +33,7 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
     super.initState();
     _batchUpdateCubit = sl<BatchUpdateCubit>();
     request = prepareInitialRequest();
+    if (operationType == OperationType.create) addRequest();
     init();
   }
 
@@ -56,6 +58,8 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
     switch (operationType) {
       case OperationType.update:
         return prepareUpdateRequest();
+      case OperationType.create:
+        return prepareCreateRequest();
       default:
         return Request();
     }
@@ -69,6 +73,21 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
         );
       case QuestionType.paragraph:
         return UpdateRequestBuilderHelper.prepareShortAnswerUpdateRequest(
+            widgetIndex,
+            isParagraph: true);
+      default:
+        return Request();
+    }
+  }
+
+  Request prepareCreateRequest() {
+    switch (questionType) {
+      case QuestionType.shortAnswer:
+        return CreateRequestBuilderHelper.prepareShortAnswerCreateRequest(
+          widgetIndex,
+        );
+      case QuestionType.paragraph:
+        return CreateRequestBuilderHelper.prepareShortAnswerCreateRequest(
             widgetIndex,
             isParagraph: true);
       default:

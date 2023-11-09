@@ -13,6 +13,10 @@ class LoadingHudCubit extends Cubit<LoadingHudState> {
     emit(ShowError(message));
   }
 
+  void show(){
+    emit(ShowAnimation());
+  }
+
   void cancel() {
     emit(DismissLoadingHud());
   }

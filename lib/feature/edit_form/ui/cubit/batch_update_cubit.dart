@@ -28,7 +28,7 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
         ''');
   }
 
-  void submitForm(String formId) async {
+  Future<bool> submitForm(String formId) async {
     for (var value in _request) {
       if (value != null) {
         _finalRequest.add(value);
@@ -44,6 +44,9 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
       prepareRequestInitialList();
       _finalRequest.clear();
       Log.info('submitted');
+      return true;
+    }else{
+      return false;
     }
   }
 

@@ -36,6 +36,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
   void init() {
     _questionController.text = widget.item?.title ?? '';
     _descriptionController.text = widget.item?.description ?? '';
+
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
+import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/batch_update_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_mixin.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dart';
@@ -20,34 +22,45 @@ class EditFormPage extends StatefulWidget {
 class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
   late EditFormCubit _editFormCubit;
   late BatchUpdateCubit _batchUpdateCubit;
+  late LoadingHudCubit _loadingHudCubit;
 
   @override
   void initState() {
     super.initState();
     _editFormCubit = sl<EditFormCubit>();
     _batchUpdateCubit = sl<BatchUpdateCubit>();
+    _loadingHudCubit = sl<LoadingHudCubit>();
+    _loadingHudCubit.show();
     _editFormCubit.fetchForm(widget.formId);
     _batchUpdateCubit.prepareRequestInitialList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Edit form')),
-      body: Column(
-        children: [
-          _buildTopPanel(),
-          _buildFormListView(),
-        ],
+    return Base(
+      loadingHudCubit: _loadingHudCubit,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Edit form')),
+        body: Column(
+          children: [
+            _buildTopPanel(),
+            _buildFormListView(),
+          ],
+        ),
+        bottomSheet: _buildBottomPanel(),
       ),
-      bottomSheet: _buildBottomPanel(),
     );
   }
 
   Widget _buildFormListView() {
     return Expanded(
-      child: BlocBuilder<EditFormCubit, EditFormState>(
+      child: BlocConsumer<EditFormCubit, EditFormState>(
         bloc: _editFormCubit,
+        listener: (context, state) {
+          if (state is FormListUpdateState) {
+            _loadingHudCubit.cancel();
+          }
+        },
         builder: (context, state) {
           if (state is FormListUpdateState) {
             return Padding(
@@ -74,10 +87,17 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
 
   Widget _buildTopPanel() {
     return EditFormTopPanel(
-      onSaveButtonTap: () {
-        _batchUpdateCubit.submitForm(widget.formId);
+      onSaveButtonTap: () async {
+        _loadingHudCubit.show();
+        final isSubmitted = await _batchUpdateCubit.submitForm(widget.formId);
+        if (isSubmitted) pop();
       },
     );
+  }
+
+  void pop() {
+    _loadingHudCubit.cancel();
+    Navigator.of(context).pop();
   }
 
   Widget _buildBottomPanel() {

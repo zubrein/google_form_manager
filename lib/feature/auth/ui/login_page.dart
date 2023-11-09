@@ -28,44 +28,6 @@ class _LoginPageState extends State<LoginPage> {
     _loginCubit.listenUserLoginState();
   }
 
-  //
-  // Future<void> batchUpdate() async {
-  //   var httpClient = await googleSignIn.authenticatedClient();
-  //
-  //   if (httpClient != null) {
-  //     await FormsApi(httpClient)
-  //         .forms
-  //         .batchUpdate(
-  //           BatchUpdateFormRequest(
-  //             includeFormInResponse: true,
-  //             requests: [
-  //               Request(
-  //                 createItem: gf.CreateItemRequest(
-  //                   item: gf.Item(
-  //                       questionItem: gf.QuestionItem(
-  //                           question: gf.Question(
-  //                               choiceQuestion: gf.ChoiceQuestion(options: [
-  //                     Option(value: 'opta'),
-  //                     Option(value: 'optb'),
-  //                     Option(value: 'optc'),
-  //                     Option(value: 'optd'),
-  //                   ], type: 'RADIO')))),
-  //                   location: gf.Location(
-  //                     index: 0,
-  //                   ),
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //           '10KTgx0j7emz5frPgDZl3_aTuhGiP3lW2jFpB9aOa3DM',
-  //           $fields: '*',
-  //         )
-  //         .then((value) {
-  //       print('DBG: $value');
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Base(
@@ -103,6 +65,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 }
