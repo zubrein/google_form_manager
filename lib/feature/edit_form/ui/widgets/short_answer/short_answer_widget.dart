@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../helper/request_builder_helper_mixin.dart';
@@ -12,12 +13,14 @@ class ShortAnswerWidget extends StatefulWidget {
   final Item? item;
   final OperationType operationType;
   final bool isParagraph;
+  final EditFormCubit editFormCubit;
 
   const ShortAnswerWidget({
     super.key,
     required this.index,
     required this.item,
     required this.operationType,
+    required this.editFormCubit,
     this.isParagraph = false,
   });
 
@@ -26,7 +29,7 @@ class ShortAnswerWidget extends StatefulWidget {
 }
 
 class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
-    with RequestBuilderHelper {
+    with RequestBuilderHelper, AutomaticKeepAliveClientMixin {
   final TextEditingController _questionController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -34,6 +37,12 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
   void init() {
     _questionController.text = widget.item?.title ?? '';
     _descriptionController.text = widget.item?.description ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return baseWidget();
   }
 
   @override
@@ -97,11 +106,18 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
   int get widgetIndex => widget.index;
 
   @override
-  QuestionType get questionType => QuestionType.shortAnswer;
+  QuestionType get questionType =>
+      widget.isParagraph ? QuestionType.paragraph : QuestionType.shortAnswer;
 
   @override
   OperationType get operationType => widget.operationType;
 
   @override
   bool? get isRequired => widget.item?.questionItem?.question?.required;
+
+  @override
+  EditFormCubit get editFormCubit => widget.editFormCubit;
+
+  @override
+  bool get wantKeepAlive => true;
 }

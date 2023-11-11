@@ -1,13 +1,14 @@
-import 'package:equatable/equatable.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
 
-class BaseItemEntity extends Equatable {
+class BaseItemEntity {
   final Item? item;
   final OperationType opType;
+  bool visibility;
 
-  const BaseItemEntity(this.item, this.opType);
-
-  @override
-  List<Object?> get props => [opType];
+  BaseItemEntity({
+    required this.item,
+    required this.opType,
+    required this.visibility,
+  });
 }

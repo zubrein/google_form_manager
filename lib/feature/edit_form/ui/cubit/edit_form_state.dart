@@ -28,21 +28,7 @@ class FetchFormFailedState extends EditFormState {
   List<Object?> get props => [];
 }
 
-class BatchInitiatedState extends EditFormState {
+class ItemDeletedState extends EditFormState {
   @override
-  List<Object?> get props => [];
-}
-
-class BatchSuccessState extends EditFormState {
-  final bool isFormUpdated;
-
-  const BatchSuccessState(this.isFormUpdated);
-
-  @override
-  List<Object?> get props => [];
-}
-
-class BatchFailedState extends EditFormState {
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [DateTime.now()];
 }

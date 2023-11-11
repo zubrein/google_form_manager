@@ -64,26 +64,27 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
         },
         builder: (context, state) {
           if (state is FormListUpdateState) {
-            return BlocProvider.value(
-              value: _editFormCubit,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 16, right: 16, top: 16, bottom: 50),
-                child: ListView.builder(
-                    itemCount: state.baseItem.length,
-                    itemBuilder: (context, position) {
-                      final formItem = state.baseItem[position];
-                      return buildFormItem(
-                        qType: _editFormCubit.checkQuestionType(formItem.item),
-                        item: formItem.item,
-                        index: position,
-                        opType: formItem.opType,
-                      );
-                    }),
-              ),
+            return Padding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 16, bottom: 50),
+              child: ListView.builder(
+                  itemCount: state.baseItem.length,
+                  itemBuilder: (context, position) {
+                    final formItem = state.baseItem[position];
+                    return formItem.visibility
+                        ? buildFormItem(
+                            qType:
+                                _editFormCubit.checkQuestionType(formItem.item),
+                            item: formItem.item,
+                            index: position,
+                            opType: formItem.opType,
+                          )
+                        : const SizedBox.shrink();
+                  }),
             );
+          } else {
+            return const SizedBox();
           }
-          return const SizedBox();
         },
       ),
     );
@@ -128,4 +129,7 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
   void dispose() {
     super.dispose();
   }
+
+  @override
+  EditFormCubit get editFormCubit => _editFormCubit;
 }

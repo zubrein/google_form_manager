@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:google_form_manager/core/helper/logger.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/helper/delete_request_item_helper.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
 
@@ -13,58 +14,90 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
   BatchUpdateCubit(this.batchUpdateUseCase) : super(EditFormInitial());
 
   BatchUpdateFormRequest batchUpdateFormRequest = BatchUpdateFormRequest();
-  final List<Request?> _request = [];
-  final List<Request> _finalRequest = [];
+  final List<Request?> _otherRequests = [];
+  final List<int> _deleteRequestsIndex = [];
+  final List<Request> _finalRequests = [];
 
-  void addRequest(Request request, int index) {
-    _request.removeAt(index);
-    _request.insert(index, request);
+  void addOtherRequest(Request request, int index) {
+    _otherRequests.removeAt(index);
+    _otherRequests.insert(index, request);
+    printRequest(request, index);
+  }
 
-    Log.info('''
-        index : $index
-        update Mask : ${_request[index]?.updateItem?.updateMask}
-        title : ${_request[index]?.updateItem?.item?.title}
-        description : ${_request[index]?.updateItem?.item?.description}
-        required: ${_request[index]?.updateItem?.item?.questionItem?.question?.required}
-        ''');
+  void addDeleteRequest(int index) {
+    Log.info(index.toString());
+    _deleteRequestsIndex.add(index);
   }
 
   Future<bool> submitForm(String formId) async {
-    for (var value in _request) {
+    for (var value in _otherRequests) {
       if (value != null) {
-        printRequest(value);
-        _finalRequest.add(value);
+        _finalRequests.add(value);
       }
     }
-    Log.info(_finalRequest.length.toString());
-    final isSubmitted = await batchUpdateUseCase(
-      BatchUpdateFormRequest(
-          requests: _finalRequest, includeFormInResponse: true),
-      formId,
-    );
-    if (isSubmitted) {
-      prepareRequestInitialList();
-      _finalRequest.clear();
-      return true;
+
+    if (_finalRequests.isNotEmpty) {
+      final isOtherRequestSubmitted = await batchUpdateUseCase(
+        BatchUpdateFormRequest(
+            requests: _finalRequests, includeFormInResponse: true),
+        formId,
+      );
+
+      if (isOtherRequestSubmitted) {
+        final isDeleteRequestSubmitted = await submitDeleteRequest(formId);
+        prepareRequestInitialList();
+        _finalRequests.clear();
+        return isDeleteRequestSubmitted ? true : false;
+      } else {
+        return false;
+      }
     } else {
-      return false;
+      final isDeleteRequestSubmitted = await submitDeleteRequest(formId);
+      prepareRequestInitialList();
+      _finalRequests.clear();
+      return isDeleteRequestSubmitted ? true : false;
+    }
+  }
+
+  Future<bool> submitDeleteRequest(String formId) async {
+    _deleteRequestsIndex.sort();
+    List<Request> deleteRequestList = [];
+    for (int i = 0; i < _deleteRequestsIndex.length; i++) {
+      deleteRequestList.add(DeleteRequestItemHelper.createDeleteRequest(
+          _deleteRequestsIndex[i] - i));
+    }
+
+    if (deleteRequestList.isNotEmpty) {
+      final isSubmitted = await batchUpdateUseCase(
+        BatchUpdateFormRequest(
+            requests: deleteRequestList, includeFormInResponse: true),
+        formId,
+      );
+
+      if (isSubmitted) {
+        _deleteRequestsIndex.clear();
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
     }
   }
 
   void prepareRequestInitialList() {
-    _request.clear();
-    _request.addAll(List<Request?>.filled(200, null));
+    _deleteRequestsIndex.clear();
+    _otherRequests.clear();
+    _otherRequests.addAll(List<Request?>.filled(200, null));
   }
 }
 
-printRequest(Request request) {
+printRequest(Request request, int index) {
   Log.info('''
-    {
-      "deleteItem": {
-        "location": {
-          "index": ${request.deleteItem?.location?.index}
-        }
-      }
-    } 
-  ''');
+        index : $index
+        update Mask : ${request.updateItem?.updateMask}
+        title : ${request.updateItem?.item?.title}
+        description : ${request.updateItem?.item?.description}
+        required: ${request.updateItem?.item?.questionItem?.question?.required}
+        ''');
 }

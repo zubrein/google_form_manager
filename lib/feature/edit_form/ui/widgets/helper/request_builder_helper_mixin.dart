@@ -1,6 +1,5 @@
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
@@ -10,7 +9,6 @@ import 'package:googleapis/forms/v1.dart';
 import '../../cubit/batch_update_cubit.dart';
 import '../shared/base_item_widget.dart';
 import 'create_request_item_helper.dart';
-import 'delete_request_item_helper.dart';
 import 'update_request_item_helper.dart';
 
 mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
@@ -24,47 +22,25 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
 
   bool? get isRequired;
 
+  EditFormCubit get editFormCubit;
+
   final Set<String> updateMask = {};
 
   Widget body();
 
   late Request request;
   late BatchUpdateCubit _batchUpdateCubit;
-  late EditFormCubit _editFormCubit;
 
   @override
   void initState() {
     super.initState();
     _batchUpdateCubit = sl<BatchUpdateCubit>();
-    _editFormCubit = BlocProvider.of<EditFormCubit>(context);
     request = prepareInitialRequest();
     if (operationType == OperationType.create) addRequest();
     init();
   }
 
   void init();
-
-  @override
-  Widget build(BuildContext context) {
-    return BaseItemWidget(
-      questionType: questionType,
-      onRequiredSwitchToggle: (value) {
-        updateMask.add(Constants.required);
-        request.updateItem?.updateMask = updateMaskBuilder(updateMask);
-        request.updateItem?.item?.questionItem?.question?.required = value;
-        addRequest();
-      },
-      isRequired: isRequired,
-      onDelete: () {
-        _editFormCubit.deleteItem(widgetIndex);
-        _batchUpdateCubit.addRequest(
-          DeleteRequestItemHelper.createDeleteRequest(widgetIndex),
-          widgetIndex,
-        );
-      },
-      childWidget: body(),
-    );
-  }
 
   Request prepareInitialRequest() {
     switch (operationType) {
@@ -116,10 +92,34 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   void addRequest({String? debounceTag}) {
     if (debounceTag != null) {
       EasyDebounce.debounce(debounceTag, debounceDuration, () {
-        _batchUpdateCubit.addRequest(request, widgetIndex);
+        _batchUpdateCubit.addOtherRequest(request, widgetIndex);
       });
     } else {
-      _batchUpdateCubit.addRequest(request, widgetIndex);
+      _batchUpdateCubit.addOtherRequest(request, widgetIndex);
     }
   }
+
+  void onDeleteButtonTap() {
+    editFormCubit.deleteItem(widgetIndex);
+    _batchUpdateCubit.addDeleteRequest(widgetIndex);
+  }
+
+  void onRequiredButtonToggle(value) {
+    if(operationType == OperationType.update) {
+      updateMask.add(Constants.required);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+      request.updateItem?.item?.questionItem?.question?.required = value;
+    }else if(operationType == OperationType.create){
+      request.createItem?.item?.questionItem?.question?.required = value;
+    }
+    addRequest();
+  }
+
+  Widget baseWidget() => BaseItemWidget(
+        questionType: questionType,
+        onRequiredSwitchToggle: onRequiredButtonToggle,
+        isRequired: isRequired,
+        onDelete: onDeleteButtonTap,
+        childWidget: body(),
+      );
 }
