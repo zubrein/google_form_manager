@@ -19,6 +19,7 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
   void addRequest(Request request, int index) {
     _request.removeAt(index);
     _request.insert(index, request);
+
     Log.info('''
         index : $index
         update Mask : ${_request[index]?.updateItem?.updateMask}
@@ -31,6 +32,7 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
   Future<bool> submitForm(String formId) async {
     for (var value in _request) {
       if (value != null) {
+        printRequest(value);
         _finalRequest.add(value);
       }
     }
@@ -43,9 +45,8 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
     if (isSubmitted) {
       prepareRequestInitialList();
       _finalRequest.clear();
-      Log.info('submitted');
       return true;
-    }else{
+    } else {
       return false;
     }
   }
@@ -54,4 +55,16 @@ class BatchUpdateCubit extends Cubit<EditFormState> {
     _request.clear();
     _request.addAll(List<Request?>.filled(200, null));
   }
+}
+
+printRequest(Request request) {
+  Log.info('''
+    {
+      "deleteItem": {
+        "location": {
+          "index": ${request.deleteItem?.location?.index}
+        }
+      }
+    } 
+  ''');
 }

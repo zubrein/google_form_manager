@@ -30,13 +30,10 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
   final TextEditingController _questionController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-
-
   @override
   void init() {
     _questionController.text = widget.item?.title ?? '';
     _descriptionController.text = widget.item?.description ?? '';
-
   }
 
   @override
@@ -68,6 +65,9 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
       updateMask.add(Constants.title);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
       addRequest(debounceTag: titleDebounceTag);
+    } else if (widget.operationType == OperationType.create) {
+      request.createItem?.item?.title = value;
+      addRequest(debounceTag: titleDebounceTag);
     }
   }
 
@@ -86,6 +86,9 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
       request.updateItem?.item?.description = value;
       updateMask.add(Constants.description);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+      addRequest(debounceTag: descriptionDebounceTag);
+    } else if (widget.operationType == OperationType.create) {
+      request.createItem?.item?.description = value;
       addRequest(debounceTag: descriptionDebounceTag);
     }
   }

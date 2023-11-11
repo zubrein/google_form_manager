@@ -5,9 +5,13 @@ import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/switch_w
 class ItemBottomWidget extends StatefulWidget {
   final void Function(bool val) onSwitchToggle;
   final bool? isRequired;
+  final VoidCallback onDelete;
 
   const ItemBottomWidget(
-      {super.key, required this.onSwitchToggle, this.isRequired});
+      {super.key,
+      required this.onSwitchToggle,
+      this.isRequired,
+      required this.onDelete});
 
   @override
   State<ItemBottomWidget> createState() => _ItemBottomWidgetState();
@@ -15,13 +19,18 @@ class ItemBottomWidget extends StatefulWidget {
 
 class _ItemBottomWidgetState extends State<ItemBottomWidget> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Icon(Icons.delete_rounded, size: 22, color: Colors.black87),
+          _buildDeleteIcon(),
           const Gap(8),
           _buildSwitchWidget(),
           const Gap(12),
@@ -40,6 +49,13 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
         isRequired: widget.isRequired,
       ),
     ]);
+  }
+
+  Widget _buildDeleteIcon() {
+    return GestureDetector(
+      onTap: widget.onDelete,
+      child: const Icon(Icons.delete_rounded, size: 22, color: Colors.black87),
+    );
   }
 
   Widget _menuIcon() {

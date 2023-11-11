@@ -13,7 +13,7 @@ class FormListRepositoryImpl extends FormListRepository {
 
     if (driveApi != null) {
       final fileList = await driveApi.files
-          .list(q: "mimeType = 'application/vnd.google-apps.form'");
+          .list(q: "mimeType = 'application/vnd.google-apps.form' and trashed=false");
       formList = fileList.items ?? [];
     } else {
       Log.info('Drive api not found');

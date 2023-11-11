@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/feature/edit_form/ui/item_type_list_page.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/item_top_widget.dart';
 
 import 'item_bottom_widget.dart';
 
-class BaseItemWidget extends StatelessWidget {
+class BaseItemWidget extends StatefulWidget {
   final Widget childWidget;
   final QuestionType questionType;
   final void Function(bool val) onRequiredSwitchToggle;
   final bool? isRequired;
+  final VoidCallback onDelete;
 
   const BaseItemWidget(
       {super.key,
       required this.childWidget,
       required this.questionType,
       required this.onRequiredSwitchToggle,
+      required this.onDelete,
       this.isRequired});
+
+  @override
+  State<BaseItemWidget> createState() => _BaseItemWidgetState();
+}
+
+class _BaseItemWidgetState extends State<BaseItemWidget> {
+  late QuestionType selectedType;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedType = widget.questionType;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +49,46 @@ class BaseItemWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        ItemTopWidget(questionType: questionType),
-                        childWidget,
+                        GestureDetector(
+                            onTap: _onTapTopWidget,
+                            child: _buildItemTopWidget()),
+                        widget.childWidget,
                         ItemBottomWidget(
-                          onSwitchToggle: onRequiredSwitchToggle,
-                          isRequired: isRequired,
+                          onSwitchToggle: widget.onRequiredSwitchToggle,
+                          isRequired: widget.isRequired,
+                          onDelete: widget.onDelete,
                         )
                       ],
                     ),
                   )),
             )),
+      ),
+    );
+  }
+
+  void _onTapTopWidget() async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ItemTypeListPage(selectedType: selectedType)));
+    if (result[0] != widget.questionType) {
+      setState(() {
+        selectedType = result[0];
+      });
+    }
+  }
+
+  Widget _buildItemTopWidget() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        child: DecoratedBox(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black54, width: 1),
+                borderRadius: BorderRadius.circular(4)),
+            child: ItemTopWidget(questionType: selectedType)),
       ),
     );
   }

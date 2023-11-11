@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/batch_update_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_mixin.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dart';
-import 'package:googleapis/forms/v1.dart';
 
 import 'cubit/edit_form_cubit.dart';
+import 'widgets/helper/create_question_item_helper.dart';
 
 class EditFormPage extends StatefulWidget {
   final String formId;
@@ -63,20 +64,23 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
         },
         builder: (context, state) {
           if (state is FormListUpdateState) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 50),
-              child: ListView.builder(
-                  itemCount: state.baseItem.length,
-                  itemBuilder: (context, position) {
-                    final formItem = state.baseItem[position];
-                    return buildFormItem(
-                      qType: _editFormCubit.checkQuestionType(formItem.item),
-                      item: formItem.item,
-                      index: position,
-                      opType: formItem.opType,
-                    );
-                  }),
+            return BlocProvider.value(
+              value: _editFormCubit,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 16, bottom: 50),
+                child: ListView.builder(
+                    itemCount: state.baseItem.length,
+                    itemBuilder: (context, position) {
+                      final formItem = state.baseItem[position];
+                      return buildFormItem(
+                        qType: _editFormCubit.checkQuestionType(formItem.item),
+                        item: formItem.item,
+                        index: position,
+                        opType: formItem.opType,
+                      );
+                    }),
+              ),
             );
           }
           return const SizedBox();
@@ -107,10 +111,10 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           GestureDetector(
-            onTap: () {
-              _editFormCubit.addItem(Item(
-                  questionItem: QuestionItem(
-                      question: Question(textQuestion: TextQuestion()))));
+            onTap: () async {
+              _editFormCubit.addItem(CreateQuestionItemHelper.getItem(
+                QuestionType.shortAnswer,
+              ));
             },
             child: const SizedBox(
                 height: 50, child: Icon(Icons.add_circle_outline)),
@@ -118,5 +122,10 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:googleapis/forms/v1.dart';
 
-class UpdateRequestBuilderHelper {
+class UpdateRequestItemHelper {
   static Request prepareShortAnswerUpdateRequest(
     int widgetIndex, {
     bool isParagraph = false,

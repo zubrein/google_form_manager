@@ -17,26 +17,32 @@ class ItemTopWidget extends StatefulWidget {
 class _ItemTopWidgetState extends State<ItemTopWidget> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            questionTypeIconMap[widget.questionType],
-            size: 16,
-          ),
-          const Gap(4),
-          Text(
-            questionTypeNameMap[widget.questionType]!,
-            style: const TextStyle(color: Colors.black54),
-          ),
-          const Icon(
-            Icons.chevron_right,
-            color: Colors.black45,
-          ),
-        ],
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minWidth: 130,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              questionTypeIconMap[widget.questionType],
+              size: 16,
+            ),
+            const Gap(4),
+            Text(
+              questionTypeNameMap[widget.questionType]!,
+              style: const TextStyle(color: Colors.black54),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              color: Colors.black45,
+            ),
+          ],
+        ),
       ),
     );
   }
