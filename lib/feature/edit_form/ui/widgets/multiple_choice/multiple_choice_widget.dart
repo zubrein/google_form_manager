@@ -61,6 +61,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
           type: widget.type,
           request: request,
           opType: widget.operationType,
+          updateMask: updateMask,
           addRequest: addRequest,
         )
       ],

@@ -38,34 +38,33 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _onTapTopWidget,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: DecoratedBox(
-              decoration: const BoxDecoration(color: Colors.green),
-              child: Padding(
-                padding: _buildInnerBoxPadding(),
-                child: DecoratedBox(
-                    decoration: _buildInnerBoxDecoration(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          _buildItemTopWidget(),
-                          buildFormItem(
-                            qType: selectedType,
-                            item: widget.formItem.item,
-                            index: widget.index,
-                            opType: widget.formItem.opType,
-                          ),
-                        ],
-                      ),
-                    )),
-              )),
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: DecoratedBox(
+            decoration: const BoxDecoration(color: Colors.green),
+            child: Padding(
+              padding: _buildInnerBoxPadding(),
+              child: DecoratedBox(
+                  decoration: _buildInnerBoxDecoration(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                            onTap: _onTapTopWidget,
+                            child: _buildItemTopWidget()),
+                        buildFormItem(
+                          qType: selectedType,
+                          item: widget.formItem.item,
+                          index: widget.index,
+                          opType: widget.formItem.opType,
+                        ),
+                      ],
+                    ),
+                  )),
+            )),
       ),
     );
   }

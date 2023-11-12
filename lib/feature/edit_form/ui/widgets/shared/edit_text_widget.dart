@@ -45,6 +45,7 @@ class EditTextWidget extends StatelessWidget {
           borderSide: BorderSide(color: Colors.black),
         ),
       ),
+
       onChanged: onChange ?? (_) {},
     );
   }

@@ -99,7 +99,5 @@ printRequest(Request request, int index) {
         title : ${request.updateItem?.item?.title}
         description : ${request.updateItem?.item?.description}
         required: ${request.updateItem?.item?.questionItem?.question?.required}
-        choice : ${request.updateItem?.item?.questionItem?.question?.choiceQuestion?.options?[0].value}
-        choiceListCount : ${request.updateItem?.item?.questionItem?.question?.choiceQuestion?.options?.length}
         ''');
 }
