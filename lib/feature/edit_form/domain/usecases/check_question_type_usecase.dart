@@ -14,6 +14,15 @@ class CheckQuestionTypeUseCase {
     } else if (item?.questionItem?.question?.textQuestion?.paragraph != null &&
         item?.questionItem?.question?.textQuestion?.paragraph == true) {
       return QuestionType.paragraph;
+    } else if (item?.questionItem?.question?.choiceQuestion != null &&
+        item?.questionItem?.question?.choiceQuestion?.type == 'RADIO') {
+      return QuestionType.multipleChoice;
+    } else if (item?.questionItem?.question?.choiceQuestion != null &&
+        item?.questionItem?.question?.choiceQuestion?.type == 'CHECKBOX') {
+      return QuestionType.checkboxes;
+    } else if (item?.questionItem?.question?.choiceQuestion != null &&
+        item?.questionItem?.question?.choiceQuestion?.type == 'DROP_DOWN') {
+      return QuestionType.dropdown;
     }
 
     return QuestionType.unknown;

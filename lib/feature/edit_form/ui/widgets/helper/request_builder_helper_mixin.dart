@@ -63,6 +63,19 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
         return UpdateRequestItemHelper.prepareShortAnswerUpdateRequest(
             widgetIndex,
             isParagraph: true);
+      case QuestionType.multipleChoice:
+        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
+            widgetIndex,
+            type: QuestionType.multipleChoice);
+      case QuestionType.checkboxes:
+        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
+            widgetIndex,
+            type: QuestionType.checkboxes);
+      case QuestionType.dropdown:
+        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
+            widgetIndex,
+            type: QuestionType.dropdown);
+
       default:
         return Request();
     }
@@ -78,6 +91,19 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
         return CreateRequestItemHelper.prepareShortAnswerCreateRequest(
             widgetIndex,
             isParagraph: true);
+      case QuestionType.multipleChoice:
+        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
+            widgetIndex,
+            type: QuestionType.multipleChoice);
+      case QuestionType.checkboxes:
+        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
+            widgetIndex,
+            type: QuestionType.checkboxes);
+      case QuestionType.dropdown:
+        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
+            widgetIndex,
+            type: QuestionType.dropdown);
+
       default:
         return Request();
     }
@@ -105,11 +131,11 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   }
 
   void onRequiredButtonToggle(value) {
-    if(operationType == OperationType.update) {
+    if (operationType == OperationType.update) {
       updateMask.add(Constants.required);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
       request.updateItem?.item?.questionItem?.question?.required = value;
-    }else if(operationType == OperationType.create){
+    } else if (operationType == OperationType.create) {
       request.createItem?.item?.questionItem?.question?.required = value;
     }
     addRequest();

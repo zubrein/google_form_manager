@@ -56,8 +56,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
                         children: [
                           _buildItemTopWidget(),
                           buildFormItem(
-                            qType: editFormCubit
-                                .checkQuestionType(widget.formItem.item),
+                            qType: selectedType,
                             item: widget.formItem.item,
                             index: widget.index,
                             opType: widget.formItem.opType,
