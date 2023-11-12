@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/batch_update_cubit.dart';
-import 'package:google_form_manager/feature/edit_form/ui/edit_form_mixin.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dart';
 
 import 'cubit/edit_form_cubit.dart';
 import 'widgets/helper/create_question_item_helper.dart';
+import 'widgets/shared/base_item_with_widget_selector.dart';
 
 class EditFormPage extends StatefulWidget {
   final String formId;
@@ -20,7 +21,7 @@ class EditFormPage extends StatefulWidget {
   State<EditFormPage> createState() => _EditFormPageState();
 }
 
-class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
+class _EditFormPageState extends State<EditFormPage> {
   late EditFormCubit _editFormCubit;
   late BatchUpdateCubit _batchUpdateCubit;
   late LoadingHudCubit _loadingHudCubit;
@@ -72,13 +73,7 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
                   itemBuilder: (context, position) {
                     final formItem = state.baseItem[position];
                     return formItem.visibility
-                        ? buildFormItem(
-                            qType:
-                                _editFormCubit.checkQuestionType(formItem.item),
-                            item: formItem.item,
-                            index: position,
-                            opType: formItem.opType,
-                          )
+                        ? _buildFormItem(formItem, position)
                         : const SizedBox.shrink();
                   }),
             );
@@ -87,6 +82,16 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
           }
         },
       ),
+    );
+  }
+
+  BaseItemWithWidgetSelector _buildFormItem(
+      BaseItemEntity formItem, int position) {
+    return BaseItemWithWidgetSelector(
+      editFormCubit: _editFormCubit,
+      questionType: _editFormCubit.checkQuestionType(formItem.item),
+      formItem: formItem,
+      index: position,
     );
   }
 
@@ -124,12 +129,4 @@ class _EditFormPageState extends State<EditFormPage> with EditFormMixin {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  EditFormCubit get editFormCubit => _editFormCubit;
 }
