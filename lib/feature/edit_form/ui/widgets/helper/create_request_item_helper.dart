@@ -35,7 +35,7 @@ class CreateRequestItemHelper {
             question: Question(
                 choiceQuestion: ChoiceQuestion(
                   options: [
-                    Option(value: '')
+                    Option(value: 'Option')
                   ],
                   shuffle: false,
                   type: CreateQuestionItemHelper.getTypeName(type),

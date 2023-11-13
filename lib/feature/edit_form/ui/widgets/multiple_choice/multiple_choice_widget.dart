@@ -57,7 +57,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
         OptionListWidget(
           optionList:
               widget.item?.questionItem?.question?.choiceQuestion?.options ??
-                  [],
+                  [Option(value: 'Option')],
           type: widget.type,
           request: request,
           opType: widget.operationType,

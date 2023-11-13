@@ -36,7 +36,7 @@ class UpdateRequestItemHelper {
             questionItem: QuestionItem(
               question: Question(
                   choiceQuestion: ChoiceQuestion(
-                    options: [Option(value: '')],
+                    options: [Option(value: 'Option')],
                     shuffle: false,
                     type: CreateQuestionItemHelper.getTypeName(type),
                   ),

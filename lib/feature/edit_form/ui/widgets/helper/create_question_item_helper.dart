@@ -32,7 +32,7 @@ class CreateQuestionItemHelper {
         questionItem: QuestionItem(
             question: Question(
                 choiceQuestion: ChoiceQuestion(
-                  options: [Option(value: '')],
+                  options: [Option(value: 'Option')],
                   type: getTypeName(type),
                   shuffle: false,
                 ),

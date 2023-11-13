@@ -64,10 +64,10 @@ class _OptionListWidgetState extends State<OptionListWidget>
                 : const SizedBox.shrink(),
             const Gap(8),
             _buildAddOptionButton(),
-            !isOtherSectionAvailable
+            !isOtherSectionAvailable && widget.type != QuestionType.dropdown
                 ? _buildOrButton()
                 : const SizedBox.shrink(),
-            !isOtherSectionAvailable
+            !isOtherSectionAvailable && widget.type != QuestionType.dropdown
                 ? _buildAddOtherButton()
                 : const SizedBox.shrink(),
           ],
@@ -179,7 +179,9 @@ class _OptionListWidgetState extends State<OptionListWidget>
                 ? _buildOtherTextWIdget()
                 : _buildOptionEditTextWidget(index),
           ),
-          _buildRemoveIcon(index),
+          optionList.length > 1
+              ? _buildRemoveIcon(index)
+              : const SizedBox.shrink(),
           const Gap(8),
         ],
       ),
