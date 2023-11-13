@@ -5,7 +5,6 @@ import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
-import 'package:google_form_manager/feature/edit_form/ui/cubit/batch_update_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dart';
 
 import 'cubit/edit_form_cubit.dart';
@@ -23,18 +22,15 @@ class EditFormPage extends StatefulWidget {
 
 class _EditFormPageState extends State<EditFormPage> {
   late EditFormCubit _editFormCubit;
-  late BatchUpdateCubit _batchUpdateCubit;
   late LoadingHudCubit _loadingHudCubit;
 
   @override
   void initState() {
     super.initState();
     _editFormCubit = sl<EditFormCubit>();
-    _batchUpdateCubit = sl<BatchUpdateCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
     _loadingHudCubit.show();
     _editFormCubit.fetchForm(widget.formId);
-    _batchUpdateCubit.prepareRequestInitialList();
   }
 
   @override
@@ -99,8 +95,12 @@ class _EditFormPageState extends State<EditFormPage> {
     return EditFormTopPanel(
       onSaveButtonTap: () async {
         _loadingHudCubit.show();
-        final isSubmitted = await _batchUpdateCubit.submitForm(widget.formId);
-        if (isSubmitted) pop();
+        final isSubmitted = await _editFormCubit.submitForm(widget.formId);
+        if (isSubmitted) {
+          pop();
+        } else {
+          pop();
+        }
       },
     );
   }

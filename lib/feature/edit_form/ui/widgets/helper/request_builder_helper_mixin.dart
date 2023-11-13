@@ -1,12 +1,10 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
 import 'package:googleapis/forms/v1.dart';
 
-import '../../cubit/batch_update_cubit.dart';
 import '../shared/base_item_widget.dart';
 import 'create_request_item_helper.dart';
 import 'update_request_item_helper.dart';
@@ -29,12 +27,10 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   Widget body();
 
   late Request request;
-  late BatchUpdateCubit _batchUpdateCubit;
 
   @override
   void initState() {
     super.initState();
-    _batchUpdateCubit = sl<BatchUpdateCubit>();
     request = prepareInitialRequest();
     if (operationType == OperationType.create) addRequest();
     init();
@@ -118,16 +114,18 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   void addRequest({String? debounceTag}) {
     if (debounceTag != null) {
       EasyDebounce.debounce(debounceTag, debounceDuration, () {
-        _batchUpdateCubit.addOtherRequest(request, widgetIndex);
+        // _batchUpdateCubit.addOtherRequest(request, widgetIndex);
+        editFormCubit.addOtherRequest(request, widgetIndex);
       });
     } else {
-      _batchUpdateCubit.addOtherRequest(request, widgetIndex);
+      // _batchUpdateCubit.addOtherRequest(request, widgetIndex);
+      editFormCubit.addOtherRequest(request, widgetIndex);
     }
   }
 
   void onDeleteButtonTap() {
     editFormCubit.deleteItem(widgetIndex);
-    _batchUpdateCubit.addDeleteRequest(widgetIndex);
+    // _batchUpdateCubit.addDeleteRequest(widgetIndex);
   }
 
   void onRequiredButtonToggle(value) {

@@ -5,10 +5,12 @@ class BaseItemEntity {
   final Item? item;
   final OperationType opType;
   bool visibility;
+  Request? request;
 
   BaseItemEntity({
     required this.item,
     required this.opType,
     required this.visibility,
+    required this.request,
   });
 }
