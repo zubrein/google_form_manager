@@ -36,6 +36,7 @@ class EditFormCubit extends Cubit<EditFormState> {
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
           return BaseItemEntity(
+            itemId: item.itemId,
             item: item,
             opType: OperationType.update,
             visibility: true,
@@ -68,8 +69,39 @@ class EditFormCubit extends Cubit<EditFormState> {
     emit(FormListUpdateState(baseItemList));
   }
 
+  void replaceItem(int index, Item item) {
+    deleteItem(index);
+    baseItemList.insert(
+        index,
+        BaseItemEntity(
+          item: item,
+          opType: OperationType.create,
+          visibility: true,
+          request: null,
+        ));
+    emit(FormListUpdateState(baseItemList));
+  }
+
   void deleteItem(int index) async {
-    baseItemList[index].visibility = false;
+    if (baseItemList[index].itemId != null) {
+      _deleteListIndexes.add(index);
+    }
+    baseItemList.removeAt(index);
+    for (var element in baseItemList) {
+      if (element.request != null) {
+        if (element.opType == OperationType.create) {
+          int itemIndex = element.request!.createItem!.location!.index!;
+          if (itemIndex > index) {
+            element.request!.createItem!.location!.index = itemIndex - 1;
+          }
+        } else if (element.opType == OperationType.update) {
+          int itemIndex = element.request!.updateItem!.location!.index!;
+          if (itemIndex > index) {
+            element.request!.createItem!.location!.index = itemIndex - 1;
+          }
+        }
+      }
+    }
     emit(FormListUpdateState(baseItemList));
   }
 
@@ -77,7 +109,7 @@ class EditFormCubit extends Cubit<EditFormState> {
     Log.info('''
         index : $index
         update Mask : ${request.updateItem?.updateMask}
-        title : ${request.updateItem?.item?.title}
+        title : ${request.createItem?.item?.title}
         description : ${request.updateItem?.item?.description}
         required: ${request.updateItem?.item?.questionItem?.question?.required}
         ''');
@@ -87,12 +119,9 @@ class EditFormCubit extends Cubit<EditFormState> {
     for (int index = 0; index < baseItemList.length; index++) {
       final value = baseItemList[index];
 
-      if (value.visibility == true) {
-        if (value.request != null) {
-          _requestList.add(value.request!);
-        }
-      } else if (value.visibility == false) {
-        _deleteListIndexes.add(index);
+      if (value.request != null) {
+        _requestList.add(value.request!);
+        Log.info('${value.request!.createItem?.location?.index}');
       }
     }
 
@@ -104,14 +133,13 @@ class EditFormCubit extends Cubit<EditFormState> {
       );
 
       if (isOtherRequestSubmitted) {
-        return await submitDeleteRequest(formId);
+        return true;
       } else {
         return false;
       }
-    } else {
-      final isDeleteRequestSubmitted = await submitDeleteRequest(formId);
-      return isDeleteRequestSubmitted ? true : false;
     }
+
+    return false;
   }
 
   Future<bool> submitDeleteRequest(String formId) async {
@@ -129,10 +157,16 @@ class EditFormCubit extends Cubit<EditFormState> {
             requests: deleteRequestList, includeFormInResponse: true),
         formId,
       );
-      prepareRequestInitialList();
-      return isSubmitted ? true : false;
+
+      if (isSubmitted) {
+        final isOtherRequestSubmitted = await submitForm(formId);
+        return isOtherRequestSubmitted ? true : false;
+      } else {
+        return false;
+      }
     } else {
-      return true;
+      final isOtherRequestSubmitted = await submitForm(formId);
+      return isOtherRequestSubmitted ? true : false;
     }
   }
 

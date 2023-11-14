@@ -84,6 +84,7 @@ class _EditFormPageState extends State<EditFormPage> {
   BaseItemWithWidgetSelector _buildFormItem(
       BaseItemEntity formItem, int position) {
     return BaseItemWithWidgetSelector(
+      key: ValueKey<String>(DateTime.now().toString()),
       editFormCubit: _editFormCubit,
       questionType: _editFormCubit.checkQuestionType(formItem.item),
       formItem: formItem,
@@ -95,7 +96,8 @@ class _EditFormPageState extends State<EditFormPage> {
     return EditFormTopPanel(
       onSaveButtonTap: () async {
         _loadingHudCubit.show();
-        final isSubmitted = await _editFormCubit.submitForm(widget.formId);
+        final isSubmitted =
+            await _editFormCubit.submitDeleteRequest(widget.formId);
         if (isSubmitted) {
           pop();
         } else {

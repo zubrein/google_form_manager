@@ -114,18 +114,15 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   void addRequest({String? debounceTag}) {
     if (debounceTag != null) {
       EasyDebounce.debounce(debounceTag, debounceDuration, () {
-        // _batchUpdateCubit.addOtherRequest(request, widgetIndex);
         editFormCubit.addOtherRequest(request, widgetIndex);
       });
     } else {
-      // _batchUpdateCubit.addOtherRequest(request, widgetIndex);
       editFormCubit.addOtherRequest(request, widgetIndex);
     }
   }
 
   void onDeleteButtonTap() {
     editFormCubit.deleteItem(widgetIndex);
-    // _batchUpdateCubit.addDeleteRequest(widgetIndex);
   }
 
   void onRequiredButtonToggle(value) {
