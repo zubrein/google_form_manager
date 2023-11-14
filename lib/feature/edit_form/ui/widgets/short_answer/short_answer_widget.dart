@@ -84,7 +84,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
     return EditTextWidget(
       controller: _descriptionController,
       onChange: _onChangeDescriptionText,
-      hint: widget.isParagraph ? 'Long-answer text' : 'Short-answer text',
+      hint: 'Description',
     );
   }
 

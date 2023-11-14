@@ -128,7 +128,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
     setState(() {});
   }
 
-  Option _newOption() => Option(value: 'Option');
+  Option _newOption() => Option(value: 'Option ${optionList.length + 1}');
 
   Option _otherOption() => Option(isOther: true);
 
@@ -171,7 +171,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
 
   Widget _buildOptionItem(Option option, int index) {
     bool isOtherSectionAvailable = option.isOther ?? false;
-    _controllerList[index].text = option.value ?? 'Option';
+    _controllerList[index].text = option.value ?? 'Option 1';
 
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
@@ -181,7 +181,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
           const Gap(4),
           Expanded(
             child: isOtherSectionAvailable
-                ? _buildOtherTextWIdget()
+                ? _buildOtherTextWidget()
                 : _buildOptionEditTextWidget(index),
           ),
           optionList.length > 1
@@ -198,15 +198,13 @@ class _OptionListWidgetState extends State<OptionListWidget>
       controller: _controllerList[index],
       hint: 'Option',
       onChange: (value) {
-        if (widget.opType == OperationType.update) {
-          optionList[index].value = value;
-          _addRequest();
-        }
+        optionList[index].value = value;
+        _addRequest();
       },
     );
   }
 
-  Widget _buildOtherTextWIdget() {
+  Widget _buildOtherTextWidget() {
     return const Padding(
       padding: EdgeInsets.only(left: 5.0),
       child: Text('Other'),
@@ -227,7 +225,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
   }
 
   Text _buildNumberBullets(int position) =>
-      Text('${position + 1}.', style: const TextStyle(fontSize: 16));
+      Text('${position}.', style: const TextStyle(fontSize: 16));
 
   Widget _buildOrButton() {
     return const Text('  or  ', style: TextStyle(color: Colors.black));

@@ -21,9 +21,24 @@ class EditFormTopPanel extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: onSaveButtonTap,
-                child: const Icon(
-                  Icons.check,
-                  size: 20,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(4)
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.check,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        Text('Save', style: TextStyle(color: Colors.white),)
+                      ],
+                    ),
+                  ),
                 ),
               )
             ],
