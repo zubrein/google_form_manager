@@ -84,7 +84,7 @@ class _EditFormPageState extends State<EditFormPage> {
   BaseItemWithWidgetSelector _buildFormItem(
       BaseItemEntity formItem, int position) {
     return BaseItemWithWidgetSelector(
-      key: ValueKey<String>(DateTime.now().toString()),
+      key: formItem.key,
       editFormCubit: _editFormCubit,
       questionType: _editFormCubit.checkQuestionType(formItem.item),
       formItem: formItem,

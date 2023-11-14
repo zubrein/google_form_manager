@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/helper/create_question_item_helper.dart';
 
 import '../../edit_form_mixin.dart';
 import '../../item_type_list_page.dart';
@@ -28,12 +29,9 @@ class BaseItemWithWidgetSelector extends StatefulWidget {
 
 class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
     with EditFormMixin {
-  late QuestionType selectedType;
-
   @override
   void initState() {
     super.initState();
-    selectedType = widget.questionType;
   }
 
   @override
@@ -56,7 +54,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
                             onTap: _onTapTopWidget,
                             child: _buildItemTopWidget()),
                         buildFormItem(
-                          qType: selectedType,
+                          qType: widget.questionType,
                           item: widget.formItem.item,
                           index: widget.index,
                           opType: widget.formItem.opType,
@@ -91,11 +89,11 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
         context,
         MaterialPageRoute(
             builder: (context) =>
-                ItemTypeListPage(selectedType: selectedType)));
-    if (result[0] != widget.questionType) {
-      setState(() {
-        selectedType = result[0];
-      });
+                ItemTypeListPage(selectedType: widget.questionType)));
+
+    if (result != null) {
+      editFormCubit.replaceItem(
+          widget.index, CreateQuestionItemHelper.getItem(result[0]));
     }
   }
 
@@ -108,7 +106,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black54, width: 1),
                 borderRadius: BorderRadius.circular(4)),
-            child: ItemTopWidget(questionType: selectedType)),
+            child: ItemTopWidget(questionType: widget.questionType)),
       ),
     );
   }

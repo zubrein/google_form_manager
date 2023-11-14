@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
 
@@ -36,12 +38,12 @@ class EditFormCubit extends Cubit<EditFormState> {
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
           return BaseItemEntity(
-            itemId: item.itemId,
-            item: item,
-            opType: OperationType.update,
-            visibility: true,
-            request: null,
-          );
+              itemId: item.itemId,
+              item: item,
+              opType: OperationType.update,
+              visibility: true,
+              request: null,
+              key: ValueKey<String>(getRandomId()));
         }));
       }
       emit(FormListUpdateState(baseItemList));
@@ -61,11 +63,11 @@ class EditFormCubit extends Cubit<EditFormState> {
 
   void addItem(Item item) {
     baseItemList.add(BaseItemEntity(
-      item: item,
-      opType: OperationType.create,
-      visibility: true,
-      request: null,
-    ));
+        item: item,
+        opType: OperationType.create,
+        visibility: true,
+        request: null,
+        key: ValueKey<String>(getRandomId())));
     emit(FormListUpdateState(baseItemList));
   }
 
@@ -74,11 +76,11 @@ class EditFormCubit extends Cubit<EditFormState> {
     baseItemList.insert(
         index,
         BaseItemEntity(
-          item: item,
-          opType: OperationType.create,
-          visibility: true,
-          request: null,
-        ));
+            item: item,
+            opType: OperationType.create,
+            visibility: true,
+            request: null,
+            key: const ValueKey<String>('')));
     emit(FormListUpdateState(baseItemList));
   }
 
