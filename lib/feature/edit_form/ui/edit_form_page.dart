@@ -23,6 +23,7 @@ class EditFormPage extends StatefulWidget {
 class _EditFormPageState extends State<EditFormPage> {
   late EditFormCubit _editFormCubit;
   late LoadingHudCubit _loadingHudCubit;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _EditFormPageState extends State<EditFormPage> {
               padding: const EdgeInsets.only(
                   left: 16, right: 16, top: 16, bottom: 50),
               child: ListView.builder(
+                  controller: _scrollController,
                   itemCount: state.baseItem.length,
                   itemBuilder: (context, position) {
                     final formItem = state.baseItem[position];
@@ -123,12 +125,25 @@ class _EditFormPageState extends State<EditFormPage> {
               _editFormCubit.addItem(CreateQuestionItemHelper.getItem(
                 QuestionType.shortAnswer,
               ));
+              scrollToBottom();
             },
             child: const SizedBox(
-                height: 50, child: Icon(Icons.add_circle_outline)),
+                height: 50, width: 50, child: Icon(Icons.add_circle_outline)),
           )
         ],
       ),
     );
+  }
+
+  void scrollToBottom(){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 500),
+        );
+      }
+    });
   }
 }
