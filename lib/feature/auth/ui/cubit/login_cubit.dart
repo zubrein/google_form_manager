@@ -23,10 +23,6 @@ class LoginCubit extends Cubit<LoginState> {
     await logoutUseCase();
   }
 
-  void userExists() {
-    emit(LoginSuccessState());
-  }
-
   void listenUserLoginState() {
     googleSigning.onCurrentUserChanged.listen((account) {
       if (account != null) {

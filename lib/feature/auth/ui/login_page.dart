@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 
 import '../../form_list/ui/form_list_page.dart';
 import 'cubit/login_cubit.dart';
@@ -33,9 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     return Base(
       loadingHudCubit: _loadingHudCubit,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-        ),
         body: BlocListener<LoginCubit, LoginState>(
           bloc: _loginCubit,
           listener: (context, state) {
@@ -47,18 +46,45 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           child: Center(
-            child: GestureDetector(
-              onTap: () {
-                _loginCubit.signingIn();
-              },
-              child: Container(
-                height: 50,
-                width: 200,
-                color: Colors.blue,
-                child: const Center(
-                  child: Text('login'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/logo.png',
+                  height: 150,
                 ),
-              ),
+                const Gap(70),
+                GestureDetector(
+                  onTap: () {
+                    _loginCubit.signingIn();
+                  },
+                  child: Container(
+                    height: 60,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blue, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/google.png',
+                              height: 30,
+                              width: 30,
+                            ),
+                            const Gap(16),
+                            Text(Constants.loginText),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

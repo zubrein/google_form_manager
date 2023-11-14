@@ -134,10 +134,15 @@ class _OptionListWidgetState extends State<OptionListWidget>
 
   void _addRequest() {
     final req = widget.request;
-    req.updateItem?.item?.questionItem?.question?.choiceQuestion?.options =
-        optionList;
-    widget.updateMask.add(Constants.multipleChoiceValue);
-    req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
+    if (widget.opType == OperationType.update) {
+      req.updateItem?.item?.questionItem?.question?.choiceQuestion?.options =
+          optionList;
+      widget.updateMask.add(Constants.multipleChoiceValue);
+      req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
+    } else if (widget.opType == OperationType.create) {
+      req.createItem?.item?.questionItem?.question?.choiceQuestion?.options =
+          optionList;
+    }
     widget.addRequest();
   }
 

@@ -60,14 +60,17 @@ class _FormListPageState extends State<FormListPage> {
             },
           ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const TemplatePage()),
-          ).then((value) {
-            _formListCubit.fetchFormList();
-          });
-        }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const TemplatePage()),
+            ).then((value) {
+              _formListCubit.fetchFormList();
+            });
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -80,32 +83,35 @@ class _FormListPageState extends State<FormListPage> {
             MaterialPageRoute(
                 builder: (context) => EditFormPage(formId: item.id!)));
       },
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            SizedBox(
-              height: 100,
-              width: 70,
-              child: Image.network(
-                item.thumbnailLink!,
-                headers: <String, String>{
-                  'Authorization': 'Bearer ${_formListCubit.token}',
-                  'Custom-Header': 'Custom-Value',
-                },
-                fit: BoxFit.fill,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              SizedBox(
+                height: 70,
+                width: 50,
+                child: Image.network(
+                  item.thumbnailLink!,
+                  headers: <String, String>{
+                    'Authorization': 'Bearer ${_formListCubit.token}',
+                    'Custom-Header': 'Custom-Value',
+                  },
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
-            const Gap(16),
-            Expanded(
-              child: Column(
-                children: [
-                  Text(item.title.toString()),
-                  Text(item.createdDate.toString()),
-                ],
-              ),
-            )
-          ],
+              const Gap(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildLabel(item.title.toString()),
+                    Text(item.createdDate.toString()),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -115,5 +121,13 @@ class _FormListPageState extends State<FormListPage> {
   void dispose() {
     _formListCubit.close();
     super.dispose();
+  }
+
+  Widget _buildLabel(String label) {
+    return Text(
+      label,
+      style: const TextStyle(
+          fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w700),
+    );
   }
 }
