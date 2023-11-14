@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
+import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
@@ -40,24 +41,33 @@ class _FormListPageState extends State<FormListPage> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: BlocConsumer(
-            bloc: _formListCubit,
-            listener: (BuildContext context, Object? state) {
-              if (state is FormListFetchSuccessState) {
-                _loadingHudCubit.cancel();
+          child: BlocListener<LoginCubit, LoginState>(
+            bloc: _formListCubit.loginCubit,
+            listener: (context, state) {
+              if (state is LogoutState) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', ModalRoute.withName('/'));
               }
             },
-            builder: (context, state) {
-              if (state is FormListFetchSuccessState) {
-                return ListView.builder(
-                    itemCount: state.formList.length,
-                    itemBuilder: (context, position) {
-                      return _buildFormListItem(state.formList[position]);
-                    });
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
+            child: BlocConsumer(
+              bloc: _formListCubit,
+              listener: (BuildContext context, Object? state) {
+                if (state is FormListFetchSuccessState) {
+                  _loadingHudCubit.cancel();
+                }
+              },
+              builder: (context, state) {
+                if (state is FormListFetchSuccessState) {
+                  return ListView.builder(
+                      itemCount: state.formList.length,
+                      itemBuilder: (context, position) {
+                        return _buildFormListItem(state.formList[position]);
+                      });
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -71,6 +81,46 @@ class _FormListPageState extends State<FormListPage> {
           },
           child: const Icon(Icons.add),
         ),
+        drawer: Drawer(
+            width: 220,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
+              child: ListView(
+                children: [_buildLogoutButton()],
+              ),
+            )),
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton() {
+    return GestureDetector(
+      onTap: () {
+        _formListCubit.logout();
+      },
+      child: const Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.logout,
+                size: 18,
+              ),
+              Gap(6),
+              Text('Logout',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  )),
+            ],
+          ),
+          Gap(8),
+          Divider(
+            height: 1,
+            color: Colors.black87,
+          ),
+        ],
       ),
     );
   }

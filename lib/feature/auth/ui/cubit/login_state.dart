@@ -13,3 +13,8 @@ class LoginSuccessState extends LoginState {
   @override
   List<Object?> get props => [];
 }
+
+class LogoutState extends LoginState {
+  @override
+  List<Object?> get props => [];
+}

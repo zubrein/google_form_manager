@@ -16,7 +16,7 @@ class UserAuthRepositoryImpl extends UserAuthenticationRepository {
   }
 
   @override
-  Future<void> logout() async {
+  void logout() {
     try {
       googleSigning.disconnect();
     } catch (error) {

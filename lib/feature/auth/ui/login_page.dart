@@ -7,7 +7,6 @@ import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 
-import '../../form_list/ui/form_list_page.dart';
 import 'cubit/login_cubit.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,10 +38,8 @@ class _LoginPageState extends State<LoginPage> {
           bloc: _loginCubit,
           listener: (context, state) {
             if (state is LoginSuccessState) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FormListPage()),
-                  ModalRoute.withName('/'));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/formList', ModalRoute.withName('/'));
             }
           },
           child: Center(

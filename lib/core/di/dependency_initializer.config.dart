@@ -17,11 +17,11 @@ import 'package:google_form_manager/feature/auth/data/repositories/user_authenti
 import 'package:google_form_manager/feature/auth/domain/repositories/user_authentication_repository.dart'
     as _i14;
 import 'package:google_form_manager/feature/auth/domain/usecases/logout_use_case.dart'
-    as _i21;
+    as _i20;
 import 'package:google_form_manager/feature/auth/domain/usecases/signing_in_use_case.dart'
-    as _i22;
+    as _i21;
 import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart'
-    as _i23;
+    as _i22;
 import 'package:google_form_manager/feature/edit_form/data/repositories/edit_form_repository_impl.dart'
     as _i8;
 import 'package:google_form_manager/feature/edit_form/domain/repository/edit_form_repository.dart'
@@ -41,7 +41,7 @@ import 'package:google_form_manager/feature/form_list/domain/repositories/form_l
 import 'package:google_form_manager/feature/form_list/domain/usecases/fetch_form_list_usecase.dart'
     as _i19;
 import 'package:google_form_manager/feature/form_list/ui/cubit/form_list_cubit.dart'
-    as _i20;
+    as _i23;
 import 'package:google_form_manager/feature/templates/data/create_form_repository_impl.dart'
     as _i5;
 import 'package:google_form_manager/feature/templates/domain/repositories/create_form_repository.dart'
@@ -87,15 +87,17 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i19.FetchFormListUseCase>(() =>
         _i19.FetchFormListUseCase(repository: gh<_i10.FormListRepository>()));
-    gh.factory<_i20.FormListCubit>(
-        () => _i20.FormListCubit(gh<_i19.FetchFormListUseCase>()));
-    gh.factory<_i21.LogoutUseCase>(() => _i21.LogoutUseCase(
+    gh.factory<_i20.LogoutUseCase>(() => _i20.LogoutUseCase(
         repository: gh<_i14.UserAuthenticationRepository>()));
-    gh.factory<_i22.SigningInUseCase>(() => _i22.SigningInUseCase(
+    gh.factory<_i21.SigningInUseCase>(() => _i21.SigningInUseCase(
         repository: gh<_i14.UserAuthenticationRepository>()));
-    gh.factory<_i23.LoginCubit>(() => _i23.LoginCubit(
-          gh<_i22.SigningInUseCase>(),
-          gh<_i21.LogoutUseCase>(),
+    gh.factory<_i22.LoginCubit>(() => _i22.LoginCubit(
+          gh<_i21.SigningInUseCase>(),
+          gh<_i20.LogoutUseCase>(),
+        ));
+    gh.factory<_i23.FormListCubit>(() => _i23.FormListCubit(
+          gh<_i19.FetchFormListUseCase>(),
+          gh<_i22.LoginCubit>(),
         ));
     return this;
   }

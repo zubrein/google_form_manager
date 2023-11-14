@@ -19,8 +19,9 @@ class LoginCubit extends Cubit<LoginState> {
     await signingIn();
   }
 
-  Future<void> logout() async {
-    await logoutUseCase();
+  void logout() {
+    logoutUseCase();
+    emit(LogoutState());
   }
 
   void listenUserLoginState() {
