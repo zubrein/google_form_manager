@@ -27,6 +27,8 @@ class CheckQuestionTypeUseCase {
       return QuestionType.date;
     }else if (item?.questionItem?.question?.timeQuestion != null) {
       return QuestionType.time;
+    }else if (item?.questionItem?.question?.scaleQuestion != null) {
+      return QuestionType.linearScale;
     }
 
     return QuestionType.unknown;

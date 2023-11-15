@@ -30,6 +30,9 @@ class CreateRequestItemHelper {
         return CreateRequestItemHelper.prepareDateCreateRequest(widgetIndex);
       case QuestionType.time:
         return CreateRequestItemHelper.prepareTimeCreateRequest(widgetIndex);
+      case QuestionType.linearScale:
+        return CreateRequestItemHelper.prepareLinearScaleCreateRequest(
+            widgetIndex);
 
       default:
         return Request();
@@ -110,6 +113,24 @@ class CreateRequestItemHelper {
                 timeQuestion: TimeQuestion(
                   duration: false,
                 ),
+                required: false),
+          ),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
+  static Request prepareLinearScaleCreateRequest(int widgetIndex) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionItem: QuestionItem(
+            question: Question(
+                scaleQuestion:
+                    ScaleQuestion(low: 1, high: 5, lowLabel: '', highLabel: ''),
                 required: false),
           ),
         ),

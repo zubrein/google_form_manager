@@ -18,6 +18,8 @@ class CreateQuestionItemHelper {
         return getDateItem();
       case QuestionType.time:
         return getTimeItem();
+      case QuestionType.linearScale:
+        return getLinearScaleItem();
 
       default:
         return Item();
@@ -59,6 +61,19 @@ class CreateQuestionItemHelper {
             question: Question(
                 timeQuestion: TimeQuestion(
                   duration: false,
+                ),
+                required: false)));
+  }
+
+  static Item getLinearScaleItem() {
+    return Item(
+        questionItem: QuestionItem(
+            question: Question(
+                scaleQuestion: ScaleQuestion(
+                  low: 1,
+                  high: 5,
+                  lowLabel: '',
+                  highLabel: '',
                 ),
                 required: false)));
   }

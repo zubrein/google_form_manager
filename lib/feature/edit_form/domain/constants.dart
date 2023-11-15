@@ -4,10 +4,12 @@ class Constants {
   static String required = 'questionItem.question.required';
   static String multipleChoiceValue =
       'questionItem.question.choiceQuestion.options';
-  static String includeTime =
-      'questionItem.question.dateQuestion.includeTime';
-  static String includeYear =
-      'questionItem.question.dateQuestion.includeYear';
+  static String includeTime = 'questionItem.question.dateQuestion.includeTime';
+  static String includeYear = 'questionItem.question.dateQuestion.includeYear';
+  static String lsLow = 'questionItem.question.scaleQuestion.low';
+  static String lsHigh = 'questionItem.question.scaleQuestion.high';
+  static String lsLowLabel = 'questionItem.question.scaleQuestion.lowLabel';
+  static String lsHighLabel = 'questionItem.question.scaleQuestion.highLabel';
 
   static String createFormLabel = 'Create Form';
   static String loginText = 'Signing with google';

@@ -28,6 +28,11 @@ class UpdateRequestItemHelper {
             type: QuestionType.dropdown);
       case QuestionType.date:
         return UpdateRequestItemHelper.prepareDateUpdateRequest(widgetIndex);
+      case QuestionType.time:
+        return UpdateRequestItemHelper.prepareTimeUpdateRequest(widgetIndex);
+      case QuestionType.linearScale:
+        return UpdateRequestItemHelper.prepareLinearScaleUpdateRequest(
+            widgetIndex);
 
       default:
         return Request();
@@ -110,6 +115,24 @@ class UpdateRequestItemHelper {
                   timeQuestion: TimeQuestion(
                     duration: false,
                   ),
+                  required: false),
+            ),
+          ),
+          location: Location(index: widgetIndex),
+          updateMask: ''),
+    );
+  }
+
+  static Request prepareLinearScaleUpdateRequest(int widgetIndex) {
+    return Request(
+      updateItem: UpdateItemRequest(
+          item: Item(
+            title: '',
+            description: '',
+            questionItem: QuestionItem(
+              question: Question(
+                  scaleQuestion: ScaleQuestion(
+                      low: 1, high: 5, lowLabel: '', highLabel: ''),
                   required: false),
             ),
           ),

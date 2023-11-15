@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 enum QuestionType {
@@ -10,8 +9,8 @@ enum QuestionType {
   linearScale,
   date,
   time,
-  multipleChoiceGrid,
-  checkboxGrid,
+  // multipleChoiceGrid,
+  // checkboxGrid,
   unknown,
 }
 
@@ -24,8 +23,8 @@ Map<QuestionType, String> questionTypeNameMap = {
   QuestionType.linearScale: 'Linear Scale',
   QuestionType.date: 'Date',
   QuestionType.time: 'Time',
-  QuestionType.multipleChoiceGrid: 'Multiple choice grid',
-  QuestionType.checkboxGrid: 'Checkbox grid',
+  // QuestionType.multipleChoiceGrid: 'Multiple choice grid',
+  // QuestionType.checkboxGrid: 'Checkbox grid',
 };
 
 Map<QuestionType, IconData> questionTypeIconMap = {
@@ -37,8 +36,8 @@ Map<QuestionType, IconData> questionTypeIconMap = {
   QuestionType.linearScale: Icons.linear_scale,
   QuestionType.date: Icons.calendar_month,
   QuestionType.time: Icons.watch_later_outlined,
-  QuestionType.multipleChoiceGrid: Icons.grid_view_rounded,
-  QuestionType.checkboxGrid: Icons.grid_view_outlined,
+  // QuestionType.multipleChoiceGrid: Icons.grid_view_rounded,
+  // QuestionType.checkboxGrid: Icons.grid_view_outlined,
 };
 
 enum OperationType { create, delete, update }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/linear_scale/linear_scale_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/time/time_widget.dart';
 import 'package:googleapis/forms/v1.dart';
@@ -33,6 +34,16 @@ mixin EditFormMixin {
 
   Widget _buildTimeWidget(int position, Item? qItem, OperationType type) {
     return TimeWidget(
+      index: position,
+      item: qItem,
+      operationType: type,
+      editFormCubit: editFormCubit,
+    );
+  }
+
+  Widget _buildLinearScaleWidget(
+      int position, Item? qItem, OperationType type) {
+    return LinearScaleWidget(
       index: position,
       item: qItem,
       operationType: type,
@@ -74,6 +85,8 @@ mixin EditFormMixin {
         return _buildDateWidget(index, item, opType);
       case QuestionType.time:
         return _buildTimeWidget(index, item, opType);
+      case QuestionType.linearScale:
+        return _buildLinearScaleWidget(index, item, opType);
 
       default:
         return Container(
