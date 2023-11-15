@@ -9,6 +9,7 @@ class BaseItemWidget extends StatefulWidget {
   final void Function(bool val) onRequiredSwitchToggle;
   final bool? isRequired;
   final VoidCallback onDelete;
+  final VoidCallback onTapMenuButton;
 
   const BaseItemWidget(
       {super.key,
@@ -16,6 +17,7 @@ class BaseItemWidget extends StatefulWidget {
       required this.questionType,
       required this.onRequiredSwitchToggle,
       required this.onDelete,
+      required this.onTapMenuButton,
       this.isRequired});
 
   @override
@@ -32,6 +34,7 @@ class _BaseItemWidgetState extends State<BaseItemWidget> {
           onSwitchToggle: widget.onRequiredSwitchToggle,
           isRequired: widget.isRequired,
           onDelete: widget.onDelete,
+          onTapMenuButton: widget.onTapMenuButton,
         )
       ],
     );

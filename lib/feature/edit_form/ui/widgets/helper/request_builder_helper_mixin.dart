@@ -19,6 +19,8 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
 
   bool? get isRequired;
 
+  VoidCallback get onTapMenuButton;
+
   EditFormCubit get editFormCubit;
 
   final Set<String> updateMask = {};
@@ -26,6 +28,8 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   Widget body();
 
   late Request request;
+
+  bool showDescription = false;
 
   @override
   void initState() {
@@ -75,6 +79,7 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
         onRequiredSwitchToggle: onRequiredButtonToggle,
         isRequired: isRequired,
         onDelete: onDeleteButtonTap,
+        onTapMenuButton: onTapMenuButton,
         childWidget: body(),
       );
 }

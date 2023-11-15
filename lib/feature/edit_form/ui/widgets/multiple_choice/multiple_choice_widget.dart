@@ -4,6 +4,7 @@ import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../../../domain/constants.dart';
+import '../../bottom_modal_operation_constant.dart';
 import '../../cubit/edit_form_cubit.dart';
 import '../helper/request_builder_helper_mixin.dart';
 import '../shared/edit_text_widget.dart';
@@ -36,6 +37,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   void init() {
+    showDescription = widget.item?.description != null;
   }
 
   @override
@@ -52,8 +54,10 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
       children: [
         _buildEditTitleWidget(),
         const Gap(4),
-        _buildEditDescriptionWidget(),
-        const Gap(4),
+        showDescription
+            ? _buildEditDescriptionWidget()
+            : const SizedBox.shrink(),
+        const Gap(8),
         OptionListWidget(
           optionList:
               widget.item?.questionItem?.question?.choiceQuestion?.options ??
@@ -132,4 +136,62 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  VoidCallback get onTapMenuButton => () async {
+        BuildContext buildContext = context;
+        final response = await showDialog(
+            context: buildContext,
+            builder: (context) {
+              return _buildBottomModal();
+            });
+        if (response != null) {
+          if (response[0] == ItemMenuOpConstant.showDesc) {
+            showDescription = true;
+          } else if (response[0] == ItemMenuOpConstant.hideDesc) {
+            showDescription = false;
+          }
+          setState(() {});
+        }
+      };
+
+  Widget _buildBottomModal() {
+    return AlertDialog(
+      alignment: Alignment.bottomCenter,
+      content: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: onTapModalDescription,
+              child: _buildModalDescriptionRow(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModalDescriptionRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text('Description',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+        showDescription
+            ? const Icon(Icons.check, size: 18, color: Colors.green)
+            : const SizedBox.shrink()
+      ],
+    );
+  }
+
+  void onTapModalDescription() {
+    showDescription = showDescription ? true : false;
+    Navigator.of(context).pop([
+      showDescription
+          ? ItemMenuOpConstant.hideDesc
+          : ItemMenuOpConstant.showDesc
+    ]);
+  }
 }

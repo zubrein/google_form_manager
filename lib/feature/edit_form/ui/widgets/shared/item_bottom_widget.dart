@@ -6,11 +6,13 @@ class ItemBottomWidget extends StatefulWidget {
   final void Function(bool val) onSwitchToggle;
   final bool? isRequired;
   final VoidCallback onDelete;
+  final VoidCallback onTapMenuButton;
 
   const ItemBottomWidget(
       {super.key,
       required this.onSwitchToggle,
       this.isRequired,
+      required this.onTapMenuButton,
       required this.onDelete});
 
   @override
@@ -26,14 +28,14 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
+      padding: const EdgeInsets.only(top: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _buildDeleteIcon(),
           const Gap(8),
           _buildSwitchWidget(),
-          const Gap(12),
+          const Gap(4),
           _menuIcon(),
         ],
       ),
@@ -66,8 +68,19 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
       menu.add(const Gap(2));
     }
 
-    return Column(
-      children: menu,
+    return InkWell(
+      onTap: widget.onTapMenuButton,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.transparent
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            children: menu,
+          ),
+        ),
+      ),
     );
   }
 
