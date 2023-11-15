@@ -5,7 +5,6 @@ import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
 import 'package:googleapis/forms/v1.dart';
 
-import '../../../../../core/helper/logger.dart';
 import '../shared/base_item_widget.dart';
 import 'create_request_item_helper.dart';
 
@@ -35,7 +34,6 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
         operationType: operationType,
         questionType: questionType,
         index: widgetIndex);
-    Log.info('create req added');
     init();
   }
 

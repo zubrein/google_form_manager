@@ -72,8 +72,6 @@ class EditFormCubit extends Cubit<EditFormState> {
           baseItemList.length,
         ),
         key: ValueKey<String>(getRandomId())));
-    // Log.info('null req added ${baseItemList.length - 1}');
-    // addOtherRequest(Request(), baseItemList.length - 1);
     emit(FormListUpdateState(baseItemList));
   }
 
@@ -148,7 +146,6 @@ class EditFormCubit extends Cubit<EditFormState> {
   }
 
   Future<bool> submitDeleteRequest(String formId) async {
-    Log.info('delete list length: ${_deleteListIndexes.length}');
     _deleteListIndexes.sort();
     List<Request> deleteRequestList = [];
     for (int i = 0; i < _deleteListIndexes.length; i++) {
