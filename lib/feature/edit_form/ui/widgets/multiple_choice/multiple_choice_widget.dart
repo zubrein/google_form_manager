@@ -36,12 +36,12 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   void init() {
-    _questionController.text = widget.item?.title ?? '';
-    _descriptionController.text = widget.item?.description ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
+    _questionController.text = widget.item?.title ?? '';
+    _descriptionController.text = widget.item?.description ?? '';
     super.build(context);
     return baseWidget();
   }
@@ -80,14 +80,15 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   }
 
   void _onChangeTitleText(String value) {
+    widget.item?.title = value;
     String titleDebounceTag = '${widget.index} title';
     if (widget.operationType == OperationType.update) {
-      request.updateItem?.item?.title = value;
+      request.updateItem?.item?.title = widget.item?.title;
       updateMask.add(Constants.title);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
       addRequest(debounceTag: titleDebounceTag);
     } else if (widget.operationType == OperationType.create) {
-      request.createItem?.item?.title = value;
+      request.createItem?.item?.title = widget.item?.title;
       addRequest(debounceTag: titleDebounceTag);
     }
   }
@@ -102,14 +103,14 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   void _onChangeDescriptionText(String value) {
     var descriptionDebounceTag = '${widget.index} description';
-
+    widget.item?.description = value;
     if (widget.operationType == OperationType.update) {
-      request.updateItem?.item?.description = value;
+      request.updateItem?.item?.description = widget.item?.description;
       updateMask.add(Constants.description);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
       addRequest(debounceTag: descriptionDebounceTag);
     } else if (widget.operationType == OperationType.create) {
-      request.createItem?.item?.description = value;
+      request.createItem?.item?.description = widget.item?.description;
       addRequest(debounceTag: descriptionDebounceTag);
     }
   }

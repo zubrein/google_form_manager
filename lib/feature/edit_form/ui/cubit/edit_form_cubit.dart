@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/helper/create_request_item_helper.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
@@ -66,12 +67,17 @@ class EditFormCubit extends Cubit<EditFormState> {
         item: item,
         opType: OperationType.create,
         visibility: true,
-        request: null,
+        request: CreateRequestItemHelper.prepareCreateRequest(
+          QuestionType.multipleChoice,
+          baseItemList.length,
+        ),
         key: ValueKey<String>(getRandomId())));
+    // Log.info('null req added ${baseItemList.length - 1}');
+    // addOtherRequest(Request(), baseItemList.length - 1);
     emit(FormListUpdateState(baseItemList));
   }
 
-  void replaceItem(int index, Item item) {
+  void replaceItem(int index, Item item, QuestionType questionType) {
     deleteItem(index);
     baseItemList.insert(
         index,
@@ -79,7 +85,10 @@ class EditFormCubit extends Cubit<EditFormState> {
             item: item,
             opType: OperationType.create,
             visibility: true,
-            request: null,
+            request: CreateRequestItemHelper.prepareCreateRequest(
+              questionType,
+              index,
+            ),
             key: const ValueKey<String>('')));
     emit(FormListUpdateState(baseItemList));
   }
@@ -89,18 +98,13 @@ class EditFormCubit extends Cubit<EditFormState> {
       _deleteListIndexes.add(index);
     }
     baseItemList.removeAt(index);
-    for (var element in baseItemList) {
+    for (int i = 0; i < baseItemList.length; i++) {
+      final element = baseItemList[i];
       if (element.request != null) {
         if (element.opType == OperationType.create) {
-          int itemIndex = element.request!.createItem!.location!.index!;
-          if (itemIndex > index) {
-            element.request!.createItem!.location!.index = itemIndex - 1;
-          }
+          element.request!.createItem!.location!.index = i;
         } else if (element.opType == OperationType.update) {
-          int itemIndex = element.request!.updateItem!.location!.index!;
-          if (itemIndex > index) {
-            element.request!.createItem!.location!.index = itemIndex - 1;
-          }
+          element.request!.updateItem!.location!.index = i;
         }
       }
     }
@@ -123,7 +127,6 @@ class EditFormCubit extends Cubit<EditFormState> {
 
       if (value.request != null) {
         _requestList.add(value.request!);
-        Log.info('${value.request!.createItem?.location?.index}');
       }
     }
 

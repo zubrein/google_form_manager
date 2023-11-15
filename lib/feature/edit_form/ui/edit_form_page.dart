@@ -123,7 +123,7 @@ class _EditFormPageState extends State<EditFormPage> {
           GestureDetector(
             onTap: () async {
               _editFormCubit.addItem(CreateQuestionItemHelper.getItem(
-                QuestionType.shortAnswer,
+                QuestionType.multipleChoice,
               ));
               scrollToBottom();
             },

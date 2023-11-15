@@ -93,7 +93,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
 
     if (result != null) {
       editFormCubit.replaceItem(
-          widget.index, CreateQuestionItemHelper.getItem(result[0]));
+          widget.index, CreateQuestionItemHelper.getItem(result[0]), result[0]);
     }
   }
 

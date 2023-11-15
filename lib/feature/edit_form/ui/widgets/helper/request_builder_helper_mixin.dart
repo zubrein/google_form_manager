@@ -5,9 +5,9 @@ import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
 import 'package:googleapis/forms/v1.dart';
 
+import '../../../../../core/helper/logger.dart';
 import '../shared/base_item_widget.dart';
 import 'create_request_item_helper.dart';
-import 'update_request_item_helper.dart';
 
 mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   int get widgetIndex;
@@ -31,79 +31,15 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    request = prepareInitialRequest();
-    if (operationType == OperationType.create) addRequest();
+    request = CreateRequestItemHelper.prepareInitialRequest(
+        operationType: operationType,
+        questionType: questionType,
+        index: widgetIndex);
+    Log.info('create req added');
     init();
   }
 
   void init();
-
-  Request prepareInitialRequest() {
-    switch (operationType) {
-      case OperationType.update:
-        return prepareUpdateRequest();
-      case OperationType.create:
-        return prepareCreateRequest();
-      default:
-        return Request();
-    }
-  }
-
-  Request prepareUpdateRequest() {
-    switch (questionType) {
-      case QuestionType.shortAnswer:
-        return UpdateRequestItemHelper.prepareShortAnswerUpdateRequest(
-          widgetIndex,
-        );
-      case QuestionType.paragraph:
-        return UpdateRequestItemHelper.prepareShortAnswerUpdateRequest(
-            widgetIndex,
-            isParagraph: true);
-      case QuestionType.multipleChoice:
-        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
-            widgetIndex,
-            type: QuestionType.multipleChoice);
-      case QuestionType.checkboxes:
-        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
-            widgetIndex,
-            type: QuestionType.checkboxes);
-      case QuestionType.dropdown:
-        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
-            widgetIndex,
-            type: QuestionType.dropdown);
-
-      default:
-        return Request();
-    }
-  }
-
-  Request prepareCreateRequest() {
-    switch (questionType) {
-      case QuestionType.shortAnswer:
-        return CreateRequestItemHelper.prepareShortAnswerCreateRequest(
-          widgetIndex,
-        );
-      case QuestionType.paragraph:
-        return CreateRequestItemHelper.prepareShortAnswerCreateRequest(
-            widgetIndex,
-            isParagraph: true);
-      case QuestionType.multipleChoice:
-        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
-            widgetIndex,
-            type: QuestionType.multipleChoice);
-      case QuestionType.checkboxes:
-        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
-            widgetIndex,
-            type: QuestionType.checkboxes);
-      case QuestionType.dropdown:
-        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
-            widgetIndex,
-            type: QuestionType.dropdown);
-
-      default:
-        return Request();
-    }
-  }
 
   String updateMaskBuilder(Set updateMask) {
     return updateMask.isNotEmpty
