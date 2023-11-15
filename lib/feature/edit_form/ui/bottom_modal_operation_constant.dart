@@ -5,4 +5,6 @@ enum ItemMenuOpConstant {
   excludeTime,
   includeYear,
   excludeYear,
+  includeDuration,
+  excludeDuration,
 }

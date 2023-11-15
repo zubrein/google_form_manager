@@ -9,34 +9,38 @@ import '../../bottom_modal_operation_constant.dart';
 import '../helper/request_builder_helper_mixin.dart';
 import '../shared/edit_text_widget.dart';
 
-class ShortAnswerWidget extends StatefulWidget {
+class TimeWidget extends StatefulWidget {
   final int index;
   final Item? item;
   final OperationType operationType;
-  final bool isParagraph;
   final EditFormCubit editFormCubit;
 
-  const ShortAnswerWidget({
+  const TimeWidget({
     super.key,
     required this.index,
     required this.item,
     required this.operationType,
     required this.editFormCubit,
-    this.isParagraph = false,
   });
 
   @override
-  State<ShortAnswerWidget> createState() => _ShortAnswerWidgetState();
+  State<TimeWidget> createState() => _TimeWidgetState();
 }
 
-class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
+class _TimeWidgetState extends State<TimeWidget>
     with RequestBuilderHelper, AutomaticKeepAliveClientMixin {
   final TextEditingController _questionController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  bool includeDuration = false;
+  String timeLabel = '';
 
   @override
   void init() {
     showDescription = widget.item?.description != null;
+    includeDuration =
+        widget.item?.questionItem?.question?.timeQuestion?.duration ?? false;
+
+    timeLabel = includeDuration ? 'Duration' : 'Time';
   }
 
   @override
@@ -50,12 +54,15 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
   @override
   Widget body() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildEditTitleWidget(),
         const Gap(4),
         showDescription
             ? _buildEditDescriptionWidget()
             : const SizedBox.shrink(),
+        const Gap(24),
+        _buildLabelWidget(timeLabel, Icons.watch_later_outlined),
       ],
     );
   }
@@ -112,8 +119,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
   int get widgetIndex => widget.index;
 
   @override
-  QuestionType get questionType =>
-      widget.isParagraph ? QuestionType.paragraph : QuestionType.shortAnswer;
+  QuestionType get questionType => QuestionType.time;
 
   @override
   OperationType get operationType => widget.operationType;
@@ -140,10 +146,36 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
             showDescription = true;
           } else if (response[0] == ItemMenuOpConstant.hideDesc) {
             showDescription = false;
+          } else if (response[0] == ItemMenuOpConstant.includeDuration) {
+            timeLabel = 'Duration';
+            includeDuration = true;
+            widget.item?.questionItem?.question?.timeQuestion?.duration =
+                includeDuration;
+            _addRequest();
+          } else if (response[0] == ItemMenuOpConstant.excludeDuration) {
+            timeLabel = 'Time';
+            includeDuration = false;
+            widget.item?.questionItem?.question?.timeQuestion?.duration =
+                includeDuration;
+            _addRequest();
           }
           setState(() {});
         }
       };
+
+  void _addRequest() {
+    if (widget.operationType == OperationType.update) {
+      request.updateItem?.item?.questionItem?.question?.timeQuestion?.duration =
+          widget.item?.questionItem?.question?.timeQuestion?.duration;
+      updateMask.add(Constants.includeYear);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+      addRequest();
+    } else if (widget.operationType == OperationType.create) {
+      request.createItem?.item?.questionItem?.question?.timeQuestion?.duration =
+          widget.item?.questionItem?.question?.timeQuestion?.duration;
+      addRequest();
+    }
+  }
 
   Widget _buildBottomModal() {
     return AlertDialog(
@@ -154,16 +186,41 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Show',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            const Gap(16),
+            const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  'Show',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                )),
             InkWell(
-              onTap: onTapModalDescription,
+              onTap: () {
+                _onTapModalItem(ButtonType.description);
+              },
               child: _buildModalRow(
                   'Description', showDescription, Icons.description),
-            )
+            ),
+            const Divider(color: Colors.black45),
+            const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'Answer Type',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                )),
+            const Gap(8),
+            InkWell(
+              onTap: () {
+                _onTapModalItem(ButtonType.duration);
+              },
+              child: _buildModalRow(
+                  'Duration', includeDuration, Icons.calendar_month),
+            ),
+            InkWell(
+              onTap: () {
+                _onTapModalItem(ButtonType.time);
+              },
+              child:
+                  _buildModalRow('Time', !includeDuration, Icons.watch_later),
+            ),
           ],
         ),
       ),
@@ -196,12 +253,55 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
     );
   }
 
-  void onTapModalDescription() {
-    showDescription = showDescription ? true : false;
-    Navigator.of(context).pop([
-      showDescription
-          ? ItemMenuOpConstant.hideDesc
-          : ItemMenuOpConstant.showDesc
-    ]);
+  void _onTapModalItem(ButtonType buttonType) {
+    if (buttonType == ButtonType.description) {
+      showDescription = showDescription ? true : false;
+      Navigator.of(context).pop([
+        showDescription
+            ? ItemMenuOpConstant.hideDesc
+            : ItemMenuOpConstant.showDesc
+      ]);
+    } else if (buttonType == ButtonType.time) {
+      includeDuration = false;
+      Navigator.of(context).pop([ItemMenuOpConstant.excludeDuration]);
+    } else if (buttonType == ButtonType.duration) {
+      includeDuration = true;
+      Navigator.of(context).pop([ItemMenuOpConstant.includeDuration]);
+    }
+  }
+
+  Widget _buildLabelWidget(String label, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 6, bottom: 8),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minWidth: 140,
+          maxWidth: 140,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(fontSize: 14, color: Colors.black45),
+                ),
+                const Gap(4),
+                Icon(
+                  icon,
+                  color: Colors.black45,
+                  size: 18,
+                )
+              ],
+            ),
+            const Divider(color: Colors.black45)
+          ],
+        ),
+      ),
+    );
   }
 }
+
+enum ButtonType { description, time, duration }

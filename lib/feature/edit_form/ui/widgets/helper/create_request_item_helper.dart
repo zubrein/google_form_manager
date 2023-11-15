@@ -29,7 +29,7 @@ class CreateRequestItemHelper {
       case QuestionType.date:
         return CreateRequestItemHelper.prepareDateCreateRequest(widgetIndex);
       case QuestionType.time:
-        return CreateRequestItemHelper.prepareDateCreateRequest(widgetIndex);
+        return CreateRequestItemHelper.prepareTimeCreateRequest(widgetIndex);
 
       default:
         return Request();

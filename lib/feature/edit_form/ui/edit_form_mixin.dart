@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_widget.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/time/time_widget.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../domain/enums.dart';
@@ -21,14 +22,21 @@ mixin EditFormMixin {
     );
   }
 
-  Widget _buildDateWidget(int position, Item? qItem, OperationType type,
-      {bool isParagraph = false}) {
+  Widget _buildDateWidget(int position, Item? qItem, OperationType type) {
     return DateWidget(
       index: position,
       item: qItem,
       operationType: type,
       editFormCubit: editFormCubit,
-      isParagraph: isParagraph,
+    );
+  }
+
+  Widget _buildTimeWidget(int position, Item? qItem, OperationType type) {
+    return TimeWidget(
+      index: position,
+      item: qItem,
+      operationType: type,
+      editFormCubit: editFormCubit,
     );
   }
 
@@ -64,6 +72,8 @@ mixin EditFormMixin {
             index, item, opType, QuestionType.dropdown);
       case QuestionType.date:
         return _buildDateWidget(index, item, opType);
+      case QuestionType.time:
+        return _buildTimeWidget(index, item, opType);
 
       default:
         return Container(

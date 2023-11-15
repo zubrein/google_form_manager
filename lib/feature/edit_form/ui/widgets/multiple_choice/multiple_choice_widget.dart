@@ -159,13 +159,20 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     return AlertDialog(
       alignment: Alignment.bottomCenter,
       content: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              'Show',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+            const Gap(16),
             InkWell(
               onTap: onTapModalDescription,
-              child: _buildModalDescriptionRow(),
+              child: _buildModalRow(
+                  'Description', showDescription, Icons.description),
             )
           ],
         ),
@@ -173,16 +180,29 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     );
   }
 
-  Widget _buildModalDescriptionRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text('Description',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-        showDescription
-            ? const Icon(Icons.check, size: 18, color: Colors.green)
-            : const SizedBox.shrink()
-      ],
+  Widget _buildModalRow(String label, bool shouldShowCheck, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        children: [
+          const Gap(8),
+          Icon(
+            icon,
+            color: Colors.black45,
+            size: 18,
+          ),
+          const Gap(4),
+          Text(label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )),
+          const Expanded(child: SizedBox()),
+          shouldShowCheck
+              ? const Icon(Icons.check, size: 18, color: Colors.green)
+              : const SizedBox.shrink()
+        ],
+      ),
     );
   }
 

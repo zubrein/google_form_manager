@@ -13,17 +13,14 @@ class DateWidget extends StatefulWidget {
   final int index;
   final Item? item;
   final OperationType operationType;
-  final bool isParagraph;
   final EditFormCubit editFormCubit;
 
-  const DateWidget({
-    super.key,
-    required this.index,
-    required this.item,
-    required this.operationType,
-    required this.editFormCubit,
-    this.isParagraph = false,
-  });
+  const DateWidget(
+      {super.key,
+      required this.index,
+      required this.item,
+      required this.operationType,
+      required this.editFormCubit});
 
   @override
   State<DateWidget> createState() => _DateWidgetState();
@@ -222,7 +219,14 @@ class _DateWidgetState extends State<DateWidget>
         padding: const EdgeInsets.all(4.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  'Show',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                )),
             InkWell(
               onTap: () {
                 _onTapModalItem(ButtonType.description);
@@ -255,6 +259,7 @@ class _DateWidgetState extends State<DateWidget>
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         children: [
+          const Gap(8),
           Icon(
             icon,
             color: Colors.black45,
