@@ -14,6 +14,11 @@ class CreateQuestionItemHelper {
         return getMultipleChoiceItem(QuestionType.checkboxes);
       case QuestionType.dropdown:
         return getMultipleChoiceItem(QuestionType.dropdown);
+      case QuestionType.date:
+        return getDateItem();
+      case QuestionType.time:
+        return getTimeItem();
+
       default:
         return Item();
     }
@@ -35,6 +40,25 @@ class CreateQuestionItemHelper {
                   options: [Option(value: 'Option 1')],
                   type: getTypeName(type),
                   shuffle: false,
+                ),
+                required: false)));
+  }
+
+  static Item getDateItem() {
+    return Item(
+        questionItem: QuestionItem(
+            question: Question(
+                dateQuestion:
+                    DateQuestion(includeTime: false, includeYear: true),
+                required: false)));
+  }
+
+  static Item getTimeItem() {
+    return Item(
+        questionItem: QuestionItem(
+            question: Question(
+                timeQuestion: TimeQuestion(
+                  duration: false,
                 ),
                 required: false)));
   }

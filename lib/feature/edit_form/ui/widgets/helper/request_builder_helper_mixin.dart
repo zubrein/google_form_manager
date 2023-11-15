@@ -7,6 +7,7 @@ import 'package:googleapis/forms/v1.dart';
 
 import '../shared/base_item_widget.dart';
 import 'create_request_item_helper.dart';
+import 'update_request_item_helper.dart';
 
 mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   int get widgetIndex;
@@ -34,7 +35,7 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    request = CreateRequestItemHelper.prepareInitialRequest(
+    request = prepareInitialRequest(
         operationType: operationType,
         questionType: questionType,
         index: widgetIndex);
@@ -42,6 +43,23 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   }
 
   void init();
+
+  static Request prepareInitialRequest({
+    required OperationType operationType,
+    required QuestionType questionType,
+    required int index,
+  }) {
+    switch (operationType) {
+      case OperationType.update:
+        return UpdateRequestItemHelper.prepareUpdateRequest(
+            questionType, index);
+      case OperationType.create:
+        return CreateRequestItemHelper.prepareCreateRequest(
+            questionType, index);
+      default:
+        return Request();
+    }
+  }
 
   String updateMaskBuilder(Set updateMask) {
     return updateMask.isNotEmpty
