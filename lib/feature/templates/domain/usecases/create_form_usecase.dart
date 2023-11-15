@@ -8,7 +8,7 @@ class CreateFormUseCase {
 
   CreateFormUseCase(this.repository);
 
-  Future<bool> call(String formName) async {
+  Future<String> call(String formName) async {
     return repository.createForm(formName, _prepareCreateFormData(formName));
   }
 

@@ -7,11 +7,11 @@ import 'package:injectable/injectable.dart';
 @Injectable(as: CreateFormRepository)
 class CreateFormRepositoryImpl extends CreateFormRepository {
   @override
-  Future<bool> createForm(String formName, Form formData) {
+  Future<String> createForm(String formName, Form formData) {
     return _createForm(formName, formData);
   }
 
-  Future<bool> _createForm(String formName, Form formData) async {
+  Future<String> _createForm(String formName, Form formData) async {
     final formApi = await GoogleApisHelper.getFormApi();
 
     if (formApi != null) {
@@ -20,10 +20,10 @@ class CreateFormRepositoryImpl extends CreateFormRepository {
         return _renameForm(formName, response.formId!);
       }
     }
-    return false;
+    return '';
   }
 
-  Future<bool> _renameForm(String formName, String formId) async {
+  Future<String> _renameForm(String formName, String formId) async {
     var driveApi = await GoogleApisHelper.getDriveApi();
 
     if (driveApi != null) {
@@ -31,8 +31,8 @@ class CreateFormRepositoryImpl extends CreateFormRepository {
 
       final file = await driveApi.files.update(newFile, formId);
 
-      if (file.id != null) return true;
+      if (file.id != null) return formId;
     }
-    return false;
+    return formId;
   }
 }

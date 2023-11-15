@@ -78,8 +78,10 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i15.UserAuthRepositoryImpl());
     gh.factory<_i16.BatchUpdateUseCase>(
         () => _i16.BatchUpdateUseCase(gh<_i7.EditFormRepository>()));
-    gh.factory<_i17.CreateFormCubit>(() =>
-        _i17.CreateFormCubit(createFormUseCase: gh<_i6.CreateFormUseCase>()));
+    gh.factory<_i17.CreateFormCubit>(() => _i17.CreateFormCubit(
+          createFormUseCase: gh<_i6.CreateFormUseCase>(),
+          batchUpdateUseCase: gh<_i16.BatchUpdateUseCase>(),
+        ));
     gh.factory<_i18.EditFormCubit>(() => _i18.EditFormCubit(
           gh<_i9.FetchFormUseCase>(),
           gh<_i3.CheckQuestionTypeUseCase>(),

@@ -21,6 +21,7 @@ class FormListPage extends StatefulWidget {
 class _FormListPageState extends State<FormListPage> {
   late FormListCubit _formListCubit;
   late LoadingHudCubit _loadingHudCubit;
+  late MenuController menuController;
 
   @override
   void initState() {
@@ -159,7 +160,48 @@ class _FormListPageState extends State<FormListPage> {
                     Text(item.createdDate.toString()),
                   ],
                 ),
-              )
+              ),
+              const Gap(8),
+              // MenuAnchor(
+              //     builder: (BuildContext context, MenuController controller,
+              //         Widget? child) {
+              //       menuController = controller;
+              //       return SizedBox(
+              //         height: 40,
+              //         width: 40,
+              //         child: Center(
+              //           child: IconButton(
+              //             onPressed: () {
+              //               if (controller.isOpen) {
+              //                 controller.close();
+              //               } else {
+              //                 controller.open();
+              //               }
+              //             },
+              //             icon: const Icon(Icons.more_horiz),
+              //             tooltip: 'Show menu',
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //     menuChildren: [
+              //       InkWell(
+              //         onTap: () {
+              //           menuController.close();
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) {
+              //                 return const AlertDialog(
+              //                   title: Text('Feature is not implemented'),
+              //                 );
+              //               });
+              //         },
+              //         child: const Padding(
+              //           padding: EdgeInsets.all(8.0),
+              //           child: Text('Delete'),
+              //         ),
+              //       ),
+              //     ]),
             ],
           ),
         ),
