@@ -21,4 +21,18 @@ class FormListRepositoryImpl extends FormListRepository {
 
     return formList;
   }
+  @override
+  Future<bool> deleteForm(String formId) async {
+    var driveApi = await GoogleApisHelper.getDriveApi();
+    if (driveApi != null) {
+      try {
+        await driveApi.files.delete(formId);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }

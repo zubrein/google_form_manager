@@ -6,6 +6,7 @@ import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart';
 import 'package:googleapis/drive/v2.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../domain/usecases/delete_form_list_usecase.dart';
 import '../../domain/usecases/fetch_form_list_usecase.dart';
 
 part 'form_list_state.dart';
@@ -13,11 +14,16 @@ part 'form_list_state.dart';
 @injectable
 class FormListCubit extends Cubit<FormListState> {
   FetchFormListUseCase fetchFormListUseCase;
+  DeleteFormListUseCase deleteFormListUseCase;
   LoginCubit loginCubit;
 
   String token = '';
 
-  FormListCubit(this.fetchFormListUseCase, this.loginCubit) : super(FormListInitial());
+  FormListCubit(
+    this.fetchFormListUseCase,
+    this.deleteFormListUseCase,
+    this.loginCubit,
+  ) : super(FormListInitial());
 
   Future<void> fetchFormList() async {
     final httpClient = await googleSigning.authenticatedClient();
@@ -27,7 +33,16 @@ class FormListCubit extends Cubit<FormListState> {
     emit(FormListFetchSuccessState(list));
   }
 
-  void logout(){
+  Future<void> deleteForm(String formId) async {
+    emit(const FormDeleteInitiatedState());
+
+    final isDeleted = await deleteFormListUseCase(formId);
+    if (isDeleted) {
+      fetchFormList();
+    }
+  }
+
+  void logout() {
     loginCubit.logout();
   }
 }

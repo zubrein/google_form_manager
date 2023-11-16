@@ -5,6 +5,7 @@ import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_page.dart';
+import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
 
@@ -53,7 +54,9 @@ class _FormListPageState extends State<FormListPage> {
             child: BlocConsumer(
               bloc: _formListCubit,
               listener: (BuildContext context, Object? state) {
-                if (state is FormListFetchSuccessState) {
+                if (state is FormListFetchInitiatedState) {
+                  _loadingHudCubit.show();
+                }else if (state is FormListFetchSuccessState) {
                   _loadingHudCubit.cancel();
                 }
               },
@@ -162,51 +165,59 @@ class _FormListPageState extends State<FormListPage> {
                 ),
               ),
               const Gap(8),
-              // MenuAnchor(
-              //     builder: (BuildContext context, MenuController controller,
-              //         Widget? child) {
-              //       menuController = controller;
-              //       return SizedBox(
-              //         height: 40,
-              //         width: 40,
-              //         child: Center(
-              //           child: IconButton(
-              //             onPressed: () {
-              //               if (controller.isOpen) {
-              //                 controller.close();
-              //               } else {
-              //                 controller.open();
-              //               }
-              //             },
-              //             icon: const Icon(Icons.more_horiz),
-              //             tooltip: 'Show menu',
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //     menuChildren: [
-              //       InkWell(
-              //         onTap: () {
-              //           menuController.close();
-              //           showDialog(
-              //               context: context,
-              //               builder: (context) {
-              //                 return const AlertDialog(
-              //                   title: Text('Feature is not implemented'),
-              //                 );
-              //               });
-              //         },
-              //         child: const Padding(
-              //           padding: EdgeInsets.all(8.0),
-              //           child: Text('Delete'),
-              //         ),
-              //       ),
-              //     ]),
+              _buildOptionButton(item),
             ],
           ),
         ),
       ),
     );
+  }
+
+  MenuAnchor _buildOptionButton(File item) {
+    return MenuAnchor(
+        builder:
+            (BuildContext context, MenuController controller, Widget? child) {
+          menuController = controller;
+          return SizedBox(
+            height: 40,
+            width: 40,
+            child: Center(
+              child: IconButton(
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+                icon: const Icon(Icons.more_horiz),
+                tooltip: 'Show menu',
+              ),
+            ),
+          );
+        },
+        menuChildren: [
+          InkWell(
+            onTap: () {
+              menuController.close();
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return confirmationDialog(
+                        context: context,
+                        message: 'Do you want to delete this form?',
+                        onTapContinueButton: () {
+                          Navigator.of(context).pop();
+                          _formListCubit.deleteForm(item.id!);
+                        });
+                  });
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('Delete'),
+            ),
+          ),
+        ]);
   }
 
   @override

@@ -17,11 +17,11 @@ import 'package:google_form_manager/feature/auth/data/repositories/user_authenti
 import 'package:google_form_manager/feature/auth/domain/repositories/user_authentication_repository.dart'
     as _i14;
 import 'package:google_form_manager/feature/auth/domain/usecases/logout_use_case.dart'
-    as _i20;
-import 'package:google_form_manager/feature/auth/domain/usecases/signing_in_use_case.dart'
     as _i21;
-import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart'
+import 'package:google_form_manager/feature/auth/domain/usecases/signing_in_use_case.dart'
     as _i22;
+import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart'
+    as _i23;
 import 'package:google_form_manager/feature/edit_form/data/repositories/edit_form_repository_impl.dart'
     as _i8;
 import 'package:google_form_manager/feature/edit_form/domain/repository/edit_form_repository.dart'
@@ -33,15 +33,17 @@ import 'package:google_form_manager/feature/edit_form/domain/usecases/check_ques
 import 'package:google_form_manager/feature/edit_form/domain/usecases/fetch_form_usecase.dart'
     as _i9;
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart'
-    as _i18;
+    as _i19;
 import 'package:google_form_manager/feature/form_list/data/repositories/form_list_repository_impl.dart'
     as _i11;
 import 'package:google_form_manager/feature/form_list/domain/repositories/form_list_repository.dart'
     as _i10;
+import 'package:google_form_manager/feature/form_list/domain/usecases/delete_form_list_usecase.dart'
+    as _i18;
 import 'package:google_form_manager/feature/form_list/domain/usecases/fetch_form_list_usecase.dart'
-    as _i19;
+    as _i20;
 import 'package:google_form_manager/feature/form_list/ui/cubit/form_list_cubit.dart'
-    as _i23;
+    as _i24;
 import 'package:google_form_manager/feature/templates/data/create_form_repository_impl.dart'
     as _i5;
 import 'package:google_form_manager/feature/templates/domain/repositories/create_form_repository.dart'
@@ -82,24 +84,27 @@ extension GetItInjectableX on _i1.GetIt {
           createFormUseCase: gh<_i6.CreateFormUseCase>(),
           batchUpdateUseCase: gh<_i16.BatchUpdateUseCase>(),
         ));
-    gh.factory<_i18.EditFormCubit>(() => _i18.EditFormCubit(
+    gh.factory<_i18.DeleteFormListUseCase>(() =>
+        _i18.DeleteFormListUseCase(repository: gh<_i10.FormListRepository>()));
+    gh.factory<_i19.EditFormCubit>(() => _i19.EditFormCubit(
           gh<_i9.FetchFormUseCase>(),
           gh<_i3.CheckQuestionTypeUseCase>(),
           gh<_i16.BatchUpdateUseCase>(),
         ));
-    gh.factory<_i19.FetchFormListUseCase>(() =>
-        _i19.FetchFormListUseCase(repository: gh<_i10.FormListRepository>()));
-    gh.factory<_i20.LogoutUseCase>(() => _i20.LogoutUseCase(
+    gh.factory<_i20.FetchFormListUseCase>(() =>
+        _i20.FetchFormListUseCase(repository: gh<_i10.FormListRepository>()));
+    gh.factory<_i21.LogoutUseCase>(() => _i21.LogoutUseCase(
         repository: gh<_i14.UserAuthenticationRepository>()));
-    gh.factory<_i21.SigningInUseCase>(() => _i21.SigningInUseCase(
+    gh.factory<_i22.SigningInUseCase>(() => _i22.SigningInUseCase(
         repository: gh<_i14.UserAuthenticationRepository>()));
-    gh.factory<_i22.LoginCubit>(() => _i22.LoginCubit(
-          gh<_i21.SigningInUseCase>(),
-          gh<_i20.LogoutUseCase>(),
+    gh.factory<_i23.LoginCubit>(() => _i23.LoginCubit(
+          gh<_i22.SigningInUseCase>(),
+          gh<_i21.LogoutUseCase>(),
         ));
-    gh.factory<_i23.FormListCubit>(() => _i23.FormListCubit(
-          gh<_i19.FetchFormListUseCase>(),
-          gh<_i22.LoginCubit>(),
+    gh.factory<_i24.FormListCubit>(() => _i24.FormListCubit(
+          gh<_i20.FetchFormListUseCase>(),
+          gh<_i18.DeleteFormListUseCase>(),
+          gh<_i23.LoginCubit>(),
         ));
     return this;
   }

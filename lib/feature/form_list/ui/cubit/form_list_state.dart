@@ -22,3 +22,10 @@ class FormListFetchSuccessState extends FormListState {
   @override
   List<Object?> get props => [formList];
 }
+
+class FormDeleteInitiatedState extends FormListState {
+  const FormDeleteInitiatedState();
+
+  @override
+  List<Object?> get props => [];
+}
