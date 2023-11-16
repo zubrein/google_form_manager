@@ -7,6 +7,7 @@ import 'package:googleapis/forms/v1.dart';
 
 import '../../bottom_modal_operation_constant.dart';
 import '../helper/request_builder_helper_mixin.dart';
+import '../helper/title_desciption_adder_mixin.dart';
 import '../shared/edit_text_widget.dart';
 
 class LinearScaleWidget extends StatefulWidget {
@@ -28,9 +29,10 @@ class LinearScaleWidget extends StatefulWidget {
 }
 
 class _LinearScaleWidgetState extends State<LinearScaleWidget>
-    with RequestBuilderHelper, AutomaticKeepAliveClientMixin {
-  final TextEditingController _questionController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+    with
+        RequestBuilderHelper,
+        TitleDescriptionAdderMixin,
+        AutomaticKeepAliveClientMixin {
   final TextEditingController _lowLabelController = TextEditingController();
   final TextEditingController _highLabelController = TextEditingController();
   List<int> lowList = [0, 1];
@@ -48,8 +50,8 @@ class _LinearScaleWidgetState extends State<LinearScaleWidget>
 
   @override
   Widget build(BuildContext context) {
-    _questionController.text = widget.item?.title ?? '';
-    _descriptionController.text = widget.item?.description ?? '';
+    questionController.text = widget.item?.title ?? '';
+    descriptionController.text = widget.item?.description ?? '';
     _lowLabelController.text =
         widget.item?.questionItem?.question?.scaleQuestion?.lowLabel ?? '';
     _highLabelController.text =
@@ -66,10 +68,10 @@ class _LinearScaleWidgetState extends State<LinearScaleWidget>
   Widget body() {
     return Column(
       children: [
-        _buildEditTitleWidget(),
+        buildEditTitleWidget(),
         const Gap(4),
         showDescription
-            ? _buildEditDescriptionWidget()
+            ? buildEditDescriptionWidget()
             : const SizedBox.shrink(),
         const Gap(8),
         _buildDropdownRow(),
@@ -184,39 +186,6 @@ class _LinearScaleWidgetState extends State<LinearScaleWidget>
     );
   }
 
-  Widget _buildEditTitleWidget() {
-    return EditTextWidget(
-      controller: _questionController,
-      fontSize: 18,
-      fontColor: Colors.black,
-      fontWeight: FontWeight.w700,
-      onChange: _onChangeTitleText,
-      hint: 'Question',
-    );
-  }
-
-  void _onChangeTitleText(String value) {
-    String titleDebounceTag = '${widget.index} title';
-    widget.item?.title = value;
-    if (widget.operationType == OperationType.update) {
-      request.updateItem?.item?.title = widget.item?.title;
-      updateMask.add(Constants.title);
-      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
-      addRequest(debounceTag: titleDebounceTag);
-    } else if (widget.operationType == OperationType.create) {
-      request.createItem?.item?.title = widget.item?.title;
-      addRequest(debounceTag: titleDebounceTag);
-    }
-  }
-
-  Widget _buildEditDescriptionWidget() {
-    return EditTextWidget(
-      controller: _descriptionController,
-      onChange: _onChangeDescriptionText,
-      hint: 'Description',
-    );
-  }
-
   Widget _buildEditLowLabelWidget() {
     return EditTextWidget(
       controller: _lowLabelController,
@@ -267,21 +236,6 @@ class _LinearScaleWidgetState extends State<LinearScaleWidget>
       request.createItem?.item?.questionItem?.question?.scaleQuestion
               ?.highLabel =
           widget.item?.questionItem?.question?.scaleQuestion?.highLabel;
-      addRequest(debounceTag: descriptionDebounceTag);
-    }
-  }
-
-  void _onChangeDescriptionText(String value) {
-    var descriptionDebounceTag = '${widget.index} description';
-    widget.item?.description = value;
-
-    if (widget.operationType == OperationType.update) {
-      request.updateItem?.item?.description = widget.item?.description;
-      updateMask.add(Constants.description);
-      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
-      addRequest(debounceTag: descriptionDebounceTag);
-    } else if (widget.operationType == OperationType.create) {
-      request.createItem?.item?.description = widget.item?.description;
       addRequest(debounceTag: descriptionDebounceTag);
     }
   }
@@ -381,4 +335,13 @@ class _LinearScaleWidgetState extends State<LinearScaleWidget>
           : ItemMenuOpConstant.showDesc
     ]);
   }
+
+  @override
+  Request get titleDescRequest => request;
+
+  @override
+  Set<String> get titleDescUpdateMask => updateMask;
+
+  @override
+  Item? get widgetItem => widget.item;
 }

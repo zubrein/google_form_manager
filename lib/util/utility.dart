@@ -26,3 +26,9 @@ String getRandomId() {
   return String.fromCharCodes(Iterable.generate(
       10, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
 }
+
+String updateMaskBuilder(Set updateMask) {
+  return updateMask.isNotEmpty
+      ? updateMask.toString().replaceAll(RegExp(r'[ {}]'), '')
+      : '';
+}
