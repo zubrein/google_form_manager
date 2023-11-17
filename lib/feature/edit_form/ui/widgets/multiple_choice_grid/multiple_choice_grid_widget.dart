@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_form_manager/core/helper/logger.dart';
+import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice_grid/column_list_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice_grid/row_list_widget.dart';
@@ -60,7 +62,10 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
             ? buildEditDescriptionWidget()
             : const SizedBox.shrink(),
         const Gap(8),
-        const Text('Rows', style: TextStyle(fontWeight: FontWeight.w700),),
+        const Text(
+          'Rows',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
         RowListWidget(
           rowList: widget.item?.questionGroupItem?.questions ??
               [Question(rowQuestion: RowQuestion(title: 'Row 1'))],
@@ -69,9 +74,13 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
           opType: widget.operationType,
           updateMask: updateMask,
           addRequest: addRequest,
+          isRequired: isRequired,
         ),
         const Gap(16),
-        const Text('Columns', style: TextStyle(fontWeight: FontWeight.w700),),
+        const Text(
+          'Columns',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
         ColumnListWidget(
           optionList: widget.item?.questionGroupItem?.grid?.columns?.options ??
               [Option(value: 'Column 1')],
@@ -96,7 +105,8 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
   OperationType get operationType => widget.operationType;
 
   @override
-  bool? get isRequired => widget.item?.questionItem?.question?.required;
+  bool? get isRequired =>
+      widget.item?.questionGroupItem?.questions?.first.required;
 
   @override
   EditFormCubit get editFormCubit => widget.editFormCubit;
@@ -105,8 +115,7 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
   bool get wantKeepAlive => true;
 
   @override
-  VoidCallback get onTapMenuButton =>
-          () async {
+  VoidCallback get onTapMenuButton => () async {
         BuildContext buildContext = context;
         final response = await showDialog(
             context: buildContext,
@@ -118,6 +127,14 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
             showDescription = true;
           } else if (response[0] == ItemMenuOpConstant.hideDesc) {
             showDescription = false;
+          } else if (response[0] == ItemMenuOpConstant.shuffleRow) {
+            widget.item?.questionGroupItem?.grid?.shuffleQuestions = true;
+            Log.info('${widget.item?.questionGroupItem?.grid?.shuffleQuestions}');
+            _addShuffleRequest();
+          } else if (response[0] == ItemMenuOpConstant.constant) {
+            widget.item?.questionGroupItem?.grid?.shuffleQuestions = false;
+            Log.info('${widget.item?.questionGroupItem?.grid?.shuffleQuestions}');
+            _addShuffleRequest();
           }
           setState(() {});
         }
@@ -141,6 +158,18 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
               onTap: onTapModalDescription,
               child: _buildModalRow(
                   'Description', showDescription, Icons.description),
+            ),
+            const Divider(
+              color: Colors.black45,
+            ),
+            const Gap(12),
+            InkWell(
+              onTap: onTapModalShuffle,
+              child: _buildModalRow(
+                  'Shuffle row order',
+                  widget.item?.questionGroupItem?.grid?.shuffleQuestions ??
+                      false,
+                  Icons.description),
             )
           ],
         ),
@@ -183,6 +212,14 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
     ]);
   }
 
+  void onTapModalShuffle() {
+    Navigator.of(context).pop([
+      widget.item?.questionGroupItem?.grid?.shuffleQuestions ?? false
+          ? ItemMenuOpConstant.constant
+          : ItemMenuOpConstant.shuffleRow
+    ]);
+  }
+
   @override
   Request get titleDescRequest => request;
 
@@ -191,4 +228,38 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
 
   @override
   Item? get widgetItem => widget.item;
+
+  @override
+  void onRequiredButtonToggle(value) {
+    widget.item?.questionGroupItem?.questions?.forEach((row) {
+      row.required = value;
+    });
+    _addRowRequest();
+  }
+
+  void _addRowRequest() {
+    if (operationType == OperationType.update) {
+      request.updateItem?.item?.questionGroupItem?.questions =
+          widgetItem?.questionGroupItem?.questions;
+      updateMask.add(Constants.multipleChoiceRow);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+    } else if (operationType == OperationType.create) {
+      request.createItem?.item?.questionGroupItem?.questions =
+          widgetItem?.questionGroupItem?.questions;
+    }
+    addRequest();
+  }
+
+  void _addShuffleRequest() {
+    if (operationType == OperationType.update) {
+      request.updateItem?.item?.questionGroupItem?.grid?.shuffleQuestions =
+          widgetItem?.questionGroupItem?.grid?.shuffleQuestions;
+      updateMask.add(Constants.multipleChoiceShuffle);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+    } else if (operationType == OperationType.create) {
+      request.updateItem?.item?.questionGroupItem?.grid?.shuffleQuestions =
+          widgetItem?.questionGroupItem?.grid?.shuffleQuestions;
+    }
+    addRequest();
+  }
 }

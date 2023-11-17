@@ -12,6 +12,7 @@ class RowListWidget extends StatefulWidget {
   final OperationType opType;
   final VoidCallback addRequest;
   final Set<String> updateMask;
+  final bool? isRequired;
 
   const RowListWidget({
     super.key,
@@ -21,6 +22,7 @@ class RowListWidget extends StatefulWidget {
     required this.opType,
     required this.updateMask,
     required this.addRequest,
+    required this.isRequired,
   });
 
   @override
@@ -66,7 +68,7 @@ class _RowListWidgetState extends State<RowListWidget>
         },
         child: Row(
           children: [
-             Text(
+            Text(
               '${optionList.length + 1}',
               style: const TextStyle(color: Colors.black),
             ),
@@ -94,8 +96,9 @@ class _RowListWidgetState extends State<RowListWidget>
     setState(() {});
   }
 
-  Question _newOption() =>
-      Question(rowQuestion: RowQuestion(title: 'Row ${optionList.length + 1}'));
+  Question _newOption() => Question(
+      rowQuestion: RowQuestion(title: 'Row ${optionList.length + 1}'),
+      required: widget.isRequired);
 
   void _addRequest() {
     final req = widget.request;

@@ -7,4 +7,6 @@ enum ItemMenuOpConstant {
   excludeYear,
   includeDuration,
   excludeDuration,
+  shuffleRow,
+  constant,
 }
