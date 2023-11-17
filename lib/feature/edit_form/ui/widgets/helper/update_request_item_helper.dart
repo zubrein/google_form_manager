@@ -33,7 +33,14 @@ class UpdateRequestItemHelper {
       case QuestionType.linearScale:
         return UpdateRequestItemHelper.prepareLinearScaleUpdateRequest(
             widgetIndex);
-
+      case QuestionType.multipleChoiceGrid:
+        return UpdateRequestItemHelper.prepareMultipleChoiceGridUpdateRequest(
+            widgetIndex,
+            type: QuestionType.multipleChoiceGrid);
+      case QuestionType.checkboxGrid:
+        return UpdateRequestItemHelper.prepareMultipleChoiceGridUpdateRequest(
+            widgetIndex,
+            type: QuestionType.checkboxGrid);
       default:
         return Request();
     }
@@ -135,6 +142,32 @@ class UpdateRequestItemHelper {
                       low: 1, high: 5, lowLabel: '', highLabel: ''),
                   required: false),
             ),
+          ),
+          location: Location(index: widgetIndex),
+          updateMask: ''),
+    );
+  }
+
+  static Request prepareMultipleChoiceGridUpdateRequest(
+    int widgetIndex, {
+    required QuestionType type,
+  }) {
+    return Request(
+      updateItem: UpdateItemRequest(
+          item: Item(
+            title: '',
+            description: '',
+            questionGroupItem: QuestionGroupItem(
+                questions: [
+                  Question(
+                      rowQuestion: RowQuestion(title: 'Row 1'), required: false)
+                ],
+                grid: Grid(
+                    columns: ChoiceQuestion(
+                  options: [Option(value: 'Column 1')],
+                  type: CreateQuestionItemHelper.getTypeName(type),
+                  shuffle: false,
+                ))),
           ),
           location: Location(index: widgetIndex),
           updateMask: ''),

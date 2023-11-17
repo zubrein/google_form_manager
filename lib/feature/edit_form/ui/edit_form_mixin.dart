@@ -7,6 +7,7 @@ import 'package:googleapis/forms/v1.dart';
 
 import '../domain/enums.dart';
 import 'widgets/date/date_widget.dart';
+import 'widgets/multiple_choice_grid/multiple_choice_grid_widget.dart';
 import 'widgets/short_answer/short_answer_widget.dart';
 
 mixin EditFormMixin {
@@ -62,6 +63,17 @@ mixin EditFormMixin {
     );
   }
 
+  Widget _buildMultipleChoiceGridWidget(
+      int position, Item? qItem, OperationType oType, QuestionType qType) {
+    return MultipleChoiceGridWidget(
+      index: position,
+      item: qItem,
+      operationType: oType,
+      editFormCubit: editFormCubit,
+      type: qType,
+    );
+  }
+
   Widget buildFormItem(
       {required QuestionType qType,
       required Item? item,
@@ -87,6 +99,12 @@ mixin EditFormMixin {
         return _buildTimeWidget(index, item, opType);
       case QuestionType.linearScale:
         return _buildLinearScaleWidget(index, item, opType);
+      case QuestionType.multipleChoiceGrid:
+        return _buildMultipleChoiceGridWidget(
+            index, item, opType, QuestionType.multipleChoiceGrid);
+      case QuestionType.checkboxGrid:
+        return _buildMultipleChoiceGridWidget(
+            index, item, opType, QuestionType.checkboxGrid);
 
       default:
         return Container(

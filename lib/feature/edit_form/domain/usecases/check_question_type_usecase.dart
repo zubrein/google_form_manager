@@ -25,10 +25,16 @@ class CheckQuestionTypeUseCase {
       return QuestionType.dropdown;
     } else if (item?.questionItem?.question?.dateQuestion != null) {
       return QuestionType.date;
-    }else if (item?.questionItem?.question?.timeQuestion != null) {
+    } else if (item?.questionItem?.question?.timeQuestion != null) {
       return QuestionType.time;
-    }else if (item?.questionItem?.question?.scaleQuestion != null) {
+    } else if (item?.questionItem?.question?.scaleQuestion != null) {
       return QuestionType.linearScale;
+    } else if (item?.questionGroupItem?.questions != null &&
+        item?.questionGroupItem?.grid?.columns?.type == 'RADIO') {
+      return QuestionType.multipleChoiceGrid;
+    } else if (item?.questionGroupItem?.questions != null &&
+        item?.questionGroupItem?.grid?.columns?.type == 'CHECKBOX') {
+      return QuestionType.checkboxGrid;
     }
 
     return QuestionType.unknown;

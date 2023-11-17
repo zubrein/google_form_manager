@@ -33,6 +33,14 @@ class CreateRequestItemHelper {
       case QuestionType.linearScale:
         return CreateRequestItemHelper.prepareLinearScaleCreateRequest(
             widgetIndex);
+      case QuestionType.multipleChoiceGrid:
+        return CreateRequestItemHelper.prepareMultipleChoiceGridCreateRequest(
+            widgetIndex,
+            type: QuestionType.multipleChoiceGrid);
+      case QuestionType.checkboxGrid:
+        return CreateRequestItemHelper.prepareMultipleChoiceGridCreateRequest(
+            widgetIndex,
+            type: QuestionType.checkboxGrid);
 
       default:
         return Request();
@@ -133,6 +141,30 @@ class CreateRequestItemHelper {
                     ScaleQuestion(low: 1, high: 5, lowLabel: '', highLabel: ''),
                 required: false),
           ),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
+  static Request prepareMultipleChoiceGridCreateRequest(int widgetIndex,
+      {required QuestionType type}) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionGroupItem: QuestionGroupItem(
+              questions: [
+                Question(
+                    rowQuestion: RowQuestion(title: 'Row 1'), required: false)
+              ],
+              grid: Grid(
+                  columns: ChoiceQuestion(
+                options: [Option(value: 'Column 1')],
+                shuffle: false,
+                type: CreateQuestionItemHelper.getTypeName(type),
+              ))),
         ),
         location: Location(index: widgetIndex),
       ),

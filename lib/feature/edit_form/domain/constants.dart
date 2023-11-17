@@ -10,6 +10,8 @@ class Constants {
   static String lsHigh = 'questionItem.question.scaleQuestion.high';
   static String lsLowLabel = 'questionItem.question.scaleQuestion.lowLabel';
   static String lsHighLabel = 'questionItem.question.scaleQuestion.highLabel';
+  static String multipleChoiceRow = 'questionGroupItem.questions';
+  static String multipleChoiceColumn = 'questionGroupItem.grid.columns.options';
 
   static String createFormLabel = 'Create Form';
   static String loginText = 'Signing with google';

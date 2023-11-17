@@ -20,6 +20,10 @@ class CreateQuestionItemHelper {
         return getTimeItem();
       case QuestionType.linearScale:
         return getLinearScaleItem();
+      case QuestionType.multipleChoiceGrid:
+        return getMultipleChoiceGridItem(QuestionType.multipleChoiceGrid);
+      case QuestionType.checkboxGrid:
+        return getMultipleChoiceGridItem(QuestionType.checkboxGrid);
 
       default:
         return Item();
@@ -78,9 +82,28 @@ class CreateQuestionItemHelper {
                 required: false)));
   }
 
+  static Item getMultipleChoiceGridItem(QuestionType type) {
+    return Item(
+        questionGroupItem: QuestionGroupItem(
+            questions: [
+          Question(
+            rowQuestion: RowQuestion(title: 'Row 1'),
+          )
+        ],
+            grid: Grid(
+                columns: ChoiceQuestion(
+              options: [Option(value: 'Column 1')],
+              type: getTypeName(type),
+              shuffle: false,
+            ))));
+  }
+
   static String getTypeName(QuestionType type) {
-    if (type == QuestionType.multipleChoice) return 'RADIO';
-    if (type == QuestionType.checkboxes) return 'CHECKBOX';
+    if (type == QuestionType.multipleChoice ||
+        type == QuestionType.multipleChoiceGrid) return 'RADIO';
+    if (type == QuestionType.checkboxes || type == QuestionType.checkboxGrid) {
+      return 'CHECKBOX';
+    }
     if (type == QuestionType.dropdown) return 'DROP_DOWN';
 
     return '';
