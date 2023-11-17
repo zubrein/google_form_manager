@@ -4,6 +4,8 @@ class Constants {
   static String required = 'questionItem.question.required';
   static String multipleChoiceValue =
       'questionItem.question.choiceQuestion.options';
+  static String multipleChoiceShuffle =
+      'questionItem.question.choiceQuestion.shuffle';
   static String includeTime = 'questionItem.question.dateQuestion.includeTime';
   static String includeYear = 'questionItem.question.dateQuestion.includeYear';
   static String lsLow = 'questionItem.question.scaleQuestion.low';
@@ -12,7 +14,7 @@ class Constants {
   static String lsHighLabel = 'questionItem.question.scaleQuestion.highLabel';
   static String multipleChoiceRow = 'questionGroupItem.questions';
   static String multipleChoiceColumn = 'questionGroupItem.grid.columns.options';
-  static String multipleChoiceShuffle = 'questionGroupItem.grid.shuffleQuestions';
+  static String multipleChoiceGridShuffle = 'questionGroupItem.grid.shuffleQuestions';
 
   static String createFormLabel = 'Create Form';
   static String loginText = 'Signing with google';

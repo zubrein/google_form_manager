@@ -254,7 +254,7 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
     if (operationType == OperationType.update) {
       request.updateItem?.item?.questionGroupItem?.grid?.shuffleQuestions =
           widgetItem?.questionGroupItem?.grid?.shuffleQuestions;
-      updateMask.add(Constants.multipleChoiceShuffle);
+      updateMask.add(Constants.multipleChoiceGridShuffle);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
     } else if (operationType == OperationType.create) {
       request.updateItem?.item?.questionGroupItem?.grid?.shuffleQuestions =

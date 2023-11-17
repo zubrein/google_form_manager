@@ -52,6 +52,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
       children: [
         ListView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: optionList.length,
             itemBuilder: (context, index) {
               return _buildOptionItem(optionList[index], index);

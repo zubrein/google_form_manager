@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_form_manager/core/helper/logger.dart';
+import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
 
@@ -102,10 +104,36 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             showDescription = true;
           } else if (response[0] == ItemMenuOpConstant.hideDesc) {
             showDescription = false;
+          } else if (response[0] == ItemMenuOpConstant.shuffleRow) {
+            widget.item?.questionItem?.question?.choiceQuestion?.shuffle = true;
+            Log.info(
+                '${widget.item?.questionGroupItem?.grid?.shuffleQuestions}');
+            _addShuffleRequest();
+          } else if (response[0] == ItemMenuOpConstant.constant) {
+            widget.item?.questionItem?.question?.choiceQuestion?.shuffle =
+                false;
+            Log.info(
+                '${widget.item?.questionGroupItem?.grid?.shuffleQuestions}');
+            _addShuffleRequest();
           }
           setState(() {});
         }
       };
+
+  void _addShuffleRequest() {
+    if (operationType == OperationType.update) {
+      request.updateItem?.item?.questionItem?.question?.choiceQuestion
+              ?.shuffle =
+          widget.item?.questionItem?.question?.choiceQuestion?.shuffle;
+      updateMask.add(Constants.multipleChoiceShuffle);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+    } else if (operationType == OperationType.create) {
+      request.updateItem?.item?.questionItem?.question?.choiceQuestion
+              ?.shuffle =
+          widget.item?.questionItem?.question?.choiceQuestion?.shuffle;
+    }
+    addRequest();
+  }
 
   Widget _buildBottomModal() {
     return AlertDialog(
@@ -125,6 +153,18 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
               onTap: onTapModalDescription,
               child: _buildModalRow(
                   'Description', showDescription, Icons.description),
+            ),
+            const Divider(
+              color: Colors.black45,
+            ),
+            const Gap(12),
+            InkWell(
+              onTap: onTapModalShuffle,
+              child: _buildModalRow(
+                  'Shuffle option order',
+                  widget.item?.questionItem?.question?.choiceQuestion?.shuffle ??
+                      false,
+                  Icons.description),
             )
           ],
         ),
@@ -164,6 +204,14 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
       showDescription
           ? ItemMenuOpConstant.hideDesc
           : ItemMenuOpConstant.showDesc
+    ]);
+  }
+
+  void onTapModalShuffle() {
+    Navigator.of(context).pop([
+      widget.item?.questionItem?.question?.choiceQuestion?.shuffle ?? false
+          ? ItemMenuOpConstant.constant
+          : ItemMenuOpConstant.shuffleRow
     ]);
   }
 
