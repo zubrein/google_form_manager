@@ -35,6 +35,8 @@ class CreateRequestItemHelper {
             type: QuestionType.checkboxGrid);
       case QuestionType.image:
         return prepareImageCreateRequest(widgetIndex);
+      case QuestionType.text:
+        return prepareTextItemCreateRequest(widgetIndex);
 
       default:
         return Request();
@@ -178,6 +180,14 @@ class CreateRequestItemHelper {
                     width: 1200,
                   ),
                   sourceUri: '')))),
+      location: Location(index: widgetIndex),
+    ));
+  }
+
+  static Request prepareTextItemCreateRequest(int widgetIndex) {
+    return Request(
+        createItem: CreateItemRequest(
+      item: (Item(title: '', description: '', textItem: TextItem())),
       location: Location(index: widgetIndex),
     ));
   }

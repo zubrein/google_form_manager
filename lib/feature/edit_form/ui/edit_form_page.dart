@@ -145,7 +145,20 @@ class _EditFormPageState extends State<EditFormPage> {
             },
             child:
                 const SizedBox(height: 50, width: 50, child: Icon(Icons.image)),
-          )
+          ),
+          GestureDetector(
+            onTap: () async {
+              _editFormCubit.addItem(
+                CreateQuestionItemHelper.getItem(
+                  QuestionType.text,
+                ),
+                QuestionType.text,
+              );
+              scrollToBottom();
+            },
+            child: const SizedBox(
+                height: 50, width: 50, child: Icon(Icons.text_fields_outlined)),
+          ),
         ],
       ),
     );

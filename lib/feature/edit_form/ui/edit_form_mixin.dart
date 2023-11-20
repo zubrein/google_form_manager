@@ -3,6 +3,7 @@ import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.d
 import 'package:google_form_manager/feature/edit_form/ui/widgets/image/image_item_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/linear_scale/linear_scale_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_widget.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/text_item/text_item_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/time/time_widget.dart';
 import 'package:googleapis/forms/v1.dart';
 
@@ -84,6 +85,15 @@ mixin EditFormMixin {
     );
   }
 
+  Widget _buildTextItemWidget(int position, Item? qItem, OperationType type) {
+    return TextItemWidget(
+      index: position,
+      item: qItem,
+      operationType: type,
+      editFormCubit: editFormCubit,
+    );
+  }
+
   Widget buildFormItem(
       {required QuestionType qType,
       required Item? item,
@@ -117,6 +127,8 @@ mixin EditFormMixin {
             index, item, opType, QuestionType.checkboxGrid);
       case QuestionType.image:
         return _buildImageItemWidget(index, item, opType);
+      case QuestionType.text:
+        return _buildTextItemWidget(index, item, opType);
 
       default:
         return Container(

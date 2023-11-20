@@ -26,14 +26,14 @@ mixin TitleDescriptionAdderMixin {
   final TextEditingController questionController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  Widget buildEditTitleWidget() {
+  Widget buildEditTitleWidget({String hint = 'Question'}) {
     return EditTextWidget(
       controller: questionController,
       fontSize: 18,
       fontColor: Colors.black,
       fontWeight: FontWeight.w700,
       onChange: _onChangeTitleText,
-      hint: 'Question',
+      hint: hint,
     );
   }
 
@@ -52,11 +52,11 @@ mixin TitleDescriptionAdderMixin {
     }
   }
 
-  Widget buildEditDescriptionWidget() {
+  Widget buildEditDescriptionWidget({String description = 'Description'}) {
     return EditTextWidget(
       controller: descriptionController,
       onChange: _onChangeDescriptionText,
-      hint: 'Description',
+      hint: description,
     );
   }
 

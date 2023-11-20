@@ -26,6 +26,8 @@ class CreateQuestionItemHelper {
         return getMultipleChoiceGridItem(QuestionType.checkboxGrid);
       case QuestionType.image:
         return getImageItem();
+      case QuestionType.text:
+        return getTextItem();
 
       default:
         return Item();
@@ -102,6 +104,10 @@ class CreateQuestionItemHelper {
 
   static Item getImageItem() {
     return Item(title: '', imageItem: ImageItem(image: Image(sourceUri: '')));
+  }
+
+  static Item getTextItem() {
+    return Item(title: '', description: '', textItem: TextItem());
   }
 
   static String getTypeName(QuestionType type) {

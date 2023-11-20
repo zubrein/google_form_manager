@@ -12,6 +12,7 @@ enum QuestionType {
   multipleChoiceGrid,
   checkboxGrid,
   image,
+  text,
   unknown,
 }
 
@@ -27,6 +28,7 @@ Map<QuestionType, String> questionTypeNameMap = {
   QuestionType.multipleChoiceGrid: 'Multiple choice grid',
   QuestionType.checkboxGrid: 'Checkbox grid',
   QuestionType.image: 'Image',
+  QuestionType.text: 'text',
 };
 
 Map<QuestionType, IconData> questionTypeIconMap = {
@@ -41,6 +43,7 @@ Map<QuestionType, IconData> questionTypeIconMap = {
   QuestionType.multipleChoiceGrid: Icons.grid_view_rounded,
   QuestionType.checkboxGrid: Icons.grid_view_outlined,
   QuestionType.image: Icons.image,
+  QuestionType.text: Icons.text_fields_outlined,
 };
 
 enum OperationType { create, delete, update }

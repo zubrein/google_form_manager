@@ -35,6 +35,8 @@ class UpdateRequestItemHelper {
             type: QuestionType.checkboxGrid);
       case QuestionType.image:
         return prepareImageUpdateRequest(widgetIndex);
+      case QuestionType.text:
+        return prepareTextItemUpdateRequest(widgetIndex);
       default:
         return Request();
     }
@@ -181,6 +183,14 @@ class UpdateRequestItemHelper {
                           width: 1200,
                         ),
                         sourceUri: '')))),
+            location: Location(index: widgetIndex),
+            updateMask: ''));
+  }
+
+  static Request prepareTextItemUpdateRequest(int widgetIndex) {
+    return Request(
+        updateItem: UpdateItemRequest(
+            item: (Item(title: '', description: '', textItem: TextItem())),
             location: Location(index: widgetIndex),
             updateMask: ''));
   }
