@@ -62,13 +62,13 @@ class EditFormCubit extends Cubit<EditFormState> {
     return checkQuestionTypeUseCase(item);
   }
 
-  void addItem(Item item) {
+  void addItem(Item item, QuestionType type) {
     baseItemList.add(BaseItemEntity(
         item: item,
         opType: OperationType.create,
         visibility: true,
         request: CreateRequestItemHelper.prepareCreateRequest(
-          QuestionType.multipleChoice,
+          type,
           baseItemList.length,
         ),
         key: ValueKey<String>(getRandomId())));

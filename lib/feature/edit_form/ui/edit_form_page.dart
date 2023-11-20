@@ -122,20 +122,36 @@ class _EditFormPageState extends State<EditFormPage> {
         children: [
           GestureDetector(
             onTap: () async {
-              _editFormCubit.addItem(CreateQuestionItemHelper.getItem(
+              _editFormCubit.addItem(
+                CreateQuestionItemHelper.getItem(
+                  QuestionType.multipleChoice,
+                ),
                 QuestionType.multipleChoice,
-              ));
+              );
               scrollToBottom();
             },
             child: const SizedBox(
                 height: 50, width: 50, child: Icon(Icons.add_circle_outline)),
+          ),
+          GestureDetector(
+            onTap: () async {
+              _editFormCubit.addItem(
+                CreateQuestionItemHelper.getItem(
+                  QuestionType.image,
+                ),
+                QuestionType.image,
+              );
+              scrollToBottom();
+            },
+            child:
+                const SizedBox(height: 50, width: 50, child: Icon(Icons.image)),
           )
         ],
       ),
     );
   }
 
-  void scrollToBottom(){
+  void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(

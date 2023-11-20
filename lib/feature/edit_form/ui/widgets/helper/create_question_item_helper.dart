@@ -101,16 +101,7 @@ class CreateQuestionItemHelper {
   }
 
   static Item getImageItem() {
-    return Item(
-        title: '',
-        imageItem: ImageItem(
-            image: Image(
-                contentUri: '',
-                properties: MediaProperties(
-                  alignment: '',
-                  width: 1200,
-                ),
-                sourceUri: '')));
+    return Item(title: '', imageItem: ImageItem(image: Image(sourceUri: '')));
   }
 
   static String getTypeName(QuestionType type) {

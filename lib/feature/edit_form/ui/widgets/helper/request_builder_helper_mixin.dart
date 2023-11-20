@@ -92,12 +92,14 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
     addRequest();
   }
 
-  Widget baseWidget() => BaseItemWidget(
-        questionType: questionType,
-        onRequiredSwitchToggle: onRequiredButtonToggle,
-        isRequired: isRequired,
-        onDelete: onDeleteButtonTap,
-        onTapMenuButton: onTapMenuButton,
-        childWidget: body(),
-      );
+  Widget baseWidget() {
+    return BaseItemWidget(
+      questionType: questionType,
+      onRequiredSwitchToggle: onRequiredButtonToggle,
+      isRequired: isRequired,
+      onDelete: onDeleteButtonTap,
+      onTapMenuButton: onTapMenuButton,
+      childWidget: body(),
+    );
+  }
 }

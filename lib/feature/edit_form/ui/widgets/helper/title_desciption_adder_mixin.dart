@@ -45,10 +45,10 @@ mixin TitleDescriptionAdderMixin {
       titleDescUpdateMask.add(Constants.title);
       titleDescRequest.updateItem?.updateMask =
           updateMaskBuilder(titleDescUpdateMask);
-      addRequest(debounceTag: titleDebounceTag);
+      titleDescAddRequest(debounceTag: titleDebounceTag);
     } else if (operationType == OperationType.create) {
       titleDescRequest.createItem?.item?.title = widgetItem?.title;
-      addRequest(debounceTag: titleDebounceTag);
+      titleDescAddRequest(debounceTag: titleDebounceTag);
     }
   }
 
@@ -69,14 +69,14 @@ mixin TitleDescriptionAdderMixin {
       titleDescUpdateMask.add(Constants.description);
       titleDescRequest.updateItem?.updateMask =
           updateMaskBuilder(titleDescUpdateMask);
-      addRequest(debounceTag: descriptionDebounceTag);
+      titleDescAddRequest(debounceTag: descriptionDebounceTag);
     } else if (operationType == OperationType.create) {
       titleDescRequest.createItem?.item?.description = widgetItem?.description;
-      addRequest(debounceTag: descriptionDebounceTag);
+      titleDescAddRequest(debounceTag: descriptionDebounceTag);
     }
   }
 
-  void addRequest({String? debounceTag}) {
+  void titleDescAddRequest({String? debounceTag}) {
     if (debounceTag != null) {
       EasyDebounce.debounce(debounceTag, debounceDuration, () {
         editFormCubit.addOtherRequest(titleDescRequest, widgetIndex);
