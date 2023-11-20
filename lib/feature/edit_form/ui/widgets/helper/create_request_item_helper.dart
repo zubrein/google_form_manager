@@ -179,7 +179,7 @@ class CreateRequestItemHelper {
                   contentUri: '',
                   properties: MediaProperties(
                     alignment: 'Left',
-                    width: 1200,
+                    width: 739,
                   ),
                   sourceUri: '')))),
       location: Location(index: widgetIndex),

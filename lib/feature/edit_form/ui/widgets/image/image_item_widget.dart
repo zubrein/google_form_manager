@@ -136,6 +136,7 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
             const Divider(
               color: Colors.black87,
             ),
+            const Gap(16),
             InkWell(
               onTap: onTapModalImageChange,
               child: _buildModalRow('Change image', false, Icons.image),
