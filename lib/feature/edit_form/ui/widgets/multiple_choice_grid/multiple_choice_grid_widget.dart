@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice_grid/column_list_widget.dart';
@@ -129,11 +128,9 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
             showDescription = false;
           } else if (response[0] == ItemMenuOpConstant.shuffleRow) {
             widget.item?.questionGroupItem?.grid?.shuffleQuestions = true;
-            Log.info('${widget.item?.questionGroupItem?.grid?.shuffleQuestions}');
             _addShuffleRequest();
           } else if (response[0] == ItemMenuOpConstant.constant) {
             widget.item?.questionGroupItem?.grid?.shuffleQuestions = false;
-            Log.info('${widget.item?.questionGroupItem?.grid?.shuffleQuestions}');
             _addShuffleRequest();
           }
           setState(() {});

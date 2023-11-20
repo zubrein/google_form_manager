@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as mt;
 import 'package:gap/gap.dart';
-import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
-import '../helper/title_desciption_adder_mixin.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../../bottom_modal_operation_constant.dart';
 import '../../utils/image_picker_helper.dart';
 import '../helper/request_builder_helper_mixin.dart';
+import '../helper/title_desciption_adder_mixin.dart';
 
 class ImageItemWidget extends StatefulWidget {
   final int index;
@@ -60,8 +59,8 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
   }
 
   Widget _getImage() {
-    String sourceUri = widget.item?.imageItem?.image?.sourceUri??'';
-    String contentUri = widget.item?.imageItem?.image?.contentUri??'';
+    String sourceUri = widget.item?.imageItem?.image?.sourceUri ?? '';
+    String contentUri = widget.item?.imageItem?.image?.contentUri ?? '';
     if (sourceUri.isNotEmpty) {
       return mt.Image.network(
         widget.item?.imageItem?.image?.sourceUri.toString() ?? '',
@@ -187,16 +186,13 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
     widget.item!.imageItem!.image!.sourceUri =
         await ImagePickerHelper.pickImage();
     if (widget.item!.imageItem!.image!.sourceUri != null) {
-      Log.info(operationType.name);
       if (operationType == OperationType.update) {
-        Log.info(widget.item!.imageItem!.image!.sourceUri.toString());
         request.updateItem?.item?.imageItem?.image?.sourceUri =
             widget.item!.imageItem!.image!.sourceUri;
         updateMask.add(Constants.image);
         request.updateItem?.updateMask = updateMaskBuilder(updateMask);
         addRequest();
       } else if (operationType == OperationType.create) {
-        Log.info(widget.item!.imageItem!.image!.sourceUri.toString());
         request.createItem?.item?.imageItem?.image?.sourceUri =
             widget.item!.imageItem!.image!.sourceUri;
         addRequest();

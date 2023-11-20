@@ -101,7 +101,7 @@ class _EditFormPageState extends State<EditFormPage> {
         if (isSubmitted) {
           pop();
         } else {
-          pop();
+          _loadingHudCubit.showError();
         }
       },
     );
