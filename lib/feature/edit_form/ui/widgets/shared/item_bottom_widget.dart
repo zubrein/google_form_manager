@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/feature/edit_form/ui/utils/utils.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/switch_widget.dart';
 
 class ItemBottomWidget extends StatefulWidget {
@@ -7,12 +9,14 @@ class ItemBottomWidget extends StatefulWidget {
   final bool? isRequired;
   final VoidCallback onDelete;
   final VoidCallback onTapMenuButton;
+  final QuestionType questionType;
 
   const ItemBottomWidget(
       {super.key,
       required this.onSwitchToggle,
       this.isRequired,
       required this.onTapMenuButton,
+      required this.questionType,
       required this.onDelete});
 
   @override
@@ -34,7 +38,9 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
         children: [
           _buildDeleteIcon(),
           const Gap(8),
-          _buildSwitchWidget(),
+          shouldShowButton(widget.questionType)
+              ? _buildSwitchWidget()
+              : const SizedBox.shrink(),
           const Gap(4),
           _menuIcon(),
         ],
@@ -71,9 +77,7 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
     return InkWell(
       onTap: widget.onTapMenuButton,
       child: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.transparent
-        ),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Column(

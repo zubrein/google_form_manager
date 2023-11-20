@@ -35,6 +35,7 @@ class _BaseItemWidgetState extends State<BaseItemWidget> {
           isRequired: widget.isRequired,
           onDelete: widget.onDelete,
           onTapMenuButton: widget.onTapMenuButton,
+          questionType: widget.questionType,
         )
       ],
     );

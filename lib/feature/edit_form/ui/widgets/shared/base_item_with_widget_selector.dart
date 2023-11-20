@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/ui/utils/utils.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/helper/create_question_item_helper.dart';
 
 import '../../edit_form_mixin.dart';
@@ -98,17 +99,19 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
   }
 
   Widget _buildItemTopWidget() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-        child: DecoratedBox(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black54, width: 1),
-                borderRadius: BorderRadius.circular(4)),
-            child: ItemTopWidget(questionType: widget.questionType)),
-      ),
-    );
+    return shouldShowButton(widget.questionType)
+        ? Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54, width: 1),
+                      borderRadius: BorderRadius.circular(4)),
+                  child: ItemTopWidget(questionType: widget.questionType)),
+            ),
+          )
+        : const SizedBox.shrink();
   }
 
   @override

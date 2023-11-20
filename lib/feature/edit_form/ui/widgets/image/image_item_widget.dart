@@ -47,12 +47,15 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
 
   @override
   Widget body() {
-    return Column(
-      children: [
-        buildEditTitleWidget(),
-        const Gap(8),
-        _getImage(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Column(
+        children: [
+          buildEditTitleWidget(),
+          const Gap(8),
+          _getImage(),
+        ],
+      ),
     );
   }
 
