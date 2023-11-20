@@ -27,14 +27,28 @@ class _ItemTypeListPageState extends State<ItemTypeListPage> {
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
-              itemCount: questionTypeNameMap.keys.length,
+              itemCount: questionTypeNameMap.keys.length - 3,
               itemBuilder: (context, position) {
-                return _buildBottomSheetContent(
-                    questionTypeNameMap.keys.toList()[position]);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildBottomSheetContent(
+                        questionTypeNameMap.keys.toList()[position]),
+                    _buildDivider(position),
+                  ],
+                );
               }),
         ),
       ),
     );
+  }
+
+  Widget _buildDivider(int position) {
+    return position == 1 || position == 4 || position == 7 || position == 9
+        ? const Divider(
+            color: Colors.black45,
+          )
+        : const SizedBox.shrink();
   }
 
   Widget _buildBottomSheetContent(QuestionType questionType) {
@@ -43,7 +57,7 @@ class _ItemTypeListPageState extends State<ItemTypeListPage> {
         Navigator.of(context).pop([questionType]);
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,17 +72,22 @@ class _ItemTypeListPageState extends State<ItemTypeListPage> {
                 const Gap(8),
                 Text(
                   questionTypeNameMap[questionType]!,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: Colors.black54,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      fontWeight: widget.selectedType != null &&
+                              widget.selectedType == questionType
+                          ? FontWeight.w900
+                          : FontWeight.w500),
                 ),
               ],
             ),
+            const Gap(8),
             widget.selectedType != null && widget.selectedType == questionType
                 ? const Icon(
                     Icons.check,
                     color: Colors.green,
+                    size: 18,
                   )
                 : const SizedBox.shrink(),
           ],
