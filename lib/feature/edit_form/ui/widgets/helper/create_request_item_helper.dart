@@ -7,40 +7,34 @@ class CreateRequestItemHelper {
       QuestionType questionType, int widgetIndex) {
     switch (questionType) {
       case QuestionType.shortAnswer:
-        return CreateRequestItemHelper.prepareShortAnswerCreateRequest(
+        return prepareShortAnswerCreateRequest(
           widgetIndex,
         );
       case QuestionType.paragraph:
-        return CreateRequestItemHelper.prepareShortAnswerCreateRequest(
-            widgetIndex,
-            isParagraph: true);
+        return prepareShortAnswerCreateRequest(widgetIndex, isParagraph: true);
       case QuestionType.multipleChoice:
-        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceCreateRequest(widgetIndex,
             type: QuestionType.multipleChoice);
       case QuestionType.checkboxes:
-        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceCreateRequest(widgetIndex,
             type: QuestionType.checkboxes);
       case QuestionType.dropdown:
-        return CreateRequestItemHelper.prepareMultipleChoiceCreateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceCreateRequest(widgetIndex,
             type: QuestionType.dropdown);
       case QuestionType.date:
-        return CreateRequestItemHelper.prepareDateCreateRequest(widgetIndex);
+        return prepareDateCreateRequest(widgetIndex);
       case QuestionType.time:
-        return CreateRequestItemHelper.prepareTimeCreateRequest(widgetIndex);
+        return prepareTimeCreateRequest(widgetIndex);
       case QuestionType.linearScale:
-        return CreateRequestItemHelper.prepareLinearScaleCreateRequest(
-            widgetIndex);
+        return prepareLinearScaleCreateRequest(widgetIndex);
       case QuestionType.multipleChoiceGrid:
-        return CreateRequestItemHelper.prepareMultipleChoiceGridCreateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
             type: QuestionType.multipleChoiceGrid);
       case QuestionType.checkboxGrid:
-        return CreateRequestItemHelper.prepareMultipleChoiceGridCreateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
             type: QuestionType.checkboxGrid);
+      case QuestionType.image:
+        return prepareImageCreateRequest(widgetIndex);
 
       default:
         return Request();
@@ -169,5 +163,22 @@ class CreateRequestItemHelper {
         location: Location(index: widgetIndex),
       ),
     );
+  }
+
+  static Request prepareImageCreateRequest(int widgetIndex) {
+    return Request(
+        createItem: CreateItemRequest(
+      item: (Item(
+          title: '',
+          imageItem: ImageItem(
+              image: Image(
+                  contentUri: '',
+                  properties: MediaProperties(
+                    alignment: 'Left',
+                    width: 1200,
+                  ),
+                  sourceUri: '')))),
+      location: Location(index: widgetIndex),
+    ));
   }
 }

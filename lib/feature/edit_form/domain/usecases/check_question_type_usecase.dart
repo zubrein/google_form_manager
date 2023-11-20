@@ -35,6 +35,8 @@ class CheckQuestionTypeUseCase {
     } else if (item?.questionGroupItem?.questions != null &&
         item?.questionGroupItem?.grid?.columns?.type == 'CHECKBOX') {
       return QuestionType.checkboxGrid;
+    } else if (item?.imageItem?.image != null) {
+      return QuestionType.image;
     }
 
     return QuestionType.unknown;

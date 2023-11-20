@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/image/image_item_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/linear_scale/linear_scale_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/time/time_widget.dart';
@@ -74,6 +75,15 @@ mixin EditFormMixin {
     );
   }
 
+  Widget _buildImageItemWidget(int position, Item? qItem, OperationType type) {
+    return ImageItemWidget(
+      index: position,
+      item: qItem,
+      operationType: type,
+      editFormCubit: editFormCubit,
+    );
+  }
+
   Widget buildFormItem(
       {required QuestionType qType,
       required Item? item,
@@ -105,6 +115,8 @@ mixin EditFormMixin {
       case QuestionType.checkboxGrid:
         return _buildMultipleChoiceGridWidget(
             index, item, opType, QuestionType.checkboxGrid);
+      case QuestionType.image:
+        return _buildImageItemWidget(index, item, opType);
 
       default:
         return Container(

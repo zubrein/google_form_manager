@@ -7,40 +7,34 @@ class UpdateRequestItemHelper {
       QuestionType questionType, int widgetIndex) {
     switch (questionType) {
       case QuestionType.shortAnswer:
-        return UpdateRequestItemHelper.prepareShortAnswerUpdateRequest(
+        return prepareShortAnswerUpdateRequest(
           widgetIndex,
         );
       case QuestionType.paragraph:
-        return UpdateRequestItemHelper.prepareShortAnswerUpdateRequest(
-            widgetIndex,
-            isParagraph: true);
+        return prepareShortAnswerUpdateRequest(widgetIndex, isParagraph: true);
       case QuestionType.multipleChoice:
-        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceUpdateRequest(widgetIndex,
             type: QuestionType.multipleChoice);
       case QuestionType.checkboxes:
-        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceUpdateRequest(widgetIndex,
             type: QuestionType.checkboxes);
       case QuestionType.dropdown:
-        return UpdateRequestItemHelper.prepareMultipleChoiceUpdateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceUpdateRequest(widgetIndex,
             type: QuestionType.dropdown);
       case QuestionType.date:
-        return UpdateRequestItemHelper.prepareDateUpdateRequest(widgetIndex);
+        return prepareDateUpdateRequest(widgetIndex);
       case QuestionType.time:
-        return UpdateRequestItemHelper.prepareTimeUpdateRequest(widgetIndex);
+        return prepareTimeUpdateRequest(widgetIndex);
       case QuestionType.linearScale:
-        return UpdateRequestItemHelper.prepareLinearScaleUpdateRequest(
-            widgetIndex);
+        return prepareLinearScaleUpdateRequest(widgetIndex);
       case QuestionType.multipleChoiceGrid:
-        return UpdateRequestItemHelper.prepareMultipleChoiceGridUpdateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceGridUpdateRequest(widgetIndex,
             type: QuestionType.multipleChoiceGrid);
       case QuestionType.checkboxGrid:
-        return UpdateRequestItemHelper.prepareMultipleChoiceGridUpdateRequest(
-            widgetIndex,
+        return prepareMultipleChoiceGridUpdateRequest(widgetIndex,
             type: QuestionType.checkboxGrid);
+      case QuestionType.image:
+        return prepareImageUpdateRequest(widgetIndex);
       default:
         return Request();
     }
@@ -172,5 +166,22 @@ class UpdateRequestItemHelper {
           location: Location(index: widgetIndex),
           updateMask: ''),
     );
+  }
+
+  static Request prepareImageUpdateRequest(int widgetIndex) {
+    return Request(
+        updateItem: UpdateItemRequest(
+            item: (Item(
+                title: '',
+                imageItem: ImageItem(
+                    image: Image(
+                        contentUri: '',
+                        properties: MediaProperties(
+                          alignment: 'CENTER',
+                          width: 1200,
+                        ),
+                        sourceUri: '')))),
+            location: Location(index: widgetIndex),
+            updateMask: ''));
   }
 }

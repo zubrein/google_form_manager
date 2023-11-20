@@ -113,7 +113,7 @@ class EditFormCubit extends Cubit<EditFormState> {
     Log.info('''
         index : $index
         update Mask : ${request.updateItem?.updateMask}
-        title : ${request.createItem?.item?.title}
+        title : ${request.updateItem?.item?.title}
         description : ${request.updateItem?.item?.description}
         required: ${request.updateItem?.item?.questionItem?.question?.required}
         ''');
