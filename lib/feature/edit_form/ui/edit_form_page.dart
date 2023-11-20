@@ -115,52 +115,74 @@ class _EditFormPageState extends State<EditFormPage> {
   }
 
   Widget _buildBottomPanel() {
-    return SizedBox(
-      height: 50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          GestureDetector(
-            onTap: () async {
-              _editFormCubit.addItem(
-                CreateQuestionItemHelper.getItem(
-                  QuestionType.multipleChoice,
-                ),
-                QuestionType.multipleChoice,
-              );
-              scrollToBottom();
-            },
-            child: const SizedBox(
-                height: 50, width: 50, child: Icon(Icons.add_circle_outline)),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: SizedBox(
+        height: 50,
+        child: Center(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black45, width: 1),
+              borderRadius: BorderRadius.circular(8)
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildNewItemAddButton(),
+                _buildImageItemAddButton(),
+                _buildTextItemAddButton(),
+              ],
+            ),
           ),
-          GestureDetector(
-            onTap: () async {
-              _editFormCubit.addItem(
-                CreateQuestionItemHelper.getItem(
-                  QuestionType.image,
-                ),
-                QuestionType.image,
-              );
-              scrollToBottom();
-            },
-            child:
-                const SizedBox(height: 50, width: 50, child: Icon(Icons.image)),
-          ),
-          GestureDetector(
-            onTap: () async {
-              _editFormCubit.addItem(
-                CreateQuestionItemHelper.getItem(
-                  QuestionType.text,
-                ),
-                QuestionType.text,
-              );
-              scrollToBottom();
-            },
-            child: const SizedBox(
-                height: 50, width: 50, child: Icon(Icons.text_fields_outlined)),
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildTextItemAddButton() {
+    return GestureDetector(
+      onTap: () async {
+        _editFormCubit.addItem(
+          CreateQuestionItemHelper.getItem(
+            QuestionType.text,
+          ),
+          QuestionType.text,
+        );
+        scrollToBottom();
+      },
+      child: const SizedBox(
+          height: 50, width: 50, child: Icon(Icons.text_fields_outlined)),
+    );
+  }
+
+  Widget _buildImageItemAddButton() {
+    return GestureDetector(
+      onTap: () async {
+        _editFormCubit.addItem(
+          CreateQuestionItemHelper.getItem(
+            QuestionType.image,
+          ),
+          QuestionType.image,
+        );
+        scrollToBottom();
+      },
+      child: const SizedBox(height: 50, width: 50, child: Icon(Icons.image)),
+    );
+  }
+
+  Widget _buildNewItemAddButton() {
+    return GestureDetector(
+      onTap: () async {
+        _editFormCubit.addItem(
+          CreateQuestionItemHelper.getItem(
+            QuestionType.multipleChoice,
+          ),
+          QuestionType.multipleChoice,
+        );
+        scrollToBottom();
+      },
+      child: const SizedBox(
+          height: 50, width: 50, child: Icon(Icons.add_circle_outline)),
     );
   }
 
