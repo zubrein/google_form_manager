@@ -70,9 +70,7 @@ class _EditFormPageState extends State<EditFormPage> {
                   itemCount: state.baseItem.length,
                   itemBuilder: (context, position) {
                     final formItem = state.baseItem[position];
-                    return formItem.visibility
-                        ? _buildFormItem(formItem, position)
-                        : const SizedBox.shrink();
+                    return _buildFormItem(formItem, position);
                   }),
             );
           } else {
@@ -122,9 +120,8 @@ class _EditFormPageState extends State<EditFormPage> {
         child: Center(
           child: DecoratedBox(
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black45, width: 1),
-              borderRadius: BorderRadius.circular(8)
-            ),
+                border: Border.all(color: Colors.black45, width: 1),
+                borderRadius: BorderRadius.circular(8)),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

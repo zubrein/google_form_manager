@@ -6,7 +6,6 @@ class BaseItemEntity {
   final String? itemId;
   final Item? item;
   final OperationType opType;
-  bool visibility;
   Request? request;
   final Key key;
 
@@ -14,7 +13,6 @@ class BaseItemEntity {
     this.itemId,
     required this.item,
     required this.opType,
-    required this.visibility,
     required this.request,
     required this.key,
   });

@@ -42,7 +42,6 @@ class EditFormCubit extends Cubit<EditFormState> {
               itemId: item.itemId,
               item: item,
               opType: OperationType.update,
-              visibility: true,
               request: null,
               key: ValueKey<String>(getRandomId()));
         }));
@@ -66,7 +65,6 @@ class EditFormCubit extends Cubit<EditFormState> {
     baseItemList.add(BaseItemEntity(
         item: item,
         opType: OperationType.create,
-        visibility: true,
         request: CreateRequestItemHelper.prepareCreateRequest(
           type,
           baseItemList.length,
@@ -82,7 +80,6 @@ class EditFormCubit extends Cubit<EditFormState> {
         BaseItemEntity(
             item: item,
             opType: OperationType.create,
-            visibility: true,
             request: CreateRequestItemHelper.prepareCreateRequest(
               questionType,
               index,
