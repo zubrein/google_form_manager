@@ -39,33 +39,70 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.green),
-            child: Padding(
-              padding: _buildInnerBoxPadding(),
-              child: DecoratedBox(
-                  decoration: _buildInnerBoxDecoration(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                            onTap: _onTapTopWidget,
-                            child: _buildItemTopWidget()),
-                        buildFormItem(
-                          qType: widget.questionType,
-                          item: widget.formItem.item,
-                          index: widget.index,
-                          opType: widget.formItem.opType,
+      child: Column(
+        children: [
+          widget.questionType == QuestionType.pageBreak
+              ? _buildPageBreakLabel()
+              : const SizedBox.shrink(),
+          ClipRRect(
+            borderRadius: _buildItemBorderRadius(),
+            child: DecoratedBox(
+                decoration: const BoxDecoration(color: Colors.green),
+                child: Padding(
+                  padding: _buildInnerBoxPadding(),
+                  child: DecoratedBox(
+                      decoration: _buildInnerBoxDecoration(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                                onTap: _onTapTopWidget,
+                                child: _buildItemTopWidget()),
+                            buildFormItem(
+                              qType: widget.questionType,
+                              item: widget.formItem.item,
+                              index: widget.index,
+                              opType: widget.formItem.opType,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )),
-            )),
+                      )),
+                )),
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildPageBreakLabel() {
+    return const Align(
+      alignment: Alignment.centerLeft,
+      child: DecoratedBox(
+          decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(4),
+                topRight: Radius.circular(4),
+              )),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: Text(
+              'Section',
+              style: TextStyle(color: Colors.white),
+            ),
+          )),
+    );
+  }
+
+  BorderRadius _buildItemBorderRadius() {
+    return widget.questionType == QuestionType.pageBreak
+        ? const BorderRadius.only(
+            topRight: Radius.circular(8),
+            bottomLeft: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          )
+        : BorderRadius.circular(8);
   }
 
   EdgeInsets _buildInnerBoxPadding() {

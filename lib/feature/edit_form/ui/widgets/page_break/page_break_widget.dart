@@ -8,13 +8,13 @@ import 'package:googleapis/forms/v1.dart';
 import '../../bottom_modal_operation_constant.dart';
 import '../helper/request_builder_helper_mixin.dart';
 
-class TextItemWidget extends StatefulWidget {
+class PageBreakWidget extends StatefulWidget {
   final int index;
   final Item? item;
   final OperationType operationType;
   final EditFormCubit editFormCubit;
 
-  const TextItemWidget({
+  const PageBreakWidget({
     super.key,
     required this.index,
     required this.item,
@@ -23,10 +23,10 @@ class TextItemWidget extends StatefulWidget {
   });
 
   @override
-  State<TextItemWidget> createState() => _TextItemWidgetState();
+  State<PageBreakWidget> createState() => _PageBreakWidgetState();
 }
 
-class _TextItemWidgetState extends State<TextItemWidget>
+class _PageBreakWidgetState extends State<PageBreakWidget>
     with
         RequestBuilderHelper,
         TitleDescriptionAdderMixin,
@@ -48,7 +48,7 @@ class _TextItemWidgetState extends State<TextItemWidget>
   Widget body() {
     return Column(
       children: [
-        buildEditTitleWidget(hint: 'Title'),
+        buildEditTitleWidget(hint: 'Section Title (optional)'),
         const Gap(4),
         showDescription
             ? buildEditDescriptionWidget(description: 'Description (optional)')
@@ -61,7 +61,7 @@ class _TextItemWidgetState extends State<TextItemWidget>
   int get widgetIndex => widget.index;
 
   @override
-  QuestionType get questionType => QuestionType.text;
+  QuestionType get questionType => QuestionType.pageBreak;
 
   @override
   OperationType get operationType => widget.operationType;

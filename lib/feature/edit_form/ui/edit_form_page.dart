@@ -131,6 +131,7 @@ class _EditFormPageState extends State<EditFormPage> {
                 _buildNewItemAddButton(),
                 _buildImageItemAddButton(),
                 _buildTextItemAddButton(),
+                _buildPageBreakAddButton(),
               ],
             ),
           ),
@@ -152,6 +153,22 @@ class _EditFormPageState extends State<EditFormPage> {
       },
       child: const SizedBox(
           height: 50, width: 50, child: Icon(Icons.text_fields_outlined)),
+    );
+  }
+
+  Widget _buildPageBreakAddButton() {
+    return GestureDetector(
+      onTap: () async {
+        _editFormCubit.addItem(
+          CreateQuestionItemHelper.getItem(
+            QuestionType.pageBreak,
+          ),
+          QuestionType.pageBreak,
+        );
+        scrollToBottom();
+      },
+      child: const SizedBox(
+          height: 50, width: 50, child: Icon(Icons.insert_page_break)),
     );
   }
 

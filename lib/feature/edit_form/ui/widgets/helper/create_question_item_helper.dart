@@ -28,6 +28,8 @@ class CreateQuestionItemHelper {
         return getImageItem();
       case QuestionType.text:
         return getTextItem();
+      case QuestionType.pageBreak:
+        return getPageBreakItem();
 
       default:
         return Item();
@@ -108,6 +110,10 @@ class CreateQuestionItemHelper {
 
   static Item getTextItem() {
     return Item(title: '', description: '', textItem: TextItem());
+  }
+
+  static Item getPageBreakItem() {
+    return Item(title: '', description: '', pageBreakItem: PageBreakItem());
   }
 
   static String getTypeName(QuestionType type) {

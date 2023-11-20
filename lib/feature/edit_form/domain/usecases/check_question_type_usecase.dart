@@ -39,6 +39,8 @@ class CheckQuestionTypeUseCase {
       return QuestionType.image;
     } else if (item?.textItem != null) {
       return QuestionType.text;
+    } else if (item?.pageBreakItem != null) {
+      return QuestionType.pageBreak;
     }
 
     return QuestionType.unknown;

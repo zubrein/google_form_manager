@@ -37,6 +37,8 @@ class CreateRequestItemHelper {
         return prepareImageCreateRequest(widgetIndex);
       case QuestionType.text:
         return prepareTextItemCreateRequest(widgetIndex);
+      case QuestionType.pageBreak:
+        return preparePageBreakCreateRequest(widgetIndex);
 
       default:
         return Request();
@@ -188,6 +190,14 @@ class CreateRequestItemHelper {
     return Request(
         createItem: CreateItemRequest(
       item: (Item(title: '', description: '', textItem: TextItem())),
+      location: Location(index: widgetIndex),
+    ));
+  }
+
+  static Request preparePageBreakCreateRequest(int widgetIndex) {
+    return Request(
+        createItem: CreateItemRequest(
+      item: (Item(title: '', description: '', pageBreakItem: PageBreakItem())),
       location: Location(index: widgetIndex),
     ));
   }

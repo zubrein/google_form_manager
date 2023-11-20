@@ -13,6 +13,7 @@ enum QuestionType {
   checkboxGrid,
   image,
   text,
+  pageBreak,
   unknown,
 }
 
@@ -29,6 +30,7 @@ Map<QuestionType, String> questionTypeNameMap = {
   QuestionType.checkboxGrid: 'Checkbox grid',
   QuestionType.image: 'Image',
   QuestionType.text: 'text',
+  QuestionType.pageBreak: 'Page Break',
 };
 
 Map<QuestionType, IconData> questionTypeIconMap = {
@@ -44,6 +46,7 @@ Map<QuestionType, IconData> questionTypeIconMap = {
   QuestionType.checkboxGrid: Icons.grid_view_outlined,
   QuestionType.image: Icons.image,
   QuestionType.text: Icons.text_fields_outlined,
+  QuestionType.pageBreak: Icons.insert_page_break,
 };
 
 enum OperationType { create, delete, update }

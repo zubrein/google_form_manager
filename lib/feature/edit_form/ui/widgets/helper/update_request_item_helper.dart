@@ -37,6 +37,8 @@ class UpdateRequestItemHelper {
         return prepareImageUpdateRequest(widgetIndex);
       case QuestionType.text:
         return prepareTextItemUpdateRequest(widgetIndex);
+      case QuestionType.pageBreak:
+        return preparePageBreakUpdateRequest(widgetIndex);
       default:
         return Request();
     }
@@ -191,6 +193,15 @@ class UpdateRequestItemHelper {
     return Request(
         updateItem: UpdateItemRequest(
             item: (Item(title: '', description: '', textItem: TextItem())),
+            location: Location(index: widgetIndex),
+            updateMask: ''));
+  }
+
+  static Request preparePageBreakUpdateRequest(int widgetIndex) {
+    return Request(
+        updateItem: UpdateItemRequest(
+            item: (Item(
+                title: '', description: '', pageBreakItem: PageBreakItem())),
             location: Location(index: widgetIndex),
             updateMask: ''));
   }
