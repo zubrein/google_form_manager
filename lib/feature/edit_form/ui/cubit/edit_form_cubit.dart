@@ -116,7 +116,7 @@ class EditFormCubit extends Cubit<EditFormState> {
         ''');
   }
 
-  Future<bool> submitForm(String formId) async {
+  Future<void> submitForm(String formId) async {
     for (int index = 0; index < baseItemList.length; index++) {
       final value = baseItemList[index];
 
@@ -132,17 +132,19 @@ class EditFormCubit extends Cubit<EditFormState> {
         formId,
       );
 
-      if (isOtherRequestSubmitted) {
-        return true;
-      } else {
-        return false;
-      }
+      isOtherRequestSubmitted.fold((success) {
+        emit(const FormSubmitSuccessState());
+        prepareRequestInitialList();
+      }, (error) {
+        emit(FormSubmitFailedState(error.toString()));
+      });
+    } else {
+      Log.info('No list');
+      emit(FormSubmitFailedState('No changes done yet'));
     }
-
-    return false;
   }
 
-  Future<bool> submitDeleteRequest(String formId) async {
+  Future<void> submitDeleteRequest(String formId) async {
     _deleteListIndexes.sort();
     List<Request> deleteRequestList = [];
     for (int i = 0; i < _deleteListIndexes.length; i++) {
@@ -151,21 +153,19 @@ class EditFormCubit extends Cubit<EditFormState> {
     }
 
     if (deleteRequestList.isNotEmpty) {
-      final isSubmitted = await batchUpdateUseCase(
+      final result = await batchUpdateUseCase(
         BatchUpdateFormRequest(
             requests: deleteRequestList, includeFormInResponse: true),
         formId,
       );
 
-      if (isSubmitted) {
-        final isOtherRequestSubmitted = await submitForm(formId);
-        return isOtherRequestSubmitted ? true : false;
-      } else {
-        return false;
-      }
+      await result.fold((success) async {
+        await submitForm(formId);
+      }, (error) {
+        emit(FormSubmitFailedState(error.toString()));
+      });
     } else {
-      final isOtherRequestSubmitted = await submitForm(formId);
-      return isOtherRequestSubmitted ? true : false;
+      await submitForm(formId);
     }
   }
 

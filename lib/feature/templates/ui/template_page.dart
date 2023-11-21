@@ -43,7 +43,7 @@ class _TemplatePageState extends State<TemplatePage> {
               _loadingHudCubit.cancel();
               Navigator.of(context).pop();
             } else if (state is CreateFormFailedState) {
-              _loadingHudCubit.showError();
+              // _loadingHudCubit.showError();
             }
           },
           builder: (context, state) {

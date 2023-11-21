@@ -28,7 +28,19 @@ class FetchFormFailedState extends EditFormState {
   List<Object?> get props => [];
 }
 
-class ItemDeletedState extends EditFormState {
+class FormSubmitFailedState extends EditFormState {
+  final String error;
+  final DateTime datetime = DateTime.now();
+
+  FormSubmitFailedState(this.error);
+
+  @override
+  List<Object?> get props => [error, datetime];
+}
+
+class FormSubmitSuccessState extends EditFormState {
+  const FormSubmitSuccessState();
+
   @override
   List<Object?> get props => [DateTime.now()];
 }

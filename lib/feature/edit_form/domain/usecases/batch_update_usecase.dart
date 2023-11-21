@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:google_form_manager/feature/edit_form/domain/repository/edit_form_repository.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
@@ -8,7 +9,8 @@ class BatchUpdateUseCase {
 
   BatchUpdateUseCase(this.repository);
 
-  Future<bool> call(BatchUpdateFormRequest request, String formId) async {
+  Future<Either<Form?, String>> call(
+      BatchUpdateFormRequest request, String formId) async {
     return await repository.bachUpdate(request, formId);
   }
 }

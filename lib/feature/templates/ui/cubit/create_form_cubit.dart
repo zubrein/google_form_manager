@@ -20,13 +20,13 @@ class CreateFormCubit extends Cubit<CreateFormState> {
   Future<void> createForm(String formName) async {
     emit(CreateFormInitiatedState());
     final formId = await createFormUseCase(formName);
-    final isUpdated = await batchUpdateUseCase(initialRequest(), formId);
-    if (isUpdated) {
+    final result = await batchUpdateUseCase(initialRequest(), formId);
+
+    result.fold((success) {
       emit(CreateFormSuccessState());
-    } else {
-      emit(CreateFormFailedState());
-    }
-    emit(CreateFormSuccessState());
+    }, (error) {
+      emit(CreateFormFailedState(error.toString()));
+    });
   }
 
   BatchUpdateFormRequest initialRequest() => BatchUpdateFormRequest(requests: [

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/base.dart';
@@ -58,24 +59,27 @@ class _EditFormPageState extends State<EditFormPage> {
         listener: (context, state) {
           if (state is FormListUpdateState) {
             _loadingHudCubit.cancel();
+          } else if (state is FormSubmitFailedState) {
+            _loadingHudCubit.showError(message: state.error);
+          } else if (state is FormSubmitSuccessState) {
+            pop();
           }
         },
+        buildWhen: (oldState, newState) {
+          return newState is FormListUpdateState;
+        },
         builder: (context, state) {
-          if (state is FormListUpdateState) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 50),
-              child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: state.baseItem.length,
-                  itemBuilder: (context, position) {
-                    final formItem = state.baseItem[position];
-                    return _buildFormItem(formItem, position);
-                  }),
-            );
-          } else {
-            return const SizedBox();
-          }
+          return Padding(
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
+            child: ListView.builder(
+                controller: _scrollController,
+                itemCount: _editFormCubit.baseItemList.length,
+                itemBuilder: (context, position) {
+                  final formItem = _editFormCubit.baseItemList[position];
+                  return _buildFormItem(formItem, position);
+                }),
+          );
         },
       ),
     );
@@ -96,13 +100,7 @@ class _EditFormPageState extends State<EditFormPage> {
     return EditFormTopPanel(
       onSaveButtonTap: () async {
         _loadingHudCubit.show();
-        final isSubmitted =
-            await _editFormCubit.submitDeleteRequest(widget.formId);
-        if (isSubmitted) {
-          pop();
-        } else {
-          _loadingHudCubit.showError();
-        }
+        _editFormCubit.submitDeleteRequest(widget.formId);
       },
     );
   }

@@ -75,7 +75,7 @@ class _BaseState extends State<Base> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildMessageText(state),
+            Expanded(child: _buildMessageText(state)),
             _buildCancelButton(),
           ],
         ),

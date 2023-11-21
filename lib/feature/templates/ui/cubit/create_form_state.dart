@@ -20,6 +20,10 @@ class CreateFormSuccessState extends CreateFormState {
 }
 
 class CreateFormFailedState extends CreateFormState {
+  final String error;
+
+  const CreateFormFailedState(this.error);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [error, DateTime.now()];
 }
