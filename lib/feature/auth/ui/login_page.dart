@@ -38,8 +38,8 @@ class _LoginPageState extends State<LoginPage> {
           bloc: _loginCubit,
           listener: (context, state) {
             if (state is LoginSuccessState) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/formList', ModalRoute.withName('/'));
+              Navigator.pushNamedAndRemoveUntil(context, '/formList',
+                  (Route route) => route.settings.name == 'login');
             }
           },
           child: Center(
