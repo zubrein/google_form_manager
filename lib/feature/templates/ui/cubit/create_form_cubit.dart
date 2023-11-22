@@ -17,10 +17,14 @@ class CreateFormCubit extends Cubit<CreateFormState> {
       {required this.createFormUseCase, required this.batchUpdateUseCase})
       : super(CreateFormInitial());
 
-  Future<void> createForm(String formName) async {
+  Future<void> createForm(String formName, {bool isQuiz = false}) async {
     emit(CreateFormInitiatedState());
     final formId = await createFormUseCase(formName);
-    final result = await batchUpdateUseCase(initialRequest(), formId);
+    final result = await batchUpdateUseCase(
+        initialRequest(
+          isQuiz: isQuiz,
+        ),
+        formId);
 
     result.fold((success) {
       emit(CreateFormSuccessState());
@@ -29,19 +33,31 @@ class CreateFormCubit extends Cubit<CreateFormState> {
     });
   }
 
-  BatchUpdateFormRequest initialRequest() => BatchUpdateFormRequest(requests: [
-        Request(
-          createItem: CreateItemRequest(
-              item: Item(
-                  questionItem: QuestionItem(
-                      question: Question(
-                          choiceQuestion: ChoiceQuestion(
-                            options: [Option(value: 'Option 1')],
-                            type: 'RADIO',
-                            shuffle: false,
-                          ),
-                          required: false))),
-              location: Location(index: 0)),
-        )
-      ], includeFormInResponse: true);
+  BatchUpdateFormRequest initialRequest({bool isQuiz = false}) =>
+      BatchUpdateFormRequest(
+        requests: [
+          Request(
+            createItem: CreateItemRequest(
+                item: Item(
+                    questionItem: QuestionItem(
+                        question: Question(
+                            choiceQuestion: ChoiceQuestion(
+                              options: [Option(value: 'Option 1')],
+                              type: 'RADIO',
+                              shuffle: false,
+                            ),
+                            required: false))),
+                location: Location(index: 0)),
+          ),
+          Request(
+              updateSettings: UpdateSettingsRequest(
+            settings: FormSettings(
+                quizSettings: QuizSettings(
+              isQuiz: isQuiz,
+            )),
+            updateMask: 'quizSettings.isQuiz',
+          ))
+        ],
+        includeFormInResponse: true,
+      );
 }

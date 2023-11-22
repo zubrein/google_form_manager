@@ -32,6 +32,8 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
 
   bool showDescription = false;
 
+  bool isQuiz = false;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +41,7 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
         operationType: operationType,
         questionType: questionType,
         index: widgetIndex);
+    isQuiz = editFormCubit.isQuiz;
     init();
   }
 

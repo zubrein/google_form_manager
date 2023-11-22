@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class CreateFormNameInputDialog extends StatefulWidget {
-  const CreateFormNameInputDialog({super.key});
+  final bool isQuiz;
+
+  const CreateFormNameInputDialog({super.key, this.isQuiz = false});
 
   @override
   State<CreateFormNameInputDialog> createState() =>
@@ -16,7 +18,7 @@ class _CreateFormNameInputDialogState extends State<CreateFormNameInputDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Please enter form name'),
+      title: Text('Please enter ${widget.isQuiz ? 'quiz' : 'form'} name'),
       content: Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: Row(
@@ -36,18 +38,19 @@ class _CreateFormNameInputDialogState extends State<CreateFormNameInputDialog> {
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       isDense: true,
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                         vertical: 4,
                         horizontal: 4,
                       ),
-                      hintText: 'Please enter form name',
-                      hintStyle: TextStyle(color: Colors.black38),
-                      enabledBorder: UnderlineInputBorder(
+                      hintText:
+                          'Please enter ${widget.isQuiz ? 'quiz' : 'form'} name',
+                      hintStyle: const TextStyle(color: Colors.black38),
+                      enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                      focusedBorder: UnderlineInputBorder(
+                      focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
                     ),
@@ -67,7 +70,9 @@ class _CreateFormNameInputDialogState extends State<CreateFormNameInputDialog> {
             const Gap(16),
             GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pop([_nameController.text]);
+                  if (buttonEnabled) {
+                    Navigator.of(context).pop([_nameController.text]);
+                  }
                 },
                 child: const Icon(Icons.arrow_forward))
           ],

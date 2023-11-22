@@ -43,7 +43,7 @@ class _TemplatePageState extends State<TemplatePage> {
               _loadingHudCubit.cancel();
               Navigator.of(context).pop();
             } else if (state is CreateFormFailedState) {
-              // _loadingHudCubit.showError();
+              _loadingHudCubit.showError(message: state.error);
             }
           },
           builder: (context, state) {
@@ -53,7 +53,13 @@ class _TemplatePageState extends State<TemplatePage> {
                 children: [
                   _buildLabel(Constants.createFormLabel),
                   const Gap(16),
-                  _buildAddButton(),
+                  Row(
+                    children: [
+                      _buildAddButton(),
+                      const Gap(16),
+                      _buildQuizButton(),
+                    ],
+                  ),
                 ],
               ),
             );
@@ -86,6 +92,36 @@ class _TemplatePageState extends State<TemplatePage> {
         child: const Center(
           child: Icon(
             Icons.add,
+            size: 40,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuizButton() {
+    return GestureDetector(
+      onTap: () async {
+        final result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const CreateFormNameInputDialog(isQuiz: true);
+          },
+        );
+        if (result != null) {
+          _createFormCubit.createForm(result[0], isQuiz: true);
+        }
+      },
+      child: Container(
+        height: 100,
+        width: 100,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black12),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Center(
+          child: Icon(
+            Icons.quiz_outlined,
             size: 40,
           ),
         ),

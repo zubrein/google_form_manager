@@ -25,6 +25,7 @@ class EditFormCubit extends Cubit<EditFormState> {
   final List<Request> _requestList = [];
   final List<int> _deleteListIndexes = [];
   final List<String> imageIdList = [];
+  bool isQuiz = false;
 
   EditFormCubit(
     this.fetchFormUseCase,
@@ -36,6 +37,7 @@ class EditFormCubit extends Cubit<EditFormState> {
     emit(FetchFormInitiatedState());
     final response = await fetchFormUseCase(formId);
     if (response != null) {
+      isQuiz = response.settings?.quizSettings?.isQuiz ?? false;
       final remoteItems = response.items;
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
