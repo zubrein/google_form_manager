@@ -24,6 +24,7 @@ class EditFormCubit extends Cubit<EditFormState> {
   List<BaseItemEntity> baseItemList = [];
   final List<Request> _requestList = [];
   final List<int> _deleteListIndexes = [];
+  final List<String> imageIdList = [];
 
   EditFormCubit(
     this.fetchFormUseCase,
@@ -116,7 +117,7 @@ class EditFormCubit extends Cubit<EditFormState> {
         ''');
   }
 
-  Future<void> submitForm(String formId) async {
+  Future<void> _onDeleteSuccess(String formId) async {
     for (int index = 0; index < baseItemList.length; index++) {
       final value = baseItemList[index];
 
@@ -140,11 +141,15 @@ class EditFormCubit extends Cubit<EditFormState> {
       });
     } else {
       Log.info('No list');
-      emit(FormSubmitFailedState('No changes done yet'));
+      if(_deleteListIndexes.isEmpty) {
+        emit(FormSubmitFailedState('No changes done yet'));
+      }else{
+        emit(const FormSubmitSuccessState());
+      }
     }
   }
 
-  Future<void> submitDeleteRequest(String formId) async {
+  Future<void> submitRequest(String formId) async {
     _deleteListIndexes.sort();
     List<Request> deleteRequestList = [];
     for (int i = 0; i < _deleteListIndexes.length; i++) {
@@ -160,12 +165,12 @@ class EditFormCubit extends Cubit<EditFormState> {
       );
 
       await result.fold((success) async {
-        await submitForm(formId);
+        await _onDeleteSuccess(formId);
       }, (error) {
         emit(FormSubmitFailedState(error.toString()));
       });
     } else {
-      await submitForm(formId);
+      await _onDeleteSuccess(formId);
     }
   }
 

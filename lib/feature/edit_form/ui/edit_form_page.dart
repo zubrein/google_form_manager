@@ -100,7 +100,7 @@ class _EditFormPageState extends State<EditFormPage> {
     return EditFormTopPanel(
       onSaveButtonTap: () async {
         _loadingHudCubit.show();
-        _editFormCubit.submitDeleteRequest(widget.formId);
+        _editFormCubit.submitRequest(widget.formId);
       },
     );
   }
