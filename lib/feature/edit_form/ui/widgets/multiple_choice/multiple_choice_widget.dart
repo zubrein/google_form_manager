@@ -219,4 +219,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   Item? get widgetItem => widget.item;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }

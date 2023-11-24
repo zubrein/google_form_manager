@@ -344,4 +344,7 @@ class _LinearScaleWidgetState extends State<LinearScaleWidget>
 
   @override
   Item? get widgetItem => widget.item;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }

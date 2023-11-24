@@ -161,4 +161,7 @@ class _PageBreakWidgetState extends State<PageBreakWidget>
 
   @override
   Request get titleDescRequest => request;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }

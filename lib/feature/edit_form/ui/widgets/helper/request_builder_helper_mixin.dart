@@ -22,6 +22,8 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
 
   VoidCallback get onTapMenuButton;
 
+  VoidCallback? get onAnswerKeyPressed;
+
   EditFormCubit get editFormCubit;
 
   final Set<String> updateMask = {};
@@ -102,6 +104,8 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
       isRequired: isRequired,
       onDelete: onDeleteButtonTap,
       onTapMenuButton: onTapMenuButton,
+      onAnswerKeyPressed: onAnswerKeyPressed,
+      isQuiz: isQuiz,
       childWidget: body(),
     );
   }

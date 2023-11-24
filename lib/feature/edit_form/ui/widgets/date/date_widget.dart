@@ -298,6 +298,9 @@ class _DateWidgetState extends State<DateWidget>
 
   @override
   Item? get widgetItem => widget.item;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }
 
 enum ButtonType { description, date, time }

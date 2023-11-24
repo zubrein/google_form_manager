@@ -7,7 +7,9 @@ import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/switch_w
 class ItemBottomWidget extends StatefulWidget {
   final void Function(bool val) onSwitchToggle;
   final bool? isRequired;
+  final bool? isQuiz;
   final VoidCallback onDelete;
+  final VoidCallback? onAnswerKeyPressed;
   final VoidCallback onTapMenuButton;
   final QuestionType questionType;
 
@@ -15,9 +17,11 @@ class ItemBottomWidget extends StatefulWidget {
       {super.key,
       required this.onSwitchToggle,
       this.isRequired,
+      this.isQuiz,
       required this.onTapMenuButton,
       required this.questionType,
-      required this.onDelete});
+      required this.onDelete,
+      this.onAnswerKeyPressed});
 
   @override
   State<ItemBottomWidget> createState() => _ItemBottomWidgetState();
@@ -36,6 +40,10 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          widget.isQuiz ?? false
+              ? _buildAnswerKeyButton()
+              : const SizedBox.shrink(),
+          const Expanded(child: SizedBox()),
           _buildDeleteIcon(),
           const Gap(8),
           shouldShowButton(widget.questionType)
@@ -43,6 +51,25 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
               : const SizedBox.shrink(),
           const Gap(4),
           _menuIcon(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerKeyButton() {
+    return GestureDetector(
+      onTap: widget.onAnswerKeyPressed ?? () {},
+      child: const Row(
+        children: [
+          Icon(
+            Icons.question_answer,
+            color: Colors.blue,
+          ),
+          Gap(8),
+          Text(
+            'Answer key',
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w700),
+          )
         ],
       ),
     );

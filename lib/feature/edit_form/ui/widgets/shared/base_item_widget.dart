@@ -8,17 +8,22 @@ class BaseItemWidget extends StatefulWidget {
   final QuestionType questionType;
   final void Function(bool val) onRequiredSwitchToggle;
   final bool? isRequired;
+  final bool? isQuiz;
   final VoidCallback onDelete;
+  final VoidCallback? onAnswerKeyPressed;
   final VoidCallback onTapMenuButton;
 
-  const BaseItemWidget(
-      {super.key,
-      required this.childWidget,
-      required this.questionType,
-      required this.onRequiredSwitchToggle,
-      required this.onDelete,
-      required this.onTapMenuButton,
-      this.isRequired});
+  const BaseItemWidget({
+    super.key,
+    required this.childWidget,
+    required this.questionType,
+    required this.onRequiredSwitchToggle,
+    required this.onDelete,
+    required this.onTapMenuButton,
+    this.isRequired,
+    this.isQuiz,
+    this.onAnswerKeyPressed,
+  });
 
   @override
   State<BaseItemWidget> createState() => _BaseItemWidgetState();
@@ -36,6 +41,8 @@ class _BaseItemWidgetState extends State<BaseItemWidget> {
           onDelete: widget.onDelete,
           onTapMenuButton: widget.onTapMenuButton,
           questionType: widget.questionType,
+          onAnswerKeyPressed: widget.onAnswerKeyPressed,
+          isQuiz: widget.isQuiz,
         )
       ],
     );

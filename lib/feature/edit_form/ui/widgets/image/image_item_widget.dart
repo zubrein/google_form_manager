@@ -210,4 +210,7 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
 
   @override
   Request get titleDescRequest => request;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }

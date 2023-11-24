@@ -164,4 +164,9 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
 
   @override
   Request get titleDescRequest => request;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {
+
+  };
 }

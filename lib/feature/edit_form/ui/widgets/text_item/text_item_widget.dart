@@ -161,4 +161,7 @@ class _TextItemWidgetState extends State<TextItemWidget>
 
   @override
   Request get titleDescRequest => request;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }

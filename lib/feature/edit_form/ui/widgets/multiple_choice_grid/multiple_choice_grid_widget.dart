@@ -259,4 +259,7 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
     }
     addRequest();
   }
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }

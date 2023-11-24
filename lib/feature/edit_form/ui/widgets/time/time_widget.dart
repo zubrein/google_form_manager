@@ -264,6 +264,9 @@ class _TimeWidgetState extends State<TimeWidget>
 
   @override
   Item? get widgetItem => widget.item;
+
+  @override
+  VoidCallback? get onAnswerKeyPressed => () {};
 }
 
 enum ButtonType { description, time, duration }
