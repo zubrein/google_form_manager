@@ -143,10 +143,7 @@ mixin EditFormMixin {
         return _buildPageBreakWidget(index, item, opType);
 
       default:
-        return Container(
-          height: 60,
-          color: Colors.red,
-        );
+        return const SizedBox.shrink();
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/base.dart';
@@ -7,6 +6,7 @@ import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dart';
+import 'package:googleapis/forms/v1.dart';
 
 import 'cubit/edit_form_cubit.dart';
 import 'widgets/helper/create_question_item_helper.dart';
@@ -85,15 +85,21 @@ class _EditFormPageState extends State<EditFormPage> {
     );
   }
 
-  BaseItemWithWidgetSelector _buildFormItem(
-      BaseItemEntity formItem, int position) {
-    return BaseItemWithWidgetSelector(
-      key: formItem.key,
-      editFormCubit: _editFormCubit,
-      questionType: _editFormCubit.checkQuestionType(formItem.item),
-      formItem: formItem,
-      index: position,
-    );
+  bool _checkIfQuestionTypeIsUnknown(Item item) {
+    final type = _editFormCubit.checkQuestionType(item);
+    return type != QuestionType.unknown ? true : false;
+  }
+
+  Widget _buildFormItem(BaseItemEntity formItem, int position) {
+    return _checkIfQuestionTypeIsUnknown(formItem.item!)
+        ? BaseItemWithWidgetSelector(
+            key: formItem.key,
+            editFormCubit: _editFormCubit,
+            questionType: _editFormCubit.checkQuestionType(formItem.item),
+            formItem: formItem,
+            index: position,
+          )
+        : const SizedBox.shrink();
   }
 
   Widget _buildTopPanel() {
