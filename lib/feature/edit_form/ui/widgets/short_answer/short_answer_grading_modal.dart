@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/point_and_feedback_mixin.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:googleapis/forms/v1.dart' as form;
@@ -35,7 +36,8 @@ class ShortAnswerGradingModal extends StatefulWidget {
       _ShortAnswerGradingModalState();
 }
 
-class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
+class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
+    with PointAndFeedbackMixin {
   final List<TextEditingController> _controllerList = [];
   final TextEditingController _feedbackController = TextEditingController();
 
@@ -56,11 +58,10 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildPointWidget(),
+            buildPointWidget(),
             if (!widget.isParagraph) _buildAddAnswerListView(),
             const Gap(32),
-            _buildFeedbackWidget(),
-            const Gap(16),
+            buildFeedbackWidget(),
             const Gap(16),
             _buildDoneButton()
           ],
@@ -69,83 +70,12 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
     );
   }
 
-  Widget _buildPointWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Text('points '),
-          _buildPointDecreaseButton(),
-          const Gap(8),
-          Text(
-            '${widget.grading?.pointValue}',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          const Gap(8),
-          _buildPointIncreaseButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPointIncreaseButton() {
-    return InkWell(
-        onTap: () {
-          _increasePoint();
-        },
-        child: const Card(
-          color: Colors.black12,
-          child: Padding(
-            padding: EdgeInsets.all(2.0),
-            child: Icon(
-              Icons.arrow_right,
-              color: Colors.white,
-            ),
-          ),
-        ));
-  }
-
-  Widget _buildPointDecreaseButton() {
-    return InkWell(
-        onTap: () {
-          _decreasePoint();
-        },
-        child: const Card(
-          color: Colors.black12,
-          child: Padding(
-            padding: EdgeInsets.all(2.0),
-            child: Icon(
-              Icons.arrow_left,
-              color: Colors.white,
-            ),
-          ),
-        ));
-  }
-
-  void _increasePoint() {
-    setState(() {
-      widget.grading!.pointValue = widget.grading!.pointValue! + 1;
-      _addPointRequest();
-    });
-  }
-
-  void _decreasePoint() {
-    setState(() {
-      if (widget.grading!.pointValue! > 0) {
-        widget.grading!.pointValue = widget.grading!.pointValue! - 1;
-        _addPointRequest();
-      }
-    });
-  }
-
   Widget _buildAddAnswerListView() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildLabel(Icons.fact_check, 'List correct answer(s)'),
+        buildLabel(Icons.fact_check, 'List correct answer(s)'),
         const Gap(16),
         ListView.builder(
             shrinkWrap: true,
@@ -156,39 +86,6 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
             }),
         const Gap(16),
         _buildAddOptionButton()
-      ],
-    );
-  }
-
-  Widget _buildFeedbackWidget() {
-    return Column(
-      children: [
-        _buildLabel(Icons.feedback_outlined, 'Answer feedback'),
-        const Gap(16),
-        EditTextWidget(
-          controller: _feedbackController,
-          hint: 'Feedback for all answers',
-          onChange: (value) {
-            widget.feedback?.text = value;
-            _addFeedbackRequest();
-          },
-        )
-      ],
-    );
-  }
-
-  Widget _buildLabel(IconData icon, String labelText) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: Colors.black87,
-        ),
-        const Gap(8),
-        Text(
-          labelText,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-        )
       ],
     );
   }
@@ -309,33 +206,26 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
     widget.addRequest();
   }
 
-  void _addFeedbackRequest() {
-    final req = widget.request;
-    if (widget.opType == OperationType.update) {
-      req.updateItem?.item?.questionItem?.question?.grading?.generalFeedback
-          ?.text = widget.feedback?.text;
-      widget.updateMask.add(Constants.feedback);
-      req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
-    } else if (widget.opType == OperationType.create) {
-      req.createItem?.item?.questionItem?.question?.grading?.generalFeedback
-          ?.text = widget.feedback?.text;
-    }
-    widget.addRequest();
-  }
-
-  void _addPointRequest() {
-    final req = widget.request;
-    if (widget.opType == OperationType.update) {
-      req.updateItem?.item?.questionItem?.question?.grading?.pointValue =
-          widget.grading?.pointValue;
-      widget.updateMask.add(Constants.point);
-      req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
-    } else if (widget.opType == OperationType.create) {
-      req.createItem?.item?.questionItem?.question?.grading?.pointValue =
-          widget.grading?.pointValue;
-    }
-    widget.addRequest();
-  }
-
   CorrectAnswer _newOption() => CorrectAnswer(value: 'Correct answer');
+
+  @override
+  Grading? get grading => widget.grading;
+
+  @override
+  VoidCallback get addRequest => widget.addRequest;
+
+  @override
+  OperationType get opType => widget.opType;
+
+  @override
+  Request get request => widget.request;
+
+  @override
+  Set<String> get updateMask => widget.updateMask;
+
+  @override
+  form.Feedback? get feedback => widget.feedback;
+
+  @override
+  TextEditingController get feedbackController => _feedbackController;
 }
