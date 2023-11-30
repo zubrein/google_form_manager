@@ -62,10 +62,11 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
       child: const Row(
         children: [
           Icon(
-            Icons.question_answer,
+            Icons.quiz_outlined,
             color: Colors.blue,
+            size: 18,
           ),
-          Gap(8),
+          Gap(6),
           Text(
             'Answer key',
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w700),

@@ -186,6 +186,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
                   isParagraph: widget.isParagraph,
                   feedback: widget
                       .item?.questionItem?.question?.grading?.generalFeedback,
+                  grading: widget.item?.questionItem?.question?.grading,
                 ),
               );
             });

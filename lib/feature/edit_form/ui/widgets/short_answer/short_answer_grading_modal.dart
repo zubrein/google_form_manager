@@ -16,16 +16,19 @@ class ShortAnswerGradingModal extends StatefulWidget {
   final Set<String> updateMask;
   final bool isParagraph;
   final form.Feedback? feedback;
+  final Grading? grading;
 
-  const ShortAnswerGradingModal(
-      {super.key,
-      required this.request,
-      required this.answers,
-      required this.opType,
-      required this.addRequest,
-      required this.updateMask,
-      this.isParagraph = false,
-      required this.feedback});
+  const ShortAnswerGradingModal({
+    super.key,
+    required this.request,
+    required this.answers,
+    required this.opType,
+    required this.addRequest,
+    required this.updateMask,
+    this.isParagraph = false,
+    required this.feedback,
+    required this.grading,
+  });
 
   @override
   State<ShortAnswerGradingModal> createState() =>
@@ -53,6 +56,7 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            _buildPointWidget(),
             if (!widget.isParagraph) _buildAddAnswerListView(),
             const Gap(32),
             _buildFeedbackWidget(),
@@ -63,6 +67,77 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
         ),
       ),
     );
+  }
+
+  Widget _buildPointWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const Text('points '),
+          _buildPointDecreaseButton(),
+          const Gap(8),
+          Text(
+            '${widget.grading?.pointValue}',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          const Gap(8),
+          _buildPointIncreaseButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPointIncreaseButton() {
+    return InkWell(
+        onTap: () {
+          _increasePoint();
+        },
+        child: const Card(
+          color: Colors.black12,
+          child: Padding(
+            padding: EdgeInsets.all(2.0),
+            child: Icon(
+              Icons.arrow_right,
+              color: Colors.white,
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildPointDecreaseButton() {
+    return InkWell(
+        onTap: () {
+          _decreasePoint();
+        },
+        child: const Card(
+          color: Colors.black12,
+          child: Padding(
+            padding: EdgeInsets.all(2.0),
+            child: Icon(
+              Icons.arrow_left,
+              color: Colors.white,
+            ),
+          ),
+        ));
+  }
+
+  void _increasePoint() {
+    setState(() {
+      widget.grading!.pointValue = widget.grading!.pointValue! + 1;
+      _addPointRequest();
+    });
+  }
+
+  void _decreasePoint() {
+    setState(() {
+      if (widget.grading!.pointValue! > 0) {
+        widget.grading!.pointValue = widget.grading!.pointValue! - 1;
+        _addPointRequest();
+      }
+    });
   }
 
   Widget _buildAddAnswerListView() {
@@ -244,6 +319,20 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
     } else if (widget.opType == OperationType.create) {
       req.createItem?.item?.questionItem?.question?.grading?.generalFeedback
           ?.text = widget.feedback?.text;
+    }
+    widget.addRequest();
+  }
+
+  void _addPointRequest() {
+    final req = widget.request;
+    if (widget.opType == OperationType.update) {
+      req.updateItem?.item?.questionItem?.question?.grading?.pointValue =
+          widget.grading?.pointValue;
+      widget.updateMask.add(Constants.point);
+      req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
+    } else if (widget.opType == OperationType.create) {
+      req.createItem?.item?.questionItem?.question?.grading?.pointValue =
+          widget.grading?.pointValue;
     }
     widget.addRequest();
   }
