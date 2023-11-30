@@ -19,6 +19,7 @@ class Constants {
   static String image = 'imageItem.image.sourceUri';
   static String correctAnswer =
       'questionItem.question.grading.correctAnswers.answers';
+  static String feedback = 'questionItem.question.grading.generalFeedback.text';
 
   static String createFormLabel = 'Create Form';
   static String loginText = 'Signing with google';

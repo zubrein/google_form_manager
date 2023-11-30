@@ -184,6 +184,8 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
                   updateMask: updateMask,
                   addRequest: addRequest,
                   isParagraph: widget.isParagraph,
+                  feedback: widget
+                      .item?.questionItem?.question?.grading?.generalFeedback,
                 ),
               );
             });

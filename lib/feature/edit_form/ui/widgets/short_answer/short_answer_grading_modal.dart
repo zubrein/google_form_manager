@@ -4,6 +4,7 @@ import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/forms/v1.dart' as form;
 
 import '../shared/edit_text_widget.dart';
 
@@ -14,16 +15,17 @@ class ShortAnswerGradingModal extends StatefulWidget {
   final VoidCallback addRequest;
   final Set<String> updateMask;
   final bool isParagraph;
+  final form.Feedback? feedback;
 
-  const ShortAnswerGradingModal({
-    super.key,
-    required this.request,
-    required this.answers,
-    required this.opType,
-    required this.addRequest,
-    required this.updateMask,
-    this.isParagraph = false,
-  });
+  const ShortAnswerGradingModal(
+      {super.key,
+      required this.request,
+      required this.answers,
+      required this.opType,
+      required this.addRequest,
+      required this.updateMask,
+      this.isParagraph = false,
+      required this.feedback});
 
   @override
   State<ShortAnswerGradingModal> createState() =>
@@ -32,6 +34,7 @@ class ShortAnswerGradingModal extends StatefulWidget {
 
 class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
   final List<TextEditingController> _controllerList = [];
+  final TextEditingController _feedbackController = TextEditingController();
 
   @override
   void initState() {
@@ -43,56 +46,73 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
 
   @override
   Widget build(BuildContext context) {
+    _feedbackController.text = widget.feedback?.text ?? '';
     return SizedBox(
       width: double.maxFinite,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (!widget.isParagraph)
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLabel(),
-                const Gap(16),
-                ConstrainedBox(
-                  constraints:
-                      const BoxConstraints(minHeight: 100, maxHeight: 300),
-                  child: ListView.builder(
-                      itemCount: widget.answers.length,
-                      itemBuilder: (context, index) {
-                        return _buildOptionItem(widget.answers[index], index);
-                      }),
-                ),
-                const Gap(16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(child: _buildAddOptionButton()),
-                    const Gap(16),
-                    _buildDoneButton()
-                  ],
-                )
-              ],
-            ),
-
-
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (!widget.isParagraph) _buildAddAnswerListView(),
+            const Gap(32),
+            _buildFeedbackWidget(),
+            const Gap(16),
+            const Gap(16),
+            _buildDoneButton()
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildLabel() {
-    return const Row(
+  Widget _buildAddAnswerListView() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildLabel(Icons.fact_check, 'List correct answer(s)'),
+        const Gap(16),
+        ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: widget.answers.length,
+            itemBuilder: (context, index) {
+              return _buildOptionItem(widget.answers[index], index);
+            }),
+        const Gap(16),
+        _buildAddOptionButton()
+      ],
+    );
+  }
+
+  Widget _buildFeedbackWidget() {
+    return Column(
+      children: [
+        _buildLabel(Icons.feedback_outlined, 'Answer feedback'),
+        const Gap(16),
+        EditTextWidget(
+          controller: _feedbackController,
+          hint: 'Feedback for all answers',
+          onChange: (value) {
+            widget.feedback?.text = value;
+            _addFeedbackRequest();
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _buildLabel(IconData icon, String labelText) {
+    return Row(
       children: [
         Icon(
-          Icons.fact_check,
+          icon,
           color: Colors.black87,
         ),
-        Gap(8),
+        const Gap(8),
         Text(
-          'List correct answer(s)',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          labelText,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         )
       ],
     );
@@ -124,16 +144,21 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
         onTap: () {
           Navigator.of(context).pop();
         },
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-              color: Colors.blueAccent,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blueAccent, width: 1.5)),
-          child: const Padding(
-            padding: EdgeInsets.all(6.0),
-            child: Text(
-              'Done',
-              style: TextStyle(color: Colors.white, fontSize: 15),
+        child: SizedBox(
+          width: double.infinity,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blueAccent, width: 1.5)),
+            child: const Padding(
+              padding: EdgeInsets.all(6.0),
+              child: Center(
+                child: Text(
+                  'Done',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
             ),
           ),
         ));
@@ -205,6 +230,20 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal> {
     } else if (widget.opType == OperationType.create) {
       req.createItem?.item?.questionItem?.question?.grading?.correctAnswers
           ?.answers = widget.answers;
+    }
+    widget.addRequest();
+  }
+
+  void _addFeedbackRequest() {
+    final req = widget.request;
+    if (widget.opType == OperationType.update) {
+      req.updateItem?.item?.questionItem?.question?.grading?.generalFeedback
+          ?.text = widget.feedback?.text;
+      widget.updateMask.add(Constants.feedback);
+      req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
+    } else if (widget.opType == OperationType.create) {
+      req.createItem?.item?.questionItem?.question?.grading?.generalFeedback
+          ?.text = widget.feedback?.text;
     }
     widget.addRequest();
   }
