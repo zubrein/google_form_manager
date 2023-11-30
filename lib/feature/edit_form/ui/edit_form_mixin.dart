@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/file_upload/file_upload_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/image/image_item_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/linear_scale/linear_scale_widget.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_widget.dart';
@@ -24,6 +25,15 @@ mixin EditFormMixin {
       operationType: type,
       editFormCubit: editFormCubit,
       isParagraph: isParagraph,
+    );
+  }
+
+  Widget _buildFileUploadWidget(int position, Item? qItem, OperationType type) {
+    return FileUploadWidget(
+      index: position,
+      item: qItem,
+      operationType: type,
+      editFormCubit: editFormCubit,
     );
   }
 
@@ -141,6 +151,8 @@ mixin EditFormMixin {
         return _buildTextItemWidget(index, item, opType);
       case QuestionType.pageBreak:
         return _buildPageBreakWidget(index, item, opType);
+      case QuestionType.fileUpload:
+        return _buildFileUploadWidget(index, item, opType);
 
       default:
         return Container(

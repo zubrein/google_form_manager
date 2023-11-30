@@ -17,8 +17,18 @@ class Constants {
   static String multipleChoiceGridShuffle =
       'questionGroupItem.grid.shuffleQuestions';
   static String image = 'imageItem.image.sourceUri';
-  // static String imageProperties = 'imageItem.image.sourceUri.properties';
 
   static String createFormLabel = 'Create Form';
   static String loginText = 'Signing with google';
 }
+
+List<String> uploadAFileTypeList = [
+  'DOCUMENT',
+  'PRESENTATION',
+  'SPREADSHEET',
+  'DRAWING',
+  'PDF',
+  'IMAGE',
+  'VIDEO',
+  'AUDIO'
+];
