@@ -55,6 +55,10 @@ class UpdateRequestItemHelper {
             description: '',
             questionItem: QuestionItem(
               question: Question(
+                  grading: Grading(
+                      pointValue: 0,
+                      generalFeedback: Feedback(text: ''),
+                      correctAnswers: CorrectAnswers(answers: [])),
                   textQuestion:
                       TextQuestion(paragraph: isParagraph ? true : null),
                   required: false),

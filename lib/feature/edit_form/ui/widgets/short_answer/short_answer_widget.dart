@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/helper/title_desciption_adder_mixin.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/short_answer/short_answer_grading_modal.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../../bottom_modal_operation_constant.dart';
@@ -55,6 +57,7 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
         showDescription
             ? buildEditDescriptionWidget()
             : const SizedBox.shrink(),
+        const Gap(32),
       ],
     );
   }
@@ -167,6 +170,22 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
 
   @override
   VoidCallback? get onAnswerKeyPressed => () {
-
-  };
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                content: ShortAnswerGradingModal(
+                  request: request,
+                  answers: widget.item?.questionItem?.question?.grading
+                          ?.correctAnswers?.answers ??
+                      [],
+                  opType: widget.operationType,
+                  updateMask: updateMask,
+                  addRequest: addRequest,
+                  isParagraph: widget.isParagraph,
+                ),
+              );
+            });
+      };
 }
