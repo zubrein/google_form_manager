@@ -20,6 +20,8 @@ class Constants {
   static String correctAnswer =
       'questionItem.question.grading.correctAnswers.answers';
   static String feedback = 'questionItem.question.grading.generalFeedback.text';
+  static String correctAnsFeedback = 'questionItem.question.grading.whenRight.text';
+  static String wrongAnsFeedback = 'questionItem.question.grading.whenWrong.text';
   static String point = 'questionItem.question.grading.pointValue';
 
   static String createFormLabel = 'Create Form';

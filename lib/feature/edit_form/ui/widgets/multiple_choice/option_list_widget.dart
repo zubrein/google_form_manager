@@ -30,7 +30,6 @@ class OptionListWidget extends StatefulWidget {
 class _OptionListWidgetState extends State<OptionListWidget>
     with AutomaticKeepAliveClientMixin {
   final List<TextEditingController> _controllerList = [];
-  final List<Option> optionList = [];
   bool isOtherSectionAvailable = false;
 
   @override
@@ -39,13 +38,12 @@ class _OptionListWidgetState extends State<OptionListWidget>
     for (int i = 0; i < widget.optionList.length; i++) {
       isOtherSectionAvailable = widget.optionList[i].isOther ?? false;
       _controllerList.add(TextEditingController());
-      optionList.add(widget.optionList[i]);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    isOtherSectionAvailable = optionList.last.isOther ?? false;
+    isOtherSectionAvailable = widget.optionList.last.isOther ?? false;
 
     super.build(context);
     return Column(
@@ -53,9 +51,9 @@ class _OptionListWidgetState extends State<OptionListWidget>
         ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: optionList.length,
+            itemCount: widget.optionList.length,
             itemBuilder: (context, index) {
-              return _buildOptionItem(optionList[index], index);
+              return _buildOptionItem(widget.optionList[index], index);
             }),
         const Gap(16),
         Row(
@@ -99,37 +97,39 @@ class _OptionListWidgetState extends State<OptionListWidget>
 
   void _addOption() {
     if (isOtherSectionAvailable) {
-      optionList.removeLast();
+      widget.optionList.removeLast();
       _controllerList.removeLast();
-      optionList.add(_newOption());
+      widget.optionList.add(_newOption());
       _controllerList.add(TextEditingController());
 
-      optionList.add(_otherOption());
+      widget.optionList.add(_otherOption());
       _controllerList.add(TextEditingController());
     } else {
-      optionList.add(_newOption());
+      widget.optionList.add(_newOption());
       _controllerList.add(TextEditingController());
     }
+
     _addRequest();
     setState(() {});
   }
 
   void _removeOption(int index) {
-    optionList.removeAt(index);
+    widget.optionList.removeAt(index);
     _controllerList.removeAt(index);
     _addRequest();
     setState(() {});
   }
 
   void _addOtherOption() {
-    optionList.add(_otherOption());
+    widget.optionList.add(_otherOption());
     _controllerList.add(TextEditingController());
     isOtherSectionAvailable = true;
     _addRequest();
     setState(() {});
   }
 
-  Option _newOption() => Option(value: 'Option ${optionList.length + 1}');
+  Option _newOption() =>
+      Option(value: 'Option ${widget.optionList.length + 1}');
 
   Option _otherOption() => Option(isOther: true);
 
@@ -137,12 +137,12 @@ class _OptionListWidgetState extends State<OptionListWidget>
     final req = widget.request;
     if (widget.opType == OperationType.update) {
       req.updateItem?.item?.questionItem?.question?.choiceQuestion?.options =
-          optionList;
+          widget.optionList;
       widget.updateMask.add(Constants.multipleChoiceValue);
       req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
     } else if (widget.opType == OperationType.create) {
       req.createItem?.item?.questionItem?.question?.choiceQuestion?.options =
-          optionList;
+          widget.optionList;
     }
     widget.addRequest();
   }
@@ -185,7 +185,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
                 ? _buildOtherTextWidget()
                 : _buildOptionEditTextWidget(index),
           ),
-          optionList.length > 1
+          widget.optionList.length > 1
               ? _buildRemoveIcon(index)
               : const SizedBox.shrink(),
           const Gap(8),
@@ -199,7 +199,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
       controller: _controllerList[index],
       hint: 'Option',
       onChange: (value) {
-        optionList[index].value = value;
+        widget.optionList[index].value = value;
         _addRequest();
       },
     );
@@ -226,7 +226,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
   }
 
   Text _buildNumberBullets(int position) =>
-      Text('${position}.', style: const TextStyle(fontSize: 16));
+      Text('$position.', style: const TextStyle(fontSize: 16));
 
   Widget _buildOrButton() {
     return const Text('  or  ', style: TextStyle(color: Colors.black));

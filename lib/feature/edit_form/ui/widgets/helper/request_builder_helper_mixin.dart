@@ -39,11 +39,13 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    request = prepareInitialRequest(
-        operationType: operationType,
-        questionType: questionType,
-        index: widgetIndex);
     isQuiz = editFormCubit.isQuiz;
+    request = prepareInitialRequest(
+      operationType: operationType,
+      questionType: questionType,
+      index: widgetIndex,
+      isQuiz: editFormCubit.isQuiz,
+    );
     init();
   }
 
@@ -53,14 +55,17 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
     required OperationType operationType,
     required QuestionType questionType,
     required int index,
+    required bool isQuiz,
   }) {
     switch (operationType) {
       case OperationType.update:
         return UpdateRequestItemHelper.prepareUpdateRequest(
             questionType, index);
       case OperationType.create:
-        return CreateRequestItemHelper.prepareCreateRequest(
-            questionType, index);
+        return isQuiz
+            ? CreateRequestItemHelper.prepareCreateRequestWithGrading(
+                questionType, index)
+            : CreateRequestItemHelper.prepareCreateRequest(questionType, index);
       default:
         return Request();
     }

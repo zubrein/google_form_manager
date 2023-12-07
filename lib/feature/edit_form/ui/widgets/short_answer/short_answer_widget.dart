@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
@@ -184,8 +183,6 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
                   updateMask: updateMask,
                   addRequest: addRequest,
                   isParagraph: widget.isParagraph,
-                  feedback: widget
-                      .item?.questionItem?.question?.grading?.generalFeedback,
                   grading: widget.item?.questionItem?.question?.grading,
                 ),
               );

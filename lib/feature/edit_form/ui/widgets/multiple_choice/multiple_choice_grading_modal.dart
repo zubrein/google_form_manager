@@ -7,53 +7,49 @@ import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:googleapis/forms/v1.dart' as form;
 
-import '../shared/edit_text_widget.dart';
-
-class ShortAnswerGradingModal extends StatefulWidget {
+class MultipleChoiceGradingModal extends StatefulWidget {
   final Request request;
   final List<CorrectAnswer> answers;
   final OperationType opType;
   final VoidCallback addRequest;
   final Set<String> updateMask;
-  final bool isParagraph;
+  final QuestionType questionType;
   final Grading? grading;
+  final List<Option> optionList;
 
-  const ShortAnswerGradingModal({
+  const MultipleChoiceGradingModal({
     super.key,
     required this.request,
     required this.answers,
     required this.opType,
     required this.addRequest,
     required this.updateMask,
-    this.isParagraph = false,
+    required this.questionType,
     required this.grading,
+    required this.optionList,
   });
 
   @override
-  State<ShortAnswerGradingModal> createState() =>
-      _ShortAnswerGradingModalState();
+  State<MultipleChoiceGradingModal> createState() =>
+      _MultipleChoiceGradingModalState();
 }
 
-class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
+class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
     with PointAndFeedbackMixin {
-  final List<TextEditingController> _controllerList = [];
-  final TextEditingController _feedbackController = TextEditingController();
+  final TextEditingController _correctAnswerController =
+      TextEditingController();
+  final TextEditingController _wrongAnswerController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (grading!.pointValue == null) {
-      grading!.pointValue = 0;
-    }
-
-    for (int i = 0; i < widget.answers.length; i++) {
-      _controllerList.add(TextEditingController());
-    }
+    grading.pointValue ??= 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    _feedbackController.text = widget.grading?.generalFeedback?.text ?? '';
+    _correctAnswerController.text = widget.grading?.whenRight?.text ?? '';
+    _wrongAnswerController.text = widget.grading?.whenWrong?.text ?? '';
     return SizedBox(
       width: double.maxFinite,
       child: SingleChildScrollView(
@@ -61,9 +57,11 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
           mainAxisSize: MainAxisSize.min,
           children: [
             buildPointWidget(),
-            if (!widget.isParagraph) _buildAddAnswerListView(),
+            _buildAddAnswerListView(),
             const Gap(32),
-            buildFeedbackWidget(),
+            buildCorrectAnsFeedbackWidget(),
+            const Gap(32),
+            buildWrongAnsFeedbackWidget(),
             const Gap(16),
             _buildDoneButton()
           ],
@@ -82,35 +80,13 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
         ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.answers.length,
+            itemCount: widget.optionList.length,
             itemBuilder: (context, index) {
-              return _buildOptionItem(widget.answers[index], index);
+              return _buildOptionItem(widget.optionList[index], index);
             }),
         const Gap(16),
-        _buildAddOptionButton()
       ],
     );
-  }
-
-  Widget _buildAddOptionButton() {
-    return GestureDetector(
-        onTap: () {
-          _addOption();
-        },
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blueAccent, width: 1.5)),
-          child: const Padding(
-            padding: EdgeInsets.all(6.0),
-            child: Center(
-              child: Text(
-                'Add a correct answer',
-                style: TextStyle(color: Colors.blueAccent, fontSize: 15),
-              ),
-            ),
-          ),
-        ));
   }
 
   Widget _buildDoneButton() {
@@ -138,60 +114,38 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
         ));
   }
 
-  void _addOption() {
+  void _addCorrectOption() {
     widget.answers.add(_newOption());
-    _controllerList.add(TextEditingController());
 
     _addRequest();
     setState(() {});
   }
 
-  Widget _buildOptionItem(CorrectAnswer answer, int index) {
-    _controllerList[index].text = answer.value ?? 'Correct answer';
-
+  Widget _buildOptionItem(Option option, int index) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         children: [
           Text('${index + 1}. '),
           Expanded(
-            child: _buildOptionEditTextWidget(index),
+            child: _buildOptionTextWidget(index),
           ),
-          _buildRemoveIcon(index)
+          _buildCheckIcon(index)
         ],
       ),
     );
   }
 
-  EditTextWidget _buildOptionEditTextWidget(int index) {
-    return EditTextWidget(
-      controller: _controllerList[index],
-      hint: 'Correct answer',
-      onChange: (value) {
-        widget.answers[index].value = value;
-        _addRequest();
-      },
-    );
+  Widget _buildOptionTextWidget(index) {
+    return Text(widget.optionList[index].value ?? '');
   }
 
-  Widget _buildRemoveIcon(int index) {
-    return GestureDetector(
-      onTap: () {
-        _removeOption(index);
-      },
-      child: const Icon(
-        Icons.close,
-        color: Colors.black38,
-        size: 20,
-      ),
+  Widget _buildCheckIcon(int index) {
+    return const Icon(
+      Icons.check,
+      color: Colors.green,
+      size: 20,
     );
-  }
-
-  void _removeOption(int index) {
-    widget.answers.removeAt(index);
-    _controllerList.removeAt(index);
-    _addRequest();
-    setState(() {});
   }
 
   void _addRequest() {
@@ -213,7 +167,11 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
   @override
   Grading get grading =>
       widget.grading ??
-      Grading(pointValue: 0, generalFeedback: form.Feedback(text: ''));
+      Grading(
+        pointValue: 0,
+        whenRight: form.Feedback(text: ''),
+        whenWrong: form.Feedback(text: ''),
+      );
 
   @override
   VoidCallback get addRequest => widget.addRequest;
@@ -228,11 +186,11 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
   Set<String> get updateMask => widget.updateMask;
 
   @override
-  TextEditingController get feedbackController => _feedbackController;
+  TextEditingController get feedbackController => TextEditingController();
 
   @override
-  TextEditingController get correctAnswerController => TextEditingController();
+  TextEditingController get correctAnswerController => _correctAnswerController;
 
   @override
-  TextEditingController get wrongAnswerController => TextEditingController();
+  TextEditingController get wrongAnswerController => _wrongAnswerController;
 }

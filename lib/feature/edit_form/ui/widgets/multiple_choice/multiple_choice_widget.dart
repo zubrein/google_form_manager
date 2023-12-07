@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_grading_modal.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../../bottom_modal_operation_constant.dart';
@@ -221,5 +222,27 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   Item? get widgetItem => widget.item;
 
   @override
-  VoidCallback? get onAnswerKeyPressed => () {};
+  VoidCallback? get onAnswerKeyPressed => () {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                content: MultipleChoiceGradingModal(
+                  request: request,
+                  answers: widget.item?.questionItem?.question?.grading
+                          ?.correctAnswers?.answers ??
+                      [],
+                  opType: widget.operationType,
+                  updateMask: updateMask,
+                  addRequest: addRequest,
+                  questionType: widget.type,
+                  grading: widget.item?.questionItem?.question?.grading,
+                  optionList: widget.item?.questionItem?.question
+                          ?.choiceQuestion?.options ??
+                      [Option(value: 'Option')],
+                ),
+              );
+            });
+      };
 }

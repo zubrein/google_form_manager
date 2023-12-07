@@ -80,6 +80,11 @@ class UpdateRequestItemHelper {
             description: '',
             questionItem: QuestionItem(
               question: Question(
+                  grading: Grading(
+                      pointValue: 0,
+                      whenRight: Feedback(text: ''),
+                      whenWrong: Feedback(text: ''),
+                      correctAnswers: CorrectAnswers(answers: [])),
                   choiceQuestion: ChoiceQuestion(
                     options: [Option(value: 'Option 1')],
                     shuffle: false,

@@ -3,14 +3,13 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
-
 import 'package:googleapis/forms/v1.dart' as form;
 
 import '../../../domain/enums.dart';
 import 'edit_text_widget.dart';
 
 mixin PointAndFeedbackMixin<T extends StatefulWidget> on State<T> {
-  Grading? get grading;
+  Grading get grading;
 
   Request get request;
 
@@ -20,9 +19,11 @@ mixin PointAndFeedbackMixin<T extends StatefulWidget> on State<T> {
 
   Set<String> get updateMask;
 
-  form.Feedback? get feedback;
-
   TextEditingController get feedbackController;
+
+  TextEditingController get correctAnswerController;
+
+  TextEditingController get wrongAnswerController;
 
   Widget buildPointWidget() {
     return Padding(
@@ -35,7 +36,7 @@ mixin PointAndFeedbackMixin<T extends StatefulWidget> on State<T> {
           _buildPointDecreaseButton(),
           const Gap(8),
           Text(
-            '${grading?.pointValue}',
+            '${grading.pointValue}',
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const Gap(8),
@@ -81,15 +82,15 @@ mixin PointAndFeedbackMixin<T extends StatefulWidget> on State<T> {
 
   void _increasePoint() {
     setState(() {
-      grading!.pointValue = grading!.pointValue! + 1;
+      grading.pointValue = grading.pointValue! + 1;
       _addPointRequest();
     });
   }
 
   void _decreasePoint() {
     setState(() {
-      if (grading!.pointValue! > 0) {
-        grading!.pointValue = grading!.pointValue! - 1;
+      if (grading.pointValue! > 0) {
+        grading.pointValue = grading.pointValue! - 1;
         _addPointRequest();
       }
     });
@@ -104,8 +105,45 @@ mixin PointAndFeedbackMixin<T extends StatefulWidget> on State<T> {
           controller: feedbackController,
           hint: 'Feedback for all answers',
           onChange: (value) {
-            feedback?.text = value;
+            grading.generalFeedback ??= form.Feedback(text: '');
+            grading.generalFeedback?.text = value;
             _addFeedbackRequest();
+          },
+        )
+      ],
+    );
+  }
+
+  Widget buildCorrectAnsFeedbackWidget() {
+    return Column(
+      children: [
+        buildLabel(Icons.feedback_outlined, 'Feedback for correct answers'),
+        const Gap(16),
+        EditTextWidget(
+          controller: correctAnswerController,
+          hint: 'Enter feedback',
+          onChange: (value) {
+            grading.whenRight ??= form.Feedback(text: '');
+            grading.whenRight?.text = value;
+            _addCorrectAnsFeedbackRequest();
+          },
+        )
+      ],
+    );
+  }
+
+  Widget buildWrongAnsFeedbackWidget() {
+    return Column(
+      children: [
+        buildLabel(Icons.feedback_outlined, 'Feedback for incorrect answers'),
+        const Gap(16),
+        EditTextWidget(
+          controller: wrongAnswerController,
+          hint: 'Enter feedback',
+          onChange: (value) {
+            grading.whenWrong ??= form.Feedback(text: '');
+            grading.whenWrong?.text = value;
+            _addWrongAnsFeedbackRequest();
           },
         )
       ],
@@ -128,12 +166,12 @@ mixin PointAndFeedbackMixin<T extends StatefulWidget> on State<T> {
   void _addPointRequest() {
     if (opType == OperationType.update) {
       request.updateItem?.item?.questionItem?.question?.grading?.pointValue =
-          grading?.pointValue;
+          grading.pointValue;
       updateMask.add(Constants.point);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
     } else if (opType == OperationType.create) {
       request.createItem?.item?.questionItem?.question?.grading?.pointValue =
-          grading?.pointValue;
+          grading.pointValue;
     }
     addRequest();
   }
@@ -141,12 +179,38 @@ mixin PointAndFeedbackMixin<T extends StatefulWidget> on State<T> {
   void _addFeedbackRequest() {
     if (opType == OperationType.update) {
       request.updateItem?.item?.questionItem?.question?.grading?.generalFeedback
-          ?.text = feedback?.text;
+          ?.text = grading.generalFeedback?.text;
       updateMask.add(Constants.feedback);
       request.updateItem?.updateMask = updateMaskBuilder(updateMask);
     } else if (opType == OperationType.create) {
       request.createItem?.item?.questionItem?.question?.grading?.generalFeedback
-          ?.text = feedback?.text;
+          ?.text = grading.generalFeedback?.text;
+    }
+    addRequest();
+  }
+
+  void _addCorrectAnsFeedbackRequest() {
+    if (opType == OperationType.update) {
+      request.updateItem?.item?.questionItem?.question?.grading?.whenRight
+          ?.text = grading.whenRight?.text;
+      updateMask.add(Constants.correctAnsFeedback);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+    } else if (opType == OperationType.create) {
+      request.createItem?.item?.questionItem?.question?.grading?.whenRight
+          ?.text = grading.whenRight?.text;
+    }
+    addRequest();
+  }
+
+  void _addWrongAnsFeedbackRequest() {
+    if (opType == OperationType.update) {
+      request.updateItem?.item?.questionItem?.question?.grading?.whenWrong
+          ?.text = grading.whenWrong?.text;
+      updateMask.add(Constants.wrongAnsFeedback);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+    } else if (opType == OperationType.create) {
+      request.createItem?.item?.questionItem?.question?.grading?.whenWrong
+          ?.text = grading.whenWrong?.text;
     }
     addRequest();
   }

@@ -45,7 +45,71 @@ class CreateRequestItemHelper {
     }
   }
 
+  static Request prepareCreateRequestWithGrading(
+      QuestionType questionType, int widgetIndex) {
+    switch (questionType) {
+      case QuestionType.shortAnswer:
+        return prepareShortAnswerCreateRequestWithGrading(
+          widgetIndex,
+        );
+      case QuestionType.paragraph:
+        return prepareShortAnswerCreateRequestWithGrading(widgetIndex,
+            isParagraph: true);
+      case QuestionType.multipleChoice:
+        return prepareMultipleChoiceCreateRequestWithGrading(widgetIndex,
+            type: QuestionType.multipleChoice);
+      case QuestionType.checkboxes:
+        return prepareMultipleChoiceCreateRequestWithGrading(widgetIndex,
+            type: QuestionType.checkboxes);
+      case QuestionType.dropdown:
+        return prepareMultipleChoiceCreateRequestWithGrading(widgetIndex,
+            type: QuestionType.dropdown);
+      // case QuestionType.date:
+      //   return prepareDateCreateRequest(widgetIndex);
+      // case QuestionType.time:
+      //   return prepareTimeCreateRequest(widgetIndex);
+      // case QuestionType.linearScale:
+      //   return prepareLinearScaleCreateRequest(widgetIndex);
+      // case QuestionType.multipleChoiceGrid:
+      //   return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+      //       type: QuestionType.multipleChoiceGrid);
+      // case QuestionType.checkboxGrid:
+      //   return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+      //       type: QuestionType.checkboxGrid);
+      // case QuestionType.image:
+      //   return prepareImageCreateRequest(widgetIndex);
+      // case QuestionType.text:
+      //   return prepareTextItemCreateRequest(widgetIndex);
+      // case QuestionType.pageBreak:
+      //   return preparePageBreakCreateRequest(widgetIndex);
+
+      default:
+        return Request();
+    }
+  }
+
   static Request prepareShortAnswerCreateRequest(
+    int widgetIndex, {
+    bool isParagraph = false,
+  }) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionItem: QuestionItem(
+            question: Question(
+                textQuestion:
+                    TextQuestion(paragraph: isParagraph ? true : null),
+                required: false),
+          ),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
+  static Request prepareShortAnswerCreateRequestWithGrading(
     int widgetIndex, {
     bool isParagraph = false,
   }) {
@@ -79,6 +143,33 @@ class CreateRequestItemHelper {
           description: '',
           questionItem: QuestionItem(
             question: Question(
+                choiceQuestion: ChoiceQuestion(
+                  options: [Option(value: 'Option 1')],
+                  shuffle: false,
+                  type: CreateQuestionItemHelper.getTypeName(type),
+                ),
+                required: false),
+          ),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
+  static Request prepareMultipleChoiceCreateRequestWithGrading(int widgetIndex,
+      {required QuestionType type}) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionItem: QuestionItem(
+            question: Question(
+                grading: Grading(
+                    pointValue: 0,
+                    whenRight: Feedback(text: ''),
+                    whenWrong: Feedback(text: ''),
+                    correctAnswers: CorrectAnswers(answers: [])),
                 choiceQuestion: ChoiceQuestion(
                   options: [Option(value: 'Option 1')],
                   shuffle: false,
