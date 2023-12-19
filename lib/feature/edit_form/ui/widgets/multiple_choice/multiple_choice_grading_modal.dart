@@ -11,6 +11,7 @@ class MultipleChoiceGradingModal extends StatefulWidget {
   final Request request;
   final List<CorrectAnswer> answers;
   final OperationType opType;
+  final QuestionType type;
   final VoidCallback addRequest;
   final Set<String> updateMask;
   final QuestionType questionType;
@@ -27,6 +28,7 @@ class MultipleChoiceGradingModal extends StatefulWidget {
     required this.questionType,
     required this.grading,
     required this.optionList,
+    required this.type,
   });
 
   @override
@@ -142,10 +144,11 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
         });
       },
       child: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
+        padding: const EdgeInsets.only(top: 12.0),
         child: Row(
           children: [
-            Text('${index + 1}. '),
+            getIcon(index) ?? const Icon(Icons.error),
+            const Gap(8),
             Expanded(
               child: _buildOptionTextWidget(index),
             ),
@@ -154,6 +157,39 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
         ),
       ),
     );
+  }
+
+  Icon? getIcon(int index) {
+    if (widget.type == QuestionType.multipleChoice) {
+      if (caStrings.contains(widget.optionList[index].value)) {
+        return const Icon(
+          Icons.radio_button_checked,
+          color: Colors.green,
+          size: 18,
+        );
+      } else {
+        return const Icon(
+          Icons.radio_button_off,
+          size: 18,
+        );
+      }
+    }
+    if (widget.type == QuestionType.checkboxes) {
+      if (caStrings.contains(widget.optionList[index].value)) {
+        return const Icon(
+          Icons.check_box,
+          color: Colors.green,
+          size: 18,
+        );
+      } else {
+        return const Icon(
+          Icons.check_box_outline_blank,
+          size: 18,
+        );
+      }
+    }
+
+    return null;
   }
 
   Widget _buildOptionTextWidget(index) {

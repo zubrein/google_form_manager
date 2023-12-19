@@ -59,7 +59,7 @@ class _OptionListWidgetState extends State<OptionListWidget>
         Row(
           children: [
             widget.type != QuestionType.dropdown
-                ? getIcon()!
+                ? getIcon() ?? const Icon(Icons.error)
                 : const SizedBox.shrink(),
             const Gap(8),
             _buildAddOptionButton(),
