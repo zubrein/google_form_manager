@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_grading_modal.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/general_answer_grading_modal.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:googleapis/forms/v1.dart' as form;
 
@@ -229,21 +230,31 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             barrierDismissible: false,
             builder: (context) {
               return AlertDialog(
-                content: MultipleChoiceGradingModal(
-                  request: request,
-                  answers: widget.item?.questionItem?.question?.grading
-                          ?.correctAnswers?.answers ??
-                      [],
-                  opType: widget.operationType,
-                  updateMask: updateMask,
-                  addRequest: addRequest,
-                  questionType: widget.type,
-                  grading:
-                      _getGrading(widget.item?.questionItem?.question?.grading),
-                  optionList: widget.item?.questionItem?.question
-                          ?.choiceQuestion?.options ??
-                      [Option(value: 'Option')],
-                ),
+                content: widget.type != QuestionType.dropdown
+                    ? MultipleChoiceGradingModal(
+                        request: request,
+                        answers: widget.item?.questionItem?.question?.grading
+                                ?.correctAnswers?.answers ??
+                            [],
+                        opType: widget.operationType,
+                        updateMask: updateMask,
+                        addRequest: addRequest,
+                        questionType: widget.type,
+                        grading: _getGrading(
+                            widget.item?.questionItem?.question?.grading),
+                        optionList: widget.item?.questionItem?.question
+                                ?.choiceQuestion?.options ??
+                            [Option(value: 'Option')],
+                        type: widget.type,
+                      )
+                    : GeneralAnswerGradingModal(
+                        request: request,
+                        opType: widget.operationType,
+                        updateMask: updateMask,
+                        addRequest: addRequest,
+                        widgetGrading: _getGrading(
+                            widget.item?.questionItem?.question?.grading),
+                      ),
               );
             });
       };
