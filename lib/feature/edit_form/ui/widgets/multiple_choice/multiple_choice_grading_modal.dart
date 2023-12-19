@@ -39,11 +39,15 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
   final TextEditingController _correctAnswerController =
       TextEditingController();
   final TextEditingController _wrongAnswerController = TextEditingController();
+  List<String> caStrings = [];
 
   @override
   void initState() {
     super.initState();
-    grading.pointValue ??= 0;
+
+    for (CorrectAnswer i in widget.answers) {
+      caStrings.add(i.value ?? '');
+    }
   }
 
   @override
@@ -75,7 +79,7 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        buildLabel(Icons.fact_check, 'List correct answer(s)'),
+        buildLabel(Icons.fact_check, 'Select correct answer(s)'),
         const Gap(16),
         ListView.builder(
             shrinkWrap: true,
@@ -114,24 +118,40 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
         ));
   }
 
-  void _addCorrectOption() {
-    widget.answers.add(_newOption());
+  void _addCorrectOption(String answer) {
+    if (caStrings.contains(answer)) {
+      caStrings.remove(answer);
+      widget.answers.clear();
+      for (String i in caStrings) {
+        widget.answers.add(CorrectAnswer(value: i));
+      }
+    } else {
+      caStrings.add(answer);
+      widget.answers.add(CorrectAnswer(value: answer));
+    }
 
     _addRequest();
     setState(() {});
   }
 
   Widget _buildOptionItem(Option option, int index) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Row(
-        children: [
-          Text('${index + 1}. '),
-          Expanded(
-            child: _buildOptionTextWidget(index),
-          ),
-          _buildCheckIcon(index)
-        ],
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _addCorrectOption(widget.optionList[index].value ?? '');
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Row(
+          children: [
+            Text('${index + 1}. '),
+            Expanded(
+              child: _buildOptionTextWidget(index),
+            ),
+            _buildCheckIcon(index)
+          ],
+        ),
       ),
     );
   }
@@ -141,11 +161,15 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
   }
 
   Widget _buildCheckIcon(int index) {
-    return const Icon(
-      Icons.check,
-      color: Colors.green,
-      size: 20,
-    );
+    if (caStrings.contains(widget.optionList[index].value)) {
+      return const Icon(
+        Icons.check,
+        color: Colors.green,
+        size: 20,
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
   void _addRequest() {
@@ -161,8 +185,6 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
     }
     widget.addRequest();
   }
-
-  CorrectAnswer _newOption() => CorrectAnswer(value: 'Correct answer');
 
   @override
   Grading get grading =>

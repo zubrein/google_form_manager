@@ -4,6 +4,7 @@ import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice/multiple_choice_grading_modal.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/forms/v1.dart' as form;
 
 import '../../bottom_modal_operation_constant.dart';
 import '../../cubit/edit_form_cubit.dart';
@@ -237,7 +238,8 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                   updateMask: updateMask,
                   addRequest: addRequest,
                   questionType: widget.type,
-                  grading: widget.item?.questionItem?.question?.grading,
+                  grading:
+                      _getGrading(widget.item?.questionItem?.question?.grading),
                   optionList: widget.item?.questionItem?.question
                           ?.choiceQuestion?.options ??
                       [Option(value: 'Option')],
@@ -245,4 +247,31 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
               );
             });
       };
+
+  Grading _getGrading(Grading? grading) {
+    if (grading == null) {
+      return Grading(
+          pointValue: 0,
+          correctAnswers: CorrectAnswers(answers: []),
+          generalFeedback: form.Feedback(text: ''));
+    } else {
+      if (grading.pointValue == null) {
+        widget.item?.questionItem?.question?.grading!.pointValue = 0;
+      }
+      if (grading.correctAnswers == null) {
+        widget.item?.questionItem?.question?.grading!.correctAnswers =
+            CorrectAnswers(answers: []);
+      }
+      if (grading.whenRight == null) {
+        widget.item?.questionItem?.question?.grading!.whenRight =
+            form.Feedback(text: '');
+      }
+      if (grading.whenWrong == null) {
+        widget.item?.questionItem?.question?.grading!.whenWrong =
+            form.Feedback(text: '');
+      }
+
+      return widget.item!.questionItem!.question!.grading!;
+    }
+  }
 }
