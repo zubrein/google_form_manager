@@ -4,10 +4,12 @@ import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/forms/v1.dart' as form;
 
 import '../../bottom_modal_operation_constant.dart';
 import '../helper/request_builder_helper_mixin.dart';
 import '../helper/title_desciption_adder_mixin.dart';
+import '../shared/general_answer_grading_modal.dart';
 
 class TimeWidget extends StatefulWidget {
   final int index;
@@ -266,7 +268,39 @@ class _TimeWidgetState extends State<TimeWidget>
   Item? get widgetItem => widget.item;
 
   @override
-  VoidCallback? get onAnswerKeyPressed => () {};
+  VoidCallback? get onAnswerKeyPressed => () {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                content: GeneralAnswerGradingModal(
+                  request: request,
+                  opType: widget.operationType,
+                  updateMask: updateMask,
+                  addRequest: addRequest,
+                  widgetGrading:
+                      _getGrading(widget.item?.questionItem?.question?.grading),
+                ),
+              );
+            });
+      };
+
+  Grading _getGrading(Grading? grading) {
+    if (grading == null) {
+      return Grading(pointValue: 0, generalFeedback: form.Feedback(text: ''));
+    } else {
+      if (grading.pointValue == null) {
+        widget.item?.questionItem?.question?.grading!.pointValue = 0;
+      }
+      if (grading.generalFeedback == null) {
+        widget.item?.questionItem?.question?.grading!.generalFeedback =
+            form.Feedback(text: '');
+      }
+
+      return widget.item!.questionItem!.question!.grading!;
+    }
+  }
 }
 
 enum ButtonType { description, time, duration }
