@@ -106,6 +106,10 @@ class UpdateRequestItemHelper {
             description: '',
             questionItem: QuestionItem(
               question: Question(
+                  grading: Grading(
+                    pointValue: 0,
+                    generalFeedback: Feedback(text: ''),
+                  ),
                   dateQuestion: DateQuestion(
                     includeYear: true,
                     includeTime: false,
@@ -126,6 +130,10 @@ class UpdateRequestItemHelper {
             description: '',
             questionItem: QuestionItem(
               question: Question(
+                  grading: Grading(
+                    pointValue: 0,
+                    generalFeedback: Feedback(text: ''),
+                  ),
                   timeQuestion: TimeQuestion(
                     duration: false,
                   ),
@@ -145,6 +153,10 @@ class UpdateRequestItemHelper {
             description: '',
             questionItem: QuestionItem(
               question: Question(
+                  grading: Grading(
+                    pointValue: 0,
+                    generalFeedback: Feedback(text: ''),
+                  ),
                   scaleQuestion: ScaleQuestion(
                       low: 1, high: 5, lowLabel: '', highLabel: ''),
                   required: false),

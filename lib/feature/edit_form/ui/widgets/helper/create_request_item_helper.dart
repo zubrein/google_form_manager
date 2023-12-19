@@ -64,12 +64,12 @@ class CreateRequestItemHelper {
       case QuestionType.dropdown:
         return prepareMultipleChoiceCreateRequestWithGrading(widgetIndex,
             type: QuestionType.dropdown);
-      // case QuestionType.date:
-      //   return prepareDateCreateRequest(widgetIndex);
-      // case QuestionType.time:
-      //   return prepareTimeCreateRequest(widgetIndex);
-      // case QuestionType.linearScale:
-      //   return prepareLinearScaleCreateRequest(widgetIndex);
+      case QuestionType.date:
+        return prepareDateCreateRequestWithGrading(widgetIndex);
+      case QuestionType.time:
+        return prepareTimeCreateRequestWithGrading(widgetIndex);
+      case QuestionType.linearScale:
+        return prepareLinearScaleCreateRequestWithGrading(widgetIndex);
       // case QuestionType.multipleChoiceGrid:
       //   return prepareMultipleChoiceGridCreateRequest(widgetIndex,
       //       type: QuestionType.multipleChoiceGrid);
@@ -203,6 +203,30 @@ class CreateRequestItemHelper {
     );
   }
 
+  static Request prepareDateCreateRequestWithGrading(int widgetIndex) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionItem: QuestionItem(
+            question: Question(
+                grading: Grading(
+                  pointValue: 0,
+                  generalFeedback: Feedback(text: ''),
+                ),
+                dateQuestion: DateQuestion(
+                  includeYear: true,
+                  includeTime: false,
+                ),
+                required: false),
+          ),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
   static Request prepareTimeCreateRequest(int widgetIndex) {
     return Request(
       createItem: CreateItemRequest(
@@ -222,6 +246,29 @@ class CreateRequestItemHelper {
     );
   }
 
+  static Request prepareTimeCreateRequestWithGrading(int widgetIndex) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionItem: QuestionItem(
+            question: Question(
+                grading: Grading(
+                  pointValue: 0,
+                  generalFeedback: Feedback(text: ''),
+                ),
+                timeQuestion: TimeQuestion(
+                  duration: false,
+                ),
+                required: false),
+          ),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
   static Request prepareLinearScaleCreateRequest(int widgetIndex) {
     return Request(
       createItem: CreateItemRequest(
@@ -230,6 +277,28 @@ class CreateRequestItemHelper {
           description: '',
           questionItem: QuestionItem(
             question: Question(
+                scaleQuestion:
+                    ScaleQuestion(low: 1, high: 5, lowLabel: '', highLabel: ''),
+                required: false),
+          ),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
+  static Request prepareLinearScaleCreateRequestWithGrading(int widgetIndex) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionItem: QuestionItem(
+            question: Question(
+                grading: Grading(
+                  pointValue: 0,
+                  generalFeedback: Feedback(text: ''),
+                ),
                 scaleQuestion:
                     ScaleQuestion(low: 1, high: 5, lowLabel: '', highLabel: ''),
                 required: false),
