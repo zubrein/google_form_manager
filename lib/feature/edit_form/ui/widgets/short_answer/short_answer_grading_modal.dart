@@ -5,7 +5,6 @@ import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/shared/point_and_feedback_mixin.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
-import 'package:googleapis/forms/v1.dart' as form;
 
 import '../shared/edit_text_widget.dart';
 
@@ -16,7 +15,7 @@ class ShortAnswerGradingModal extends StatefulWidget {
   final VoidCallback addRequest;
   final Set<String> updateMask;
   final bool isParagraph;
-  final Grading? grading;
+  final Grading widgetGrading;
 
   const ShortAnswerGradingModal({
     super.key,
@@ -26,7 +25,7 @@ class ShortAnswerGradingModal extends StatefulWidget {
     required this.addRequest,
     required this.updateMask,
     this.isParagraph = false,
-    required this.grading,
+    required this.widgetGrading,
   });
 
   @override
@@ -42,9 +41,6 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
   @override
   void initState() {
     super.initState();
-    if (grading!.pointValue == null) {
-      grading!.pointValue = 0;
-    }
 
     for (int i = 0; i < widget.answers.length; i++) {
       _controllerList.add(TextEditingController());
@@ -53,7 +49,8 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
 
   @override
   Widget build(BuildContext context) {
-    _feedbackController.text = widget.grading?.generalFeedback?.text ?? '';
+    _feedbackController.text =
+        widget.widgetGrading.generalFeedback?.text ?? '';
     return SizedBox(
       width: double.maxFinite,
       child: SingleChildScrollView(
@@ -211,9 +208,7 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
   CorrectAnswer _newOption() => CorrectAnswer(value: 'Correct answer');
 
   @override
-  Grading get grading =>
-      widget.grading ??
-      Grading(pointValue: 0, generalFeedback: form.Feedback(text: ''));
+  Grading get grading => widget.widgetGrading;
 
   @override
   VoidCallback get addRequest => widget.addRequest;
@@ -235,4 +230,6 @@ class _ShortAnswerGradingModalState extends State<ShortAnswerGradingModal>
 
   @override
   TextEditingController get wrongAnswerController => TextEditingController();
+
+
 }

@@ -5,6 +5,7 @@ import 'package:google_form_manager/feature/edit_form/ui/cubit/edit_form_cubit.d
 import 'package:google_form_manager/feature/edit_form/ui/widgets/helper/title_desciption_adder_mixin.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/short_answer/short_answer_grading_modal.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/forms/v1.dart' as form;
 
 import '../../bottom_modal_operation_constant.dart';
 import '../helper/request_builder_helper_mixin.dart';
@@ -183,9 +184,32 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget>
                   updateMask: updateMask,
                   addRequest: addRequest,
                   isParagraph: widget.isParagraph,
-                  grading: widget.item?.questionItem?.question?.grading,
+                  widgetGrading: _getGrading(widget.item?.questionItem?.question?.grading),
                 ),
               );
             });
       };
+
+  Grading _getGrading(Grading? grading) {
+    if (grading == null) {
+      return Grading(
+          pointValue: 0,
+          correctAnswers: CorrectAnswers(answers: []),
+          generalFeedback: form.Feedback(text: ''));
+    } else {
+      if (grading.pointValue == null) {
+        widget.item?.questionItem?.question?.grading!.pointValue = 0;
+      }
+      if (grading.correctAnswers == null) {
+        widget.item?.questionItem?.question?.grading!.correctAnswers =
+            CorrectAnswers(answers: []);
+      }
+      if (grading.generalFeedback == null) {
+        widget.item?.questionItem?.question?.grading!.generalFeedback =
+            form.Feedback(text: '');
+      }
+
+      return widget.item!.questionItem!.question!.grading!;
+    }
+  }
 }
