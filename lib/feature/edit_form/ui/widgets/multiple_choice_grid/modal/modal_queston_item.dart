@@ -35,7 +35,7 @@ class ModalQuestionItem extends StatefulWidget {
   State<ModalQuestionItem> createState() => _ModalQuestionItemState();
 }
 
-class _ModalQuestionItemState extends State<ModalQuestionItem> {
+class _ModalQuestionItemState extends State<ModalQuestionItem> with AutomaticKeepAliveClientMixin{
   List<String> caStrings = [];
 
   @override
@@ -49,6 +49,7 @@ class _ModalQuestionItemState extends State<ModalQuestionItem> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _buildQuestionItem();
   }
 
@@ -208,6 +209,7 @@ class _ModalQuestionItemState extends State<ModalQuestionItem> {
     setState(() {
       widget.grading.pointValue = widget.grading.pointValue! + 1;
     });
+    _addRowRequest();
   }
 
   void _decreasePoint() {
@@ -216,6 +218,7 @@ class _ModalQuestionItemState extends State<ModalQuestionItem> {
         widget.grading.pointValue = widget.grading.pointValue! - 1;
       }
     });
+    _addRowRequest();
   }
 
   Icon? getIcon(int index) {
@@ -264,4 +267,7 @@ class _ModalQuestionItemState extends State<ModalQuestionItem> {
     }
     widget.addRequest();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
