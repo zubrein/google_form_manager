@@ -28,10 +28,10 @@ class CreateRequestItemHelper {
       case QuestionType.linearScale:
         return prepareLinearScaleCreateRequest(widgetIndex);
       case QuestionType.multipleChoiceGrid:
-        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+        return prepareMultipleChoiceGridCreateRequestWithGrading(widgetIndex,
             type: QuestionType.multipleChoiceGrid);
       case QuestionType.checkboxGrid:
-        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+        return prepareMultipleChoiceGridCreateRequestWithGrading(widgetIndex,
             type: QuestionType.checkboxGrid);
       case QuestionType.image:
         return prepareImageCreateRequest(widgetIndex);
@@ -70,18 +70,12 @@ class CreateRequestItemHelper {
         return prepareTimeCreateRequestWithGrading(widgetIndex);
       case QuestionType.linearScale:
         return prepareLinearScaleCreateRequestWithGrading(widgetIndex);
-      // case QuestionType.multipleChoiceGrid:
-      //   return prepareMultipleChoiceGridCreateRequest(widgetIndex,
-      //       type: QuestionType.multipleChoiceGrid);
-      // case QuestionType.checkboxGrid:
-      //   return prepareMultipleChoiceGridCreateRequest(widgetIndex,
-      //       type: QuestionType.checkboxGrid);
-      // case QuestionType.image:
-      //   return prepareImageCreateRequest(widgetIndex);
-      // case QuestionType.text:
-      //   return prepareTextItemCreateRequest(widgetIndex);
-      // case QuestionType.pageBreak:
-      //   return preparePageBreakCreateRequest(widgetIndex);
+      case QuestionType.multipleChoiceGrid:
+        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+            type: QuestionType.multipleChoiceGrid);
+      case QuestionType.checkboxGrid:
+        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+            type: QuestionType.checkboxGrid);
 
       default:
         return Request();
@@ -320,6 +314,35 @@ class CreateRequestItemHelper {
               questions: [
                 Question(
                     rowQuestion: RowQuestion(title: 'Row 1'), required: false)
+              ],
+              grid: Grid(
+                  columns: ChoiceQuestion(
+                options: [Option(value: 'Column 1')],
+                shuffle: false,
+                type: CreateQuestionItemHelper.getTypeName(type),
+              ))),
+        ),
+        location: Location(index: widgetIndex),
+      ),
+    );
+  }
+
+  static Request prepareMultipleChoiceGridCreateRequestWithGrading(
+      int widgetIndex,
+      {required QuestionType type}) {
+    return Request(
+      createItem: CreateItemRequest(
+        item: Item(
+          title: '',
+          description: '',
+          questionGroupItem: QuestionGroupItem(
+              questions: [
+                Question(
+                    grading: Grading(
+                        pointValue: 0,
+                        correctAnswers: CorrectAnswers(answers: [])),
+                    rowQuestion: RowQuestion(title: 'Row 1'),
+                    required: false)
               ],
               grid: Grid(
                   columns: ChoiceQuestion(

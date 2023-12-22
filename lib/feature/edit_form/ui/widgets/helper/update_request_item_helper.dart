@@ -179,7 +179,11 @@ class UpdateRequestItemHelper {
             questionGroupItem: QuestionGroupItem(
                 questions: [
                   Question(
-                      rowQuestion: RowQuestion(title: 'Row 1'), required: false)
+                      grading: Grading(
+                          pointValue: 0,
+                          correctAnswers: CorrectAnswers(answers: [])),
+                      rowQuestion: RowQuestion(title: 'Row 1'),
+                      required: false)
                 ],
                 grid: Grid(
                     columns: ChoiceQuestion(

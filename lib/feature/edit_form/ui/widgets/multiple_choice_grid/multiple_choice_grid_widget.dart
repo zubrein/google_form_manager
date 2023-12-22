@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice_grid/column_list_widget.dart';
+import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice_grid/modal/multiple_choice_grid_grading_modal.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/multiple_choice_grid/row_list_widget.dart';
 import 'package:googleapis/forms/v1.dart';
 
@@ -261,5 +262,26 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
   }
 
   @override
-  VoidCallback? get onAnswerKeyPressed => () {};
+  VoidCallback? get onAnswerKeyPressed => () {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                content: MultipleChoiceGridGradingModal(
+                  request: request,
+                  opType: widget.operationType,
+                  updateMask: updateMask,
+                  addRequest: addRequest,
+                  questionType: widget.type,
+                  questionList: widget.item?.questionGroupItem?.questions ??
+                      [Question(rowQuestion: RowQuestion(title: 'Row 1'))],
+                  optionList:
+                      widget.item?.questionGroupItem?.grid?.columns?.options ??
+                          [Option(value: 'Column 1')],
+                  type: widget.type,
+                ),
+              );
+            });
+      };
 }
