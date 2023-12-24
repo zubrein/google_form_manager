@@ -28,10 +28,10 @@ class CreateRequestItemHelper {
       case QuestionType.linearScale:
         return prepareLinearScaleCreateRequest(widgetIndex);
       case QuestionType.multipleChoiceGrid:
-        return prepareMultipleChoiceGridCreateRequestWithGrading(widgetIndex,
+        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
             type: QuestionType.multipleChoiceGrid);
       case QuestionType.checkboxGrid:
-        return prepareMultipleChoiceGridCreateRequestWithGrading(widgetIndex,
+        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
             type: QuestionType.checkboxGrid);
       case QuestionType.image:
         return prepareImageCreateRequest(widgetIndex);
@@ -71,10 +71,10 @@ class CreateRequestItemHelper {
       case QuestionType.linearScale:
         return prepareLinearScaleCreateRequestWithGrading(widgetIndex);
       case QuestionType.multipleChoiceGrid:
-        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+        return prepareMultipleChoiceGridCreateRequestWithGrading(widgetIndex,
             type: QuestionType.multipleChoiceGrid);
       case QuestionType.checkboxGrid:
-        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
+        return prepareMultipleChoiceGridCreateRequestWithGrading(widgetIndex,
             type: QuestionType.checkboxGrid);
 
       default:

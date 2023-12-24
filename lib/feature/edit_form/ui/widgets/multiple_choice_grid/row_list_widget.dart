@@ -32,14 +32,12 @@ class RowListWidget extends StatefulWidget {
 class _RowListWidgetState extends State<RowListWidget>
     with AutomaticKeepAliveClientMixin {
   final List<TextEditingController> _controllerList = [];
-  final List<Question> optionList = [];
 
   @override
   void initState() {
     super.initState();
     for (int i = 0; i < widget.rowList.length; i++) {
       _controllerList.add(TextEditingController());
-      optionList.add(widget.rowList[i]);
     }
   }
 
@@ -51,9 +49,9 @@ class _RowListWidgetState extends State<RowListWidget>
         ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: optionList.length,
+            itemCount: widget.rowList.length,
             itemBuilder: (context, index) {
-              return _buildOptionItem(optionList[index], index);
+              return _buildOptionItem(widget.rowList[index], index);
             }),
         const Gap(16),
         _buildAddOptionButton()
@@ -69,7 +67,7 @@ class _RowListWidgetState extends State<RowListWidget>
         child: Row(
           children: [
             Text(
-              '${optionList.length + 1}',
+              '${widget.rowList.length + 1}',
               style: const TextStyle(color: Colors.black),
             ),
             const Gap(12),
@@ -82,7 +80,7 @@ class _RowListWidgetState extends State<RowListWidget>
   }
 
   void _addOption() {
-    optionList.add(_newOption());
+    widget.rowList.add(_newOption());
     _controllerList.add(TextEditingController());
 
     _addRequest();
@@ -90,24 +88,24 @@ class _RowListWidgetState extends State<RowListWidget>
   }
 
   void _removeOption(int index) {
-    optionList.removeAt(index);
+    widget.rowList.removeAt(index);
     _controllerList.removeAt(index);
     _addRequest();
     setState(() {});
   }
 
   Question _newOption() => Question(
-      rowQuestion: RowQuestion(title: 'Row ${optionList.length + 1}'),
+      rowQuestion: RowQuestion(title: 'Row ${widget.rowList.length + 1}'),
       required: widget.isRequired);
 
   void _addRequest() {
     final req = widget.request;
     if (widget.opType == OperationType.update) {
-      req.updateItem?.item?.questionGroupItem?.questions = optionList;
+      req.updateItem?.item?.questionGroupItem?.questions = widget.rowList;
       widget.updateMask.add(Constants.multipleChoiceRow);
       req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
     } else if (widget.opType == OperationType.create) {
-      req.createItem?.item?.questionGroupItem?.questions = optionList;
+      req.createItem?.item?.questionGroupItem?.questions = widget.rowList;
     }
     widget.addRequest();
   }
@@ -130,7 +128,7 @@ class _RowListWidgetState extends State<RowListWidget>
           Expanded(
             child: _buildOptionEditTextWidget(index),
           ),
-          optionList.length > 1
+          widget.rowList.length > 1
               ? _buildRemoveIcon(index)
               : const SizedBox.shrink(),
           const Gap(8),
@@ -144,7 +142,7 @@ class _RowListWidgetState extends State<RowListWidget>
       controller: _controllerList[index],
       hint: 'Add row',
       onChange: (value) {
-        optionList[index].rowQuestion?.title = value;
+        widget.rowList[index].rowQuestion?.title = value;
         _addRequest();
       },
     );

@@ -30,14 +30,12 @@ class ColumnListWidget extends StatefulWidget {
 class _ColumnListWidgetState extends State<ColumnListWidget>
     with AutomaticKeepAliveClientMixin {
   final List<TextEditingController> _controllerList = [];
-  final List<Option> optionList = [];
 
   @override
   void initState() {
     super.initState();
     for (int i = 0; i < widget.optionList.length; i++) {
       _controllerList.add(TextEditingController());
-      optionList.add(widget.optionList[i]);
     }
   }
 
@@ -49,9 +47,9 @@ class _ColumnListWidgetState extends State<ColumnListWidget>
         ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: optionList.length,
+            itemCount: widget.optionList.length,
             itemBuilder: (context, index) {
-              return _buildOptionItem(optionList[index], index);
+              return _buildOptionItem(widget.optionList[index], index);
             }),
         const Gap(16),
         Row(
@@ -77,7 +75,7 @@ class _ColumnListWidgetState extends State<ColumnListWidget>
   }
 
   void _addOption() {
-    optionList.add(_newOption());
+    widget.optionList.add(_newOption());
     _controllerList.add(TextEditingController());
 
     _addRequest();
@@ -85,24 +83,24 @@ class _ColumnListWidgetState extends State<ColumnListWidget>
   }
 
   void _removeOption(int index) {
-    optionList.removeAt(index);
+    widget.optionList.removeAt(index);
     _controllerList.removeAt(index);
     _addRequest();
     setState(() {});
   }
 
-  Option _newOption() => Option(value: 'Column ${optionList.length + 1}');
+  Option _newOption() => Option(value: 'Column ${widget.optionList.length + 1}');
 
   void _addRequest() {
     final req = widget.request;
     if (widget.opType == OperationType.update) {
       req.updateItem?.item?.questionGroupItem?.grid?.columns?.options =
-          optionList;
+          widget.optionList;
       widget.updateMask.add(Constants.multipleChoiceColumn);
       req.updateItem?.updateMask = updateMaskBuilder(widget.updateMask);
     } else if (widget.opType == OperationType.create) {
       req.createItem?.item?.questionGroupItem?.grid?.columns?.options =
-          optionList;
+          widget.optionList;
     }
     widget.addRequest();
   }
@@ -142,7 +140,7 @@ class _ColumnListWidgetState extends State<ColumnListWidget>
           Expanded(
             child: _buildOptionEditTextWidget(index),
           ),
-          optionList.length > 1
+          widget.optionList.length > 1
               ? _buildRemoveIcon(index)
               : const SizedBox.shrink(),
           const Gap(8),
@@ -156,7 +154,7 @@ class _ColumnListWidgetState extends State<ColumnListWidget>
       controller: _controllerList[index],
       hint: 'Add column',
       onChange: (value) {
-        optionList[index].value = value;
+        widget.optionList[index].value = value;
         _addRequest();
       },
     );
