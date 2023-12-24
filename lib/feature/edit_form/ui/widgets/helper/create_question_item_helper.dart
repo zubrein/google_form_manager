@@ -102,9 +102,6 @@ class CreateQuestionItemHelper {
         questionGroupItem: QuestionGroupItem(
             questions: [
           Question(
-            grading: Grading(
-                pointValue: 0,
-                correctAnswers: CorrectAnswers(answers: [])),
             rowQuestion: RowQuestion(title: 'Row 1'),
           )
         ],
