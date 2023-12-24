@@ -27,7 +27,7 @@ class CreateFormCubit extends Cubit<CreateFormState> {
         formId);
 
     result.fold((success) {
-      emit(CreateFormSuccessState());
+      emit(CreateFormSuccessState(formId));
     }, (error) {
       emit(CreateFormFailedState(error.toString()));
     });

@@ -15,8 +15,12 @@ class CreateFormInitiatedState extends CreateFormState {
 }
 
 class CreateFormSuccessState extends CreateFormState {
+  final String formId;
+
+  const CreateFormSuccessState(this.formId);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [formId];
 }
 
 class CreateFormFailedState extends CreateFormState {

@@ -5,6 +5,7 @@ import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
+import 'package:google_form_manager/feature/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/templates/ui/create_form_name_input_dialog.dart';
 import 'package:google_form_manager/feature/templates/ui/cubit/create_form_cubit.dart';
 
@@ -42,6 +43,11 @@ class _TemplatePageState extends State<TemplatePage> {
             } else if (state is CreateFormSuccessState) {
               _loadingHudCubit.cancel();
               Navigator.of(context).pop();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditFormPage(formId: state.formId)));
             } else if (state is CreateFormFailedState) {
               _loadingHudCubit.showError(message: state.error);
             }
