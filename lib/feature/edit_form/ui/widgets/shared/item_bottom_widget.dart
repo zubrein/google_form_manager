@@ -41,7 +41,9 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           widget.isQuiz ?? false
-              ? _buildAnswerKeyButton()
+              ? shouldShowButton(widget.questionType)
+                  ? _buildAnswerKeyButton()
+                  : const SizedBox.shrink()
               : const SizedBox.shrink(),
           const Expanded(child: SizedBox()),
           _buildDeleteIcon(),
