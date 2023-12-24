@@ -76,6 +76,12 @@ class CreateRequestItemHelper {
       case QuestionType.checkboxGrid:
         return prepareMultipleChoiceGridCreateRequestWithGrading(widgetIndex,
             type: QuestionType.checkboxGrid);
+      case QuestionType.image:
+        return prepareImageCreateRequest(widgetIndex);
+      case QuestionType.text:
+        return prepareTextItemCreateRequest(widgetIndex);
+      case QuestionType.pageBreak:
+        return preparePageBreakCreateRequest(widgetIndex);
 
       default:
         return Request();
