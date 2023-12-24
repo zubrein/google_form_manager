@@ -35,15 +35,17 @@ class _BaseItemWidgetState extends State<BaseItemWidget> {
     return Column(
       children: [
         widget.childWidget,
-        ItemBottomWidget(
-          onSwitchToggle: widget.onRequiredSwitchToggle,
-          isRequired: widget.isRequired,
-          onDelete: widget.onDelete,
-          onTapMenuButton: widget.onTapMenuButton,
-          questionType: widget.questionType,
-          onAnswerKeyPressed: widget.onAnswerKeyPressed,
-          isQuiz: widget.isQuiz,
-        )
+        widget.questionType != QuestionType.fileUpload
+            ? ItemBottomWidget(
+                onSwitchToggle: widget.onRequiredSwitchToggle,
+                isRequired: widget.isRequired,
+                onDelete: widget.onDelete,
+                onTapMenuButton: widget.onTapMenuButton,
+                questionType: widget.questionType,
+                onAnswerKeyPressed: widget.onAnswerKeyPressed,
+                isQuiz: widget.isQuiz,
+              )
+            : const SizedBox.shrink()
       ],
     );
   }

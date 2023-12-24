@@ -27,3 +27,15 @@ class Constants {
   static String createFormLabel = 'Create Form';
   static String loginText = 'Signing with google';
 }
+
+List<String> uploadAFileTypeList = [
+  'DOCUMENT',
+  'PRESENTATION',
+  'SPREADSHEET',
+  'DRAWING',
+  'PDF',
+  'IMAGE',
+  'VIDEO',
+  'AUDIO'
+];
+

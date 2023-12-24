@@ -23,6 +23,8 @@ class CheckQuestionTypeUseCase {
     } else if (item?.questionItem?.question?.choiceQuestion != null &&
         item?.questionItem?.question?.choiceQuestion?.type == 'DROP_DOWN') {
       return QuestionType.dropdown;
+    } else if (item?.questionItem?.question?.fileUploadQuestion != null) {
+      return QuestionType.fileUpload;
     } else if (item?.questionItem?.question?.dateQuestion != null) {
       return QuestionType.date;
     } else if (item?.questionItem?.question?.timeQuestion != null) {

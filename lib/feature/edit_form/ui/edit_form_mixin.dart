@@ -10,6 +10,7 @@ import 'package:googleapis/forms/v1.dart';
 
 import '../domain/enums.dart';
 import 'widgets/date/date_widget.dart';
+import 'widgets/file_upload/file_upload_widget.dart';
 import 'widgets/multiple_choice_grid/multiple_choice_grid_widget.dart';
 import 'widgets/short_answer/short_answer_widget.dart';
 
@@ -63,6 +64,15 @@ mixin EditFormMixin {
       operationType: oType,
       editFormCubit: editFormCubit,
       type: qType,
+    );
+  }
+
+  Widget _buildFileUploadWidget(int position, Item? qItem, OperationType type) {
+    return FileUploadWidget(
+      index: position,
+      item: qItem,
+      operationType: type,
+      editFormCubit: editFormCubit,
     );
   }
 
@@ -123,6 +133,8 @@ mixin EditFormMixin {
       case QuestionType.dropdown:
         return _buildMultipleChoiceWidget(
             index, item, opType, QuestionType.dropdown);
+      case QuestionType.fileUpload:
+        return _buildFileUploadWidget(index, item, opType);
       case QuestionType.date:
         return _buildDateWidget(index, item, opType);
       case QuestionType.time:
