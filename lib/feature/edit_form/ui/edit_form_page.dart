@@ -9,6 +9,7 @@ import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dar
 import 'package:googleapis/forms/v1.dart';
 
 import 'cubit/edit_form_cubit.dart';
+import 'item_type_list_page.dart';
 import 'widgets/helper/create_question_item_helper.dart';
 import 'widgets/shared/base_item_with_widget_selector.dart';
 
@@ -191,12 +192,16 @@ class _EditFormPageState extends State<EditFormPage> {
   Widget _buildNewItemAddButton() {
     return GestureDetector(
       onTap: () async {
-        _editFormCubit.addItem(
-          CreateQuestionItemHelper.getItem(
-            QuestionType.multipleChoice,
-          ),
-          QuestionType.multipleChoice,
-        );
+        final result = await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ItemTypeListPage()));
+
+        if (result != null) {
+          _editFormCubit.addItem(
+            CreateQuestionItemHelper.getItem(result[0]),
+            result[0],
+          );
+        }
+
         scrollToBottom();
       },
       child: const SizedBox(
