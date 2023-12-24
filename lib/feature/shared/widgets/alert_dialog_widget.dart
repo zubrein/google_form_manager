@@ -7,6 +7,7 @@ Widget confirmationDialog({
   required String message,
   VoidCallback? onTapCancelButton,
   VoidCallback? onTapContinueButton,
+  String? cancelText,
 }) {
   return CupertinoAlertDialog(
     content: Column(
@@ -21,9 +22,9 @@ Widget confirmationDialog({
           children: [
             TextButton(
                 onPressed: onTapCancelButton,
-                child: const Text(
-                  'cancel',
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                child: Text(
+                  cancelText ?? 'cancel',
+                  style: const TextStyle(fontWeight: FontWeight.w700),
                 )),
             TextButton(
                 onPressed: onTapContinueButton ??

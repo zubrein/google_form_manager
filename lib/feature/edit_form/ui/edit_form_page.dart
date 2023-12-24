@@ -41,17 +41,24 @@ class _EditFormPageState extends State<EditFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Base(
-      loadingHudCubit: _loadingHudCubit,
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Edit form')),
-        body: Column(
-          children: [
-            _buildTopPanel(),
-            _buildFormListView(),
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        await _showSaveDialog('exit');
+        pop();
+        return false;
+      },
+      child: Base(
+        loadingHudCubit: _loadingHudCubit,
+        child: Scaffold(
+          appBar: AppBar(title: const Text('Edit form')),
+          body: Column(
+            children: [
+              _buildTopPanel(),
+              _buildFormListView(),
+            ],
+          ),
+          bottomSheet: _buildBottomPanel(),
         ),
-        bottomSheet: _buildBottomPanel(),
       ),
     );
   }
@@ -119,23 +126,31 @@ class _EditFormPageState extends State<EditFormPage> {
         _editFormCubit.submitRequest(widget.formId);
       },
       onShareButtonTap: () async {
-        showDialog(
-            useRootNavigator: false,
-            context: context,
-            builder: (_) {
-              return confirmationDialog(
-                  context: context,
-                  message:
-                      'Your progress is not saved yet. Do you want to save your progress?',
-                  onTapContinueButton: () {
-                    Navigator.of(context).pop();
-                    _loadingHudCubit.show();
-                    _editFormCubit.submitRequest(widget.formId,
-                        fromShare: true);
-                  });
-            });
+        _showSaveDialog('cancel');
       },
     );
+  }
+
+  Future<void> _showSaveDialog(String cancelText) async {
+    await showDialog(
+        useRootNavigator: false,
+        context: context,
+        builder: (_) {
+          return confirmationDialog(
+            context: context,
+            message:
+                'Your progress is not saved yet. Do you want to save your progress?',
+            onTapContinueButton: () {
+              Navigator.of(context).pop();
+              _loadingHudCubit.show();
+              _editFormCubit.submitRequest(widget.formId, fromShare: true);
+            },
+            onTapCancelButton: () {
+              Navigator.pop(context);
+            },
+            cancelText: cancelText,
+          );
+        });
   }
 
   void pop() {
