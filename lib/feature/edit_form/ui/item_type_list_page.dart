@@ -27,7 +27,7 @@ class _ItemTypeListPageState extends State<ItemTypeListPage> {
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
-              itemCount: questionTypeNameMap.keys.length - 3,
+              itemCount: questionTypeNameMap.keys.length - 4,
               itemBuilder: (context, position) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

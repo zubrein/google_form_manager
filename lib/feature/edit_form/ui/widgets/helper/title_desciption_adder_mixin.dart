@@ -26,7 +26,7 @@ mixin TitleDescriptionAdderMixin {
   final TextEditingController questionController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  Widget buildEditTitleWidget({String hint = 'Question'}) {
+  Widget buildEditTitleWidget({String hint = 'Question', bool enabled = true}) {
     return EditTextWidget(
       controller: questionController,
       fontSize: 18,
@@ -34,6 +34,7 @@ mixin TitleDescriptionAdderMixin {
       fontWeight: FontWeight.w700,
       onChange: _onChangeTitleText,
       hint: hint,
+      enabled: enabled,
     );
   }
 
@@ -52,11 +53,13 @@ mixin TitleDescriptionAdderMixin {
     }
   }
 
-  Widget buildEditDescriptionWidget({String description = 'Description'}) {
+  Widget buildEditDescriptionWidget(
+      {String description = 'Description', bool enabled = true}) {
     return EditTextWidget(
       controller: descriptionController,
       onChange: _onChangeDescriptionText,
       hint: description,
+      enabled: enabled,
     );
   }
 

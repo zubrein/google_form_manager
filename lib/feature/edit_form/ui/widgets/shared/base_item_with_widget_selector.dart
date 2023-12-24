@@ -123,15 +123,17 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
   }
 
   void _onTapTopWidget() async {
-    final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                ItemTypeListPage(selectedType: widget.questionType)));
+    if (widget.questionType != QuestionType.fileUpload) {
+      final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ItemTypeListPage(selectedType: widget.questionType)));
 
-    if (result != null) {
-      editFormCubit.replaceItem(
-          widget.index, CreateQuestionItemHelper.getItem(result[0]), result[0]);
+      if (result != null) {
+        editFormCubit.replaceItem(widget.index,
+            CreateQuestionItemHelper.getItem(result[0]), result[0]);
+      }
     }
   }
 

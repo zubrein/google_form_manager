@@ -69,9 +69,9 @@ class _FileUploadWidgetState extends State<FileUploadWidget>
   @override
   Widget body() {
     return Column(children: [
-      buildEditTitleWidget(),
+      buildEditTitleWidget(enabled: false),
       const Gap(4),
-      showDescription ? buildEditDescriptionWidget() : const SizedBox.shrink(),
+      buildEditDescriptionWidget(enabled: false),
       const Gap(16),
       _buildFileTypeList(),
     ]);
@@ -89,6 +89,16 @@ class _FileUploadWidgetState extends State<FileUploadWidget>
           _buildMaxFileCountRow(),
           const Gap(8),
           _buildMaxFileSizeRow(),
+          const Gap(16),
+          Container(
+            color: Colors.redAccent,
+            padding: const EdgeInsets.all(16),
+            child: const Text(
+              'File upload question cant be edited/created on this version',
+              style: TextStyle(color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );
