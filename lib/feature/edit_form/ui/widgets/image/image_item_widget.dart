@@ -37,6 +37,8 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
   @override
   void init() {}
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     questionController.text = widget.item?.title ?? '';
@@ -62,20 +64,73 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
     String sourceUri = widget.item?.imageItem?.image?.sourceUri ?? '';
     String contentUri = widget.item?.imageItem?.image?.contentUri ?? '';
     if (sourceUri.isNotEmpty) {
-      return mt.Image.network(
-        widget.item?.imageItem?.image?.sourceUri.toString() ?? '',
-        height: 150,
-        width: double.infinity,
-      );
+      return _buildSourceImageWidget();
     } else if (contentUri.isNotEmpty) {
-      return mt.Image.network(
+      return _buildContentImageWidget();
+    } else {
+      return _buildPlaceholderImageWidget();
+    }
+  }
+
+  Widget _buildPlaceholderImageWidget() {
+    return InkWell(
+      onTap: onTapModalImageChange,
+      child: SizedBox(
+          height: 150,
+          child: isLoading ? _buildLoadingWidget() : const Icon(Icons.image)),
+    );
+  }
+
+  Widget _buildContentImageWidget() {
+    return SizedBox(
+      height: 150,
+      child: mt.Image.network(
         widget.item?.imageItem?.image?.contentUri.toString() ?? '',
         height: 150,
         width: double.infinity,
-      );
-    } else {
-      return const SizedBox(height: 150, child: Icon(Icons.image));
-    }
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return _buildLoadingWidget();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildSourceImageWidget() {
+    return SizedBox(
+      height: 150,
+      child: mt.Image.network(
+        widget.item?.imageItem?.image?.sourceUri.toString() ?? '',
+        height: 150,
+        width: double.infinity,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return _buildLoadingWidget();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildLoadingWidget() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 15),
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+          Gap(12),
+          Text('Please wait...')
+        ],
+      ),
+    );
   }
 
   @override
@@ -137,7 +192,10 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
             ),
             const Gap(16),
             InkWell(
-              onTap: onTapModalImageChange,
+              onTap: () {
+                Navigator.of(context).pop();
+                onTapModalImageChange();
+              },
               child: _buildModalRow('Change image', false, Icons.image),
             ),
           ],
@@ -182,7 +240,8 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
   }
 
   void onTapModalImageChange() async {
-    Navigator.of(context).pop();
+    isLoading = true;
+    setState(() {});
     final entity = await ImagePickerHelper.pickImage();
     widget.item!.imageItem!.image!.sourceUri = entity?.url;
     editFormCubit.addUploadedImageID(entity?.id ?? '');
@@ -198,9 +257,13 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
             widget.item!.imageItem!.image!.sourceUri;
         addRequest();
       }
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
