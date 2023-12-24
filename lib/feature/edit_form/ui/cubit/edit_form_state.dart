@@ -30,17 +30,20 @@ class FetchFormFailedState extends EditFormState {
 
 class FormSubmitFailedState extends EditFormState {
   final String error;
+  final bool fromShare;
   final DateTime datetime = DateTime.now();
 
-  FormSubmitFailedState(this.error);
+  FormSubmitFailedState(this.error, this.fromShare);
 
   @override
-  List<Object?> get props => [error, datetime];
+  List<Object?> get props => [error, fromShare, datetime];
 }
 
 class FormSubmitSuccessState extends EditFormState {
-  const FormSubmitSuccessState();
+  final bool fromShare;
+
+  const FormSubmitSuccessState(this.fromShare);
 
   @override
-  List<Object?> get props => [DateTime.now()];
+  List<Object?> get props => [fromShare, DateTime.now()];
 }

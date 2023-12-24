@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_form_manager/core/helper/google_apis_helper.dart';
 import 'package:google_form_manager/core/helper/logger.dart';
+import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/widgets/helper/create_request_item_helper.dart';
@@ -28,6 +29,8 @@ class EditFormCubit extends Cubit<EditFormState> {
   final List<String> imageIdList = [];
   bool isQuiz = false;
 
+  String responderUrl = '';
+
   EditFormCubit(
     this.fetchFormUseCase,
     this.checkQuestionTypeUseCase,
@@ -44,6 +47,7 @@ class EditFormCubit extends Cubit<EditFormState> {
     if (response != null) {
       isQuiz = response.settings?.quizSettings?.isQuiz ?? false;
       final remoteItems = response.items;
+      responderUrl = response.responderUri ?? '';
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
           return BaseItemEntity(
@@ -124,7 +128,7 @@ class EditFormCubit extends Cubit<EditFormState> {
         ''');
   }
 
-  Future<void> _onDeleteSuccess(String formId) async {
+  Future<void> _onDeleteSuccess(String formId, bool fromShare) async {
     for (int index = 0; index < baseItemList.length; index++) {
       final value = baseItemList[index];
 
@@ -141,22 +145,21 @@ class EditFormCubit extends Cubit<EditFormState> {
       );
 
       isOtherRequestSubmitted.fold((success) {
-        emit(const FormSubmitSuccessState());
+        emit(FormSubmitSuccessState(fromShare));
         prepareRequestInitialList();
       }, (error) {
-        emit(FormSubmitFailedState(error.toString()));
+        emit(FormSubmitFailedState(error.toString(), fromShare));
       });
     } else {
-      Log.info('No list');
       if (_deleteListIndexes.isEmpty) {
-        emit(FormSubmitFailedState('No changes done yet'));
+        emit(FormSubmitFailedState(Constants.noChangesText, fromShare));
       } else {
-        emit(const FormSubmitSuccessState());
+        emit(FormSubmitSuccessState(fromShare));
       }
     }
   }
 
-  Future<void> submitRequest(String formId) async {
+  Future<void> submitRequest(String formId, {bool fromShare = false}) async {
     _deleteListIndexes.sort();
     List<Request> deleteRequestList = [];
     for (int i = 0; i < _deleteListIndexes.length; i++) {
@@ -172,12 +175,12 @@ class EditFormCubit extends Cubit<EditFormState> {
       );
 
       await result.fold((success) async {
-        await _onDeleteSuccess(formId);
+        await _onDeleteSuccess(formId, fromShare);
       }, (error) {
-        emit(FormSubmitFailedState(error.toString()));
+        emit(FormSubmitFailedState(error.toString(), fromShare));
       });
     } else {
-      await _onDeleteSuccess(formId);
+      await _onDeleteSuccess(formId, fromShare);
     }
   }
 

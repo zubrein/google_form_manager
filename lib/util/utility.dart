@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../feature/auth/domain/entities/user_profile_entity.dart';
 
@@ -31,4 +32,12 @@ String updateMaskBuilder(Set updateMask) {
   return updateMask.isNotEmpty
       ? updateMask.toString().replaceAll(RegExp(r'[ {}]'), '')
       : '';
+}
+
+Future<void> shareForm(String url) async {
+  final result = await Share.shareWithResult('Please fill out the form \n$url');
+
+  if (result.status == ShareResultStatus.success) {
+    return;
+  }
 }

@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
+import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dart';
+import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 
+import '../../shared/widgets/alert_dialog_widget.dart';
 import 'cubit/edit_form_cubit.dart';
 import 'item_type_list_page.dart';
 import 'widgets/helper/create_question_item_helper.dart';
@@ -57,12 +60,18 @@ class _EditFormPageState extends State<EditFormPage> {
     return Expanded(
       child: BlocConsumer<EditFormCubit, EditFormState>(
         bloc: _editFormCubit,
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is FormListUpdateState) {
             _loadingHudCubit.cancel();
           } else if (state is FormSubmitFailedState) {
-            _loadingHudCubit.showError(message: state.error);
+            if (state.fromShare && state.error == Constants.noChangesText) {
+              await shareForm(_editFormCubit.responderUrl);
+              pop();
+            } else {
+              _loadingHudCubit.showError(message: state.error);
+            }
           } else if (state is FormSubmitSuccessState) {
+            await shareForm(_editFormCubit.responderUrl);
             pop();
           }
         },
@@ -108,6 +117,23 @@ class _EditFormPageState extends State<EditFormPage> {
       onSaveButtonTap: () async {
         _loadingHudCubit.show();
         _editFormCubit.submitRequest(widget.formId);
+      },
+      onShareButtonTap: () async {
+        showDialog(
+            useRootNavigator: false,
+            context: context,
+            builder: (_) {
+              return confirmationDialog(
+                  context: context,
+                  message:
+                      'Your progress is not saved yet. Do you want to save your progress?',
+                  onTapContinueButton: () {
+                    Navigator.of(context).pop();
+                    _loadingHudCubit.show();
+                    _editFormCubit.submitRequest(widget.formId,
+                        fromShare: true);
+                  });
+            });
       },
     );
   }
