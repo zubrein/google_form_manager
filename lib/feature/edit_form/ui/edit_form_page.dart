@@ -220,4 +220,10 @@ class _EditFormPageState extends State<EditFormPage> {
       }
     });
   }
+
+  @override
+  void dispose() {
+    _editFormCubit.deleteImagesFromDrive();
+    super.dispose();
+  }
 }

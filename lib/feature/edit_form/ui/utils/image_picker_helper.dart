@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:google_form_manager/core/helper/google_apis_helper.dart';
+import 'package:google_form_manager/feature/edit_form/domain/entities/image_entity.dart';
 import 'package:googleapis/drive/v2.dart' as drive;
 
 class ImagePickerHelper {
-  static Future<String?> pickImage() async {
+  static Future<ImageEntity?> pickImage() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -14,8 +15,8 @@ class ImagePickerHelper {
       );
 
       if (result != null) {
-        final dUrl = uploadImage(result.files.single.path!);
-        return dUrl;
+        final entity = uploadImage(result.files.single.path!);
+        return entity;
       }
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
@@ -24,7 +25,7 @@ class ImagePickerHelper {
   }
 }
 
-Future<String> uploadImage(String filePath) async {
+Future<ImageEntity?> uploadImage(String filePath) async {
   final driveApi = await GoogleApisHelper.getDriveApi();
 
   final File file = File(filePath);
@@ -36,7 +37,7 @@ Future<String> uploadImage(String filePath) async {
   );
 
   final drive.File dFile = drive.File();
-  dFile.title = 'MyImage.jpg';
+  dFile.title = 'formImage.jpg';
 
   final result = await driveApi?.files.insert(dFile, uploadMedia: media);
   await driveApi?.permissions.insert(
@@ -47,5 +48,5 @@ Future<String> uploadImage(String filePath) async {
     result!.id!,
   );
 
-  return result?.webContentLink ?? '';
+  return ImageEntity(result?.webContentLink ?? '', result!.id!);
 }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_form_manager/core/helper/google_apis_helper.dart';
 import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
@@ -32,6 +33,10 @@ class EditFormCubit extends Cubit<EditFormState> {
     this.checkQuestionTypeUseCase,
     this.batchUpdateUseCase,
   ) : super(EditFormInitial());
+
+  void addUploadedImageID(String id) {
+    imageIdList.add(id);
+  }
 
   Future<void> fetchForm(String formId) async {
     emit(FetchFormInitiatedState());
@@ -143,9 +148,9 @@ class EditFormCubit extends Cubit<EditFormState> {
       });
     } else {
       Log.info('No list');
-      if(_deleteListIndexes.isEmpty) {
+      if (_deleteListIndexes.isEmpty) {
         emit(FormSubmitFailedState('No changes done yet'));
-      }else{
+      } else {
         emit(const FormSubmitSuccessState());
       }
     }
@@ -179,5 +184,17 @@ class EditFormCubit extends Cubit<EditFormState> {
   void prepareRequestInitialList() {
     _deleteListIndexes.clear();
     _requestList.clear();
+  }
+
+  void deleteImagesFromDrive() async {
+    final driveApi = await GoogleApisHelper.getDriveApi();
+    if (driveApi != null) {
+      for (var id in imageIdList) {
+        if (id.isNotEmpty) {
+          await driveApi.files.delete(id);
+        }
+      }
+      imageIdList.clear();
+    }
   }
 }

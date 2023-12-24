@@ -183,8 +183,9 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
 
   void onTapModalImageChange() async {
     Navigator.of(context).pop();
-    widget.item!.imageItem!.image!.sourceUri =
-        await ImagePickerHelper.pickImage();
+    final entity = await ImagePickerHelper.pickImage();
+    widget.item!.imageItem!.image!.sourceUri = entity?.url;
+    editFormCubit.addUploadedImageID(entity?.id ?? '');
     if (widget.item!.imageItem!.image!.sourceUri != null) {
       if (operationType == OperationType.update) {
         request.updateItem?.item?.imageItem?.image?.sourceUri =
