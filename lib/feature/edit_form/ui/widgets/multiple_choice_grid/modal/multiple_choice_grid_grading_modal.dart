@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
-import 'package:googleapis/forms/v1.dart' as form;
 
 import 'modal_queston_item.dart';
 
@@ -93,29 +92,10 @@ class _MultipleChoiceGridGradingModalState
             opType: widget.opType,
             questionIndex: index,
             questionTitle: widget.questionList[index].rowQuestion?.title ?? '',
-            grading: _getGrading(widget.questionList[index].grading, index),
+            // grading: _getGrading(widget.questionList[index].grading, index),
             request: widget.request,
           );
         });
-  }
-
-  Grading _getGrading(Grading? grading, int index) {
-    if (grading == null) {
-      return Grading(
-          pointValue: 0,
-          correctAnswers: CorrectAnswers(answers: []),
-          generalFeedback: form.Feedback(text: ''));
-    } else {
-      if (grading.pointValue == null) {
-        widget.questionList[index].grading!.pointValue = 0;
-      }
-      if (grading.correctAnswers == null) {
-        widget.questionList[index].grading!.correctAnswers =
-            CorrectAnswers(answers: []);
-      }
-
-      return widget.questionList[index].grading!;
-    }
   }
 
   Widget _buildDoneButton() {

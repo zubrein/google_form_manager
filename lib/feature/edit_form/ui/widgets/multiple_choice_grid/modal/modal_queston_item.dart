@@ -14,7 +14,6 @@ class ModalQuestionItem extends StatefulWidget {
   final OperationType opType;
   final int questionIndex;
   final String questionTitle;
-  final Grading grading;
   final Request request;
 
   const ModalQuestionItem({
@@ -27,7 +26,6 @@ class ModalQuestionItem extends StatefulWidget {
     required this.opType,
     required this.questionIndex,
     required this.questionTitle,
-    required this.grading,
     required this.request,
   });
 
@@ -35,13 +33,35 @@ class ModalQuestionItem extends StatefulWidget {
   State<ModalQuestionItem> createState() => _ModalQuestionItemState();
 }
 
-class _ModalQuestionItemState extends State<ModalQuestionItem> with AutomaticKeepAliveClientMixin{
+class _ModalQuestionItemState extends State<ModalQuestionItem>
+    with AutomaticKeepAliveClientMixin {
   List<String> caStrings = [];
 
   @override
   void initState() {
     super.initState();
-    final answers = widget.grading.correctAnswers?.answers ?? [];
+    _setGrading();
+  }
+
+  Future<void> _setGrading() async {
+    if (widget.questionList[widget.questionIndex].grading == null) {
+      widget.questionList[widget.questionIndex].grading =
+          Grading(pointValue: 0, correctAnswers: CorrectAnswers(answers: []));
+    } else {
+      if (widget.questionList[widget.questionIndex].grading!.pointValue ==
+          null) {
+        widget.questionList[widget.questionIndex].grading!.pointValue = 0;
+      }
+      if (widget.questionList[widget.questionIndex].grading!.correctAnswers ==
+          null) {
+        widget.questionList[widget.questionIndex].grading!.correctAnswers =
+            CorrectAnswers(answers: []);
+      }
+    }
+
+    final answers = widget.questionList[widget.questionIndex].grading
+        ?.correctAnswers?.answers ??
+        [];
     for (CorrectAnswer i in answers) {
       caStrings.add(i.value ?? '');
     }
@@ -74,7 +94,7 @@ class _ModalQuestionItemState extends State<ModalQuestionItem> with AutomaticKee
           const Gap(8),
           _buildOptionListView(),
           const Gap(16),
-          _buildPointWidget(widget.grading),
+          _buildPointWidget(widget.questionList[widget.questionIndex].grading!),
           const Divider(
             color: Colors.grey,
           )
@@ -86,13 +106,17 @@ class _ModalQuestionItemState extends State<ModalQuestionItem> with AutomaticKee
   void _addCorrectOption(String answer) {
     if (caStrings.contains(answer)) {
       caStrings.remove(answer);
-      widget.grading.correctAnswers?.answers?.clear();
+      widget.questionList[widget.questionIndex].grading?.correctAnswers?.answers
+          ?.clear();
       for (String i in caStrings) {
-        widget.grading.correctAnswers?.answers?.add(CorrectAnswer(value: i));
+        widget
+            .questionList[widget.questionIndex].grading?.correctAnswers?.answers
+            ?.add(CorrectAnswer(value: i));
       }
     } else {
       caStrings.add(answer);
-      widget.grading.correctAnswers?.answers?.add(CorrectAnswer(value: answer));
+      widget.questionList[widget.questionIndex].grading?.correctAnswers?.answers
+          ?.add(CorrectAnswer(value: answer));
     }
 
     _addRowRequest();
@@ -207,15 +231,17 @@ class _ModalQuestionItemState extends State<ModalQuestionItem> with AutomaticKee
 
   void _increasePoint() {
     setState(() {
-      widget.grading.pointValue = widget.grading.pointValue! + 1;
+      widget.questionList[widget.questionIndex].grading?.pointValue =
+          widget.questionList[widget.questionIndex].grading!.pointValue! + 1;
     });
     _addRowRequest();
   }
 
   void _decreasePoint() {
     setState(() {
-      if (widget.grading.pointValue! > 0) {
-        widget.grading.pointValue = widget.grading.pointValue! - 1;
+      if (widget.questionList[widget.questionIndex].grading!.pointValue! > 0) {
+        widget.questionList[widget.questionIndex].grading!.pointValue =
+            widget.questionList[widget.questionIndex].grading!.pointValue! - 1;
       }
     });
     _addRowRequest();
