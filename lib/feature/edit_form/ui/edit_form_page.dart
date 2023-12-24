@@ -78,8 +78,7 @@ class _EditFormPageState extends State<EditFormPage> {
               _loadingHudCubit.showError(message: state.error);
             }
           } else if (state is FormSubmitSuccessState) {
-            await shareForm(_editFormCubit.responderUrl);
-            pop();
+            await _onFormSubmitSuccess(context);
           }
         },
         buildWhen: (oldState, newState) {
@@ -100,6 +99,27 @@ class _EditFormPageState extends State<EditFormPage> {
         },
       ),
     );
+  }
+
+  Future<void> _onFormSubmitSuccess(BuildContext context) async {
+    await showDialog(
+        useRootNavigator: false,
+        context: context,
+        builder: (_) {
+          return confirmationDialog(
+            context: context,
+            message:
+                'Your progress has been submitted successfully. Do you want to share?',
+            onTapContinueButton: () async {
+              await shareForm(_editFormCubit.responderUrl)
+                  .then((value) => Navigator.of(context).pop());
+            },
+            onTapCancelButton: () {
+              Navigator.pop(context);
+            },
+            cancelText: 'exit',
+          );
+        }).then((value) => pop());
   }
 
   bool _checkIfQuestionTypeIsUnknown(Item item) {
