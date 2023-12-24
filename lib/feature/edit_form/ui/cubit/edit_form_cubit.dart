@@ -163,8 +163,11 @@ class EditFormCubit extends Cubit<EditFormState> {
     _deleteListIndexes.sort();
     List<Request> deleteRequestList = [];
     for (int i = 0; i < _deleteListIndexes.length; i++) {
-      deleteRequestList.add(DeleteRequestItemHelper.createDeleteRequest(
-          _deleteListIndexes[i] - i));
+      int index = 0;
+      if (_deleteListIndexes[i] != 0) {
+        index = _deleteListIndexes[i] - i;
+      }
+      deleteRequestList.add(DeleteRequestItemHelper.createDeleteRequest(index));
     }
 
     if (deleteRequestList.isNotEmpty) {
