@@ -203,4 +203,12 @@ class EditFormCubit extends Cubit<EditFormState> {
       imageIdList.clear();
     }
   }
+
+  bool checkIfListIsEmpty() {
+    if (_requestList.isNotEmpty || _deleteListIndexes.isNotEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

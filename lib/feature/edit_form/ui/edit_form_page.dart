@@ -43,8 +43,11 @@ class _EditFormPageState extends State<EditFormPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await _showSaveDialog('exit');
-        pop();
+        if (_editFormCubit.checkIfListIsEmpty()) {
+          pop();
+        } else {
+          await _showSaveDialog('exit');
+        }
         return false;
       },
       child: Base(
