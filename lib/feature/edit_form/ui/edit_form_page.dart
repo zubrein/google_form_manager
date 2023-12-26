@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
-import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/edit_form/ui/edit_form_top_panel.dart';
@@ -70,20 +69,7 @@ class _EditFormPageState extends State<EditFormPage> {
     return Expanded(
       child: BlocConsumer<EditFormCubit, EditFormState>(
         bloc: _editFormCubit,
-        listener: (context, state) async {
-          if (state is FormListUpdateState) {
-            _loadingHudCubit.cancel();
-          } else if (state is FormSubmitFailedState) {
-            if (state.fromShare && state.error == Constants.noChangesText) {
-              await shareForm(_editFormCubit.responderUrl);
-              pop();
-            } else {
-              _loadingHudCubit.showError(message: state.error);
-            }
-          } else if (state is FormSubmitSuccessState) {
-            await _onFormSubmitSuccess(context);
-          }
-        },
+        listener: _onListenEditFormCubit,
         buildWhen: (oldState, newState) {
           return newState is FormListUpdateState;
         },
@@ -102,6 +88,16 @@ class _EditFormPageState extends State<EditFormPage> {
         },
       ),
     );
+  }
+
+  void _onListenEditFormCubit(context, state) async {
+    if (state is FormListUpdateState) {
+      _loadingHudCubit.cancel();
+    } else if (state is FormSubmitFailedState) {
+      _loadingHudCubit.showError(message: state.error);
+    } else if (state is FormSubmitSuccessState) {
+      await _onFormSubmitSuccess(context);
+    }
   }
 
   Future<void> _onFormSubmitSuccess(BuildContext context) async {
@@ -149,7 +145,11 @@ class _EditFormPageState extends State<EditFormPage> {
         _editFormCubit.submitRequest(widget.formId);
       },
       onShareButtonTap: () async {
-        _showSaveDialog('cancel');
+        if (_editFormCubit.checkIfListIsEmpty()) {
+          await shareForm(_editFormCubit.responderUrl);
+        } else {
+          _showSaveDialog('cancel');
+        }
       },
     );
   }

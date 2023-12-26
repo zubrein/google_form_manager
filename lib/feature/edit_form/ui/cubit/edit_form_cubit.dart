@@ -207,10 +207,13 @@ class EditFormCubit extends Cubit<EditFormState> {
   }
 
   bool checkIfListIsEmpty() {
-    if (_requestList.isNotEmpty || _deleteListIndexes.isNotEmpty) {
-      return false;
-    } else {
-      return true;
+    for (int index = 0; index < baseItemList.length; index++) {
+      final value = baseItemList[index];
+
+      if (value.request != null) {
+        return false;
+      }
     }
+    return true;
   }
 }
