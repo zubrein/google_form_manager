@@ -14,6 +14,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/usecases/batch_update_usecase.dart';
 import '../../domain/usecases/check_question_type_usecase.dart';
 import '../../domain/usecases/fetch_form_usecase.dart';
+import '../utils/process_request_for_empty_feedback.dart';
 import '../widgets/helper/delete_request_item_helper.dart';
 
 part 'edit_form_state.dart';
@@ -210,61 +211,6 @@ class EditFormCubit extends Cubit<EditFormState> {
       return false;
     } else {
       return true;
-    }
-  }
-
-  void processGradingFeedbackRequest(Request request) {
-    processCreateGradingRequest(request);
-    processUpdateGradingRequest(request);
-  }
-
-  void processUpdateGradingRequest(Request request) {
-    final generalFeedback = request.updateItem?.item?.questionItem?.question
-            ?.grading?.generalFeedback?.text ??
-        '';
-    if (generalFeedback.isEmpty) {
-      request.updateItem?.item?.questionItem?.question?.grading?.generalFeedback
-          ?.text = ' ';
-    }
-    final whenRight = request.updateItem?.item?.questionItem?.question?.grading
-            ?.whenRight?.text ??
-        '';
-    if (whenRight.isEmpty) {
-      request.updateItem?.item?.questionItem?.question?.grading?.whenRight
-          ?.text = ' ';
-    }
-
-    final whenWrong = request.updateItem?.item?.questionItem?.question?.grading
-            ?.whenWrong?.text ??
-        '';
-    if (whenWrong.isEmpty) {
-      request.updateItem?.item?.questionItem?.question?.grading?.whenWrong
-          ?.text = ' ';
-    }
-  }
-
-  void processCreateGradingRequest(Request request) {
-    final generalFeedback = request.createItem?.item?.questionItem?.question
-            ?.grading?.generalFeedback?.text ??
-        '';
-    if (generalFeedback.isEmpty) {
-      request.createItem?.item?.questionItem?.question?.grading?.generalFeedback
-          ?.text = ' ';
-    }
-    final whenRight = request.createItem?.item?.questionItem?.question?.grading
-            ?.whenRight?.text ??
-        '';
-    if (whenRight.isEmpty) {
-      request.createItem?.item?.questionItem?.question?.grading?.whenRight
-          ?.text = ' ';
-    }
-
-    final whenWrong = request.createItem?.item?.questionItem?.question?.grading
-            ?.whenWrong?.text ??
-        '';
-    if (whenWrong.isEmpty) {
-      request.createItem?.item?.questionItem?.question?.grading?.whenWrong
-          ?.text = ' ';
     }
   }
 }
