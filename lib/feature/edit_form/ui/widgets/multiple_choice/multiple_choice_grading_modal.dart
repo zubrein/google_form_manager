@@ -42,8 +42,6 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
       TextEditingController();
   final TextEditingController _wrongAnswerController = TextEditingController();
   List<String> caStrings = [];
-  bool showWhenRightError = false;
-  bool showWhenWrongError = false;
 
   @override
   void initState() {
@@ -69,26 +67,11 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
             _buildAddAnswerListView(),
             const Gap(32),
             buildCorrectAnsFeedbackWidget(),
-            if (showWhenRightError) _buildErrorText(),
             const Gap(32),
             buildWrongAnsFeedbackWidget(),
-            if (showWhenWrongError) _buildErrorText(),
             const Gap(16),
             _buildDoneButton()
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorText() {
-    return const Padding(
-      padding: EdgeInsets.only(top: 8.0),
-      child: Text(
-        'Feedback must not empty',
-        style: TextStyle(
-          color: Colors.red,
-          fontSize: 13,
         ),
       ),
     );
@@ -116,18 +99,7 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
   Widget _buildDoneButton() {
     return GestureDetector(
         onTap: () {
-          if (_correctAnswerController.text.isNotEmpty &&
-              _wrongAnswerController.text.isNotEmpty) {
-            Navigator.of(context).pop();
-          } else {
-            if (_correctAnswerController.text.isEmpty) {
-              showWhenRightError = true;
-            }
-            if (_wrongAnswerController.text.isEmpty) {
-              showWhenWrongError = true;
-            }
-            setState(() {});
-          }
+          Navigator.of(context).pop();
         },
         child: SizedBox(
           width: double.infinity,

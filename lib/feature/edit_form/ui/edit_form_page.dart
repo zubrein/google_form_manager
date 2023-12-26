@@ -170,6 +170,9 @@ class _EditFormPageState extends State<EditFormPage> {
             },
             onTapCancelButton: () {
               Navigator.pop(context);
+              if (cancelText == 'exit') {
+                Navigator.pop(context);
+              }
             },
             cancelText: cancelText,
           );
