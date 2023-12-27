@@ -76,18 +76,41 @@ class _EditFormPageState extends State<EditFormPage> {
         builder: (context, state) {
           return Padding(
             padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
-            child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _editFormCubit.baseItemList.length,
-                itemBuilder: (context, position) {
-                  final formItem = _editFormCubit.baseItemList[position];
-                  return _buildFormItem(formItem, position);
-                }),
+            const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
+            child: ReorderableListView(
+              onReorder: (int oldIndex, int newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  _editFormCubit.addDeleteRequestOnReorder(oldIndex);
+                  final BaseItemEntity item =
+                  _editFormCubit.baseItemList.removeAt(oldIndex);
+                  _editFormCubit.baseItemList.insert(newIndex, item);
+                  _editFormCubit.baseItemList[newIndex].request = Request(
+                    createItem: CreateItemRequest(
+                      item: item.item,
+                      location: Location(index: newIndex),
+                    ),
+                  );
+
+                });
+              },
+              children: _prepareList(),
+            ),
           );
         },
       ),
     );
+  }
+
+  List<Widget> _prepareList() {
+    final widgets = <Widget>[];
+    for (int i = 0; i < _editFormCubit.baseItemList.length; i += 1) {
+      final formItem = _editFormCubit.baseItemList[i];
+      widgets.add(_buildFormItem(formItem, i));
+    }
+    return widgets;
   }
 
   void _onListenEditFormCubit(context, state) async {
@@ -108,7 +131,7 @@ class _EditFormPageState extends State<EditFormPage> {
           return confirmationDialog(
             context: context,
             message:
-                'Your progress has been submitted successfully. Do you want to share?',
+            'Your progress has been submitted successfully. Do you want to share?',
             onTapContinueButton: () async {
               await shareForm(_editFormCubit.responderUrl)
                   .then((value) => Navigator.of(context).pop());
@@ -129,12 +152,12 @@ class _EditFormPageState extends State<EditFormPage> {
   Widget _buildFormItem(BaseItemEntity formItem, int position) {
     return _checkIfQuestionTypeIsUnknown(formItem.item!)
         ? BaseItemWithWidgetSelector(
-            key: formItem.key,
-            editFormCubit: _editFormCubit,
-            questionType: _editFormCubit.checkQuestionType(formItem.item),
-            formItem: formItem,
-            index: position,
-          )
+      key: formItem.key,
+      editFormCubit: _editFormCubit,
+      questionType: _editFormCubit.checkQuestionType(formItem.item),
+      formItem: formItem,
+      index: position,
+    )
         : const SizedBox.shrink();
   }
 
@@ -162,7 +185,7 @@ class _EditFormPageState extends State<EditFormPage> {
           return confirmationDialog(
             context: context,
             message:
-                'Your progress is not saved yet. Do you want to save your progress?',
+            'Your progress is not saved yet. Do you want to save your progress?',
             onTapContinueButton: () {
               Navigator.of(context).pop();
               _loadingHudCubit.show();

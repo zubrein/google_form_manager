@@ -118,6 +118,11 @@ class EditFormCubit extends Cubit<EditFormState> {
     }
     emit(FormListUpdateState(baseItemList));
   }
+  void addDeleteRequestOnReorder(int index){
+    if (baseItemList[index].itemId != null) {
+      _deleteListIndexes.add(index);
+    }
+  }
 
   printRequest(Request request, int index) {
     Log.info('''
