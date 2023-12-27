@@ -33,4 +33,15 @@ class EditFormRepositoryImpl extends EditFormRepository {
     }
     return form;
   }
+
+  @override
+  Future<List<FormResponse>> getResponses(String formId) async {
+    final formApi = await GoogleApisHelper.getFormApi();
+    ListFormResponsesResponse formResponses;
+    if (formApi != null) {
+      formResponses = await formApi.forms.responses.list(formId);
+      return formResponses.responses ?? [];
+    }
+    return [];
+  }
 }
