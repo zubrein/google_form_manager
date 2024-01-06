@@ -7,7 +7,7 @@ import '../../core/loading_hud/loading_hud_cubit.dart';
 import '../../util/utility.dart';
 import '../shared/widgets/alert_dialog_widget.dart';
 import 'edit_form/ui/cubit/edit_form_cubit.dart';
-import 'edit_form_top_panel.dart';
+import 'top_panel.dart';
 
 class FormTabPage extends StatefulWidget {
   final String formId;
@@ -70,7 +70,7 @@ class _FormTabPageState extends State<FormTabPage> {
   }
 
   Widget _buildTopPanel() {
-    return EditFormTopPanel(
+    return TopPanel(
       onSaveButtonTap: () async {
         _loadingHudCubit.show();
         _editFormCubit.submitRequest(widget.formId);
