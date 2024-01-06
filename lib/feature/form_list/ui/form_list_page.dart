@@ -9,7 +9,7 @@ import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
-import '../../google_form/edit_form/ui/edit_form_page.dart';
+import '../../google_form/form_tab_page.dart';
 import 'cubit/form_list_cubit.dart';
 
 class FormListPage extends StatefulWidget {
@@ -135,7 +135,7 @@ class _FormListPageState extends State<FormListPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => EditFormPage(formId: item.id!)));
+                builder: (context) => FormTabPage(formId: item.id!)));
       },
       child: Card(
         child: Padding(

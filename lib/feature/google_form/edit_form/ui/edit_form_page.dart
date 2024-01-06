@@ -52,10 +52,10 @@ class _EditFormPageState extends State<EditFormPage> {
       child: Base(
         loadingHudCubit: _loadingHudCubit,
         child: Scaffold(
-          appBar: AppBar(title: const Text('Edit form')),
+          // appBar: AppBar(title: const Text('Edit form')),
           body: Column(
             children: [
-              _buildTopPanel(),
+              // _buildTopPanel(),
               _buildFormListView(),
             ],
           ),
