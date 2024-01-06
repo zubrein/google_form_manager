@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
 import 'package:google_form_manager/util/utility.dart';
@@ -80,18 +81,49 @@ class _EditFormPageState extends State<EditFormPage>
                 itemCount: widget.editFormCubit.baseItemList.length + 1,
                 itemBuilder: (context, position) {
                   return position == 0
-                      ? Column(
-                          children: [
-                            _buildFormTitle(),
-                            _buildFormDescription(),
-                          ],
-                        )
+                      ? state is FetchFormInitiatedState
+                          ? const SizedBox.shrink()
+                          : _buildFormTitleDescSection()
                       : _buildFormItem(
                           widget.editFormCubit.baseItemList[position - 1],
                           position - 1);
                 }),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildFormTitleDescSection() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: DecoratedBox(
+            decoration: const BoxDecoration(color: Colors.green),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 1)
+                  .copyWith(left: 8, right: 1),
+              child: DecoratedBox(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        _buildFormTitle(),
+                        const Gap(8),
+                        _buildFormDescription(),
+                        const Gap(8),
+                      ],
+                    ),
+                  )),
+            )),
       ),
     );
   }
@@ -290,7 +322,6 @@ class _EditFormPageState extends State<EditFormPage>
       fontWeight: FontWeight.w700,
       onChange: _onChangeTitleText,
       hint: 'Title',
-      disableBorder: true,
       enabled: false,
     );
   }
@@ -298,7 +329,7 @@ class _EditFormPageState extends State<EditFormPage>
   Widget _buildFormDescription() {
     return EditTextWidget(
       controller: _descriptionController,
-      fontSize: 14,
+      fontSize: 16,
       fontColor: Colors.black54,
       fontWeight: FontWeight.w500,
       onChange: _onChangeTitleText,

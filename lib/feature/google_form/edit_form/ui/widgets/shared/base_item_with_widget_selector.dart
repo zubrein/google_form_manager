@@ -106,10 +106,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
   }
 
   EdgeInsets _buildInnerBoxPadding() {
-    return const EdgeInsets.symmetric(vertical: 1).copyWith(
-      left: 8,
-      right: 1,
-    );
+    return const EdgeInsets.symmetric(vertical: 1).copyWith(left: 8, right: 1);
   }
 
   BoxDecoration _buildInnerBoxDecoration() {
