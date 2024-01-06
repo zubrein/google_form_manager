@@ -27,7 +27,8 @@ class EditFormPage extends StatefulWidget {
   State<EditFormPage> createState() => _EditFormPageState();
 }
 
-class _EditFormPageState extends State<EditFormPage> {
+class _EditFormPageState extends State<EditFormPage>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -39,6 +40,7 @@ class _EditFormPageState extends State<EditFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return WillPopScope(
       onWillPop: () async {
         if (widget.editFormCubit.checkIfListIsEmpty()) {
@@ -272,4 +274,7 @@ class _EditFormPageState extends State<EditFormPage> {
     widget.editFormCubit.deleteImagesFromDrive();
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
