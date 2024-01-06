@@ -4,12 +4,12 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart';
-import 'package:google_form_manager/feature/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
+import '../../google_form/edit_form/ui/edit_form_page.dart';
 import 'cubit/form_list_cubit.dart';
 
 class FormListPage extends StatefulWidget {
@@ -56,7 +56,7 @@ class _FormListPageState extends State<FormListPage> {
               listener: (BuildContext context, Object? state) {
                 if (state is FormListFetchInitiatedState) {
                   _loadingHudCubit.show();
-                }else if (state is FormListFetchSuccessState) {
+                } else if (state is FormListFetchSuccessState) {
                   _loadingHudCubit.cancel();
                 }
               },

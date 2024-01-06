@@ -4,10 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
-import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
-import 'package:google_form_manager/feature/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/templates/ui/create_form_name_input_dialog.dart';
 import 'package:google_form_manager/feature/templates/ui/cubit/create_form_cubit.dart';
+
+import '../../google_form/edit_form/domain/constants.dart';
+import '../../google_form/edit_form/ui/edit_form_page.dart';
 
 class TemplatePage extends StatefulWidget {
   const TemplatePage({super.key});

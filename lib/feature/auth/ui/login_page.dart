@@ -5,7 +5,7 @@ import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
-import 'package:google_form_manager/feature/edit_form/domain/constants.dart';
+import 'package:google_form_manager/feature/google_form/edit_form/domain/constants.dart';
 
 import 'cubit/login_cubit.dart';
 
