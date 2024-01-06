@@ -59,6 +59,10 @@ class EditFormCubit extends Cubit<EditFormState> {
               key: ValueKey<String>(getRandomId()));
         }));
       }
+      emit(ShowTitleState(
+        response.info?.title ?? '',
+        response.info?.description ?? '',
+      ));
       emit(FormListUpdateState(baseItemList));
     } else {
       emit(FetchFormFailedState());

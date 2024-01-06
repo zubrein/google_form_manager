@@ -23,6 +23,16 @@ class FormListUpdateState extends EditFormState {
   List<Object?> get props => [baseItem, DateTime.now()];
 }
 
+class ShowTitleState extends EditFormState {
+  final String title;
+  final String description;
+
+  const ShowTitleState(this.title, this.description);
+
+  @override
+  List<Object?> get props => [title, description, DateTime.now()];
+}
+
 class FetchFormFailedState extends EditFormState {
   @override
   List<Object?> get props => [];

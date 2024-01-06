@@ -4,12 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
+import 'package:google_form_manager/feature/google_form/form_tab_page.dart';
 import 'package:google_form_manager/feature/templates/ui/create_form_name_input_dialog.dart';
 import 'package:google_form_manager/feature/templates/ui/cubit/create_form_cubit.dart';
 
 import '../../google_form/edit_form/domain/constants.dart';
-import '../../google_form/edit_form/ui/cubit/edit_form_cubit.dart';
-import '../../google_form/edit_form/ui/edit_form_page.dart';
 
 class TemplatePage extends StatefulWidget {
   const TemplatePage({super.key});
@@ -21,14 +20,12 @@ class TemplatePage extends StatefulWidget {
 class _TemplatePageState extends State<TemplatePage> {
   late CreateFormCubit _createFormCubit;
   late LoadingHudCubit _loadingHudCubit;
-  late EditFormCubit _editFormCubit;
 
   @override
   void initState() {
     super.initState();
     _createFormCubit = sl<CreateFormCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
-    _editFormCubit = sl<EditFormCubit>();
   }
 
   @override
@@ -50,10 +47,8 @@ class _TemplatePageState extends State<TemplatePage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EditFormPage(
+                      builder: (context) => FormTabPage(
                             formId: state.formId,
-                            editFormCubit: _editFormCubit,
-                            loadingHudCubit: _loadingHudCubit,
                           )));
             } else if (state is CreateFormFailedState) {
               _loadingHudCubit.showError(message: state.error);

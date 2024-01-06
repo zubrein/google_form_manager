@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/ui/edit_form_page.dart';
@@ -22,11 +24,28 @@ class _FormTabPageState extends State<FormTabPage> {
   late EditFormCubit _editFormCubit;
   late LoadingHudCubit _loadingHudCubit;
 
+  late StreamSubscription _editFormCubitSubscription;
+
   @override
   void initState() {
     super.initState();
     _editFormCubit = sl<EditFormCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
+    _editFormCubit.fetchForm(widget.formId);
+    _editFormCubitSubscription =
+        _editFormCubit.stream.listen(_onListenEditFormCubit);
+  }
+
+  @override
+  void dispose() {
+    _editFormCubitSubscription.cancel();
+    super.dispose();
+  }
+
+  void _onListenEditFormCubit(state) async {
+    if (state is FormListUpdateState) {
+      _loadingHudCubit.cancel();
+    }
   }
 
   @override
@@ -36,35 +55,53 @@ class _FormTabPageState extends State<FormTabPage> {
         loadingHudCubit: _loadingHudCubit,
         child: Scaffold(
           body: DefaultTabController(
-            length: 2,
+            length: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTopPanel(),
-                const TabBar(
-                  indicator: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.black, width: 2.0))),
-                  labelColor: Colors.black,
-                  tabs: [
-                    Tab(text: 'Questions'),
-                    Tab(text: 'Responses'),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(children: [
-                    EditFormPage(
-                      formId: widget.formId,
-                      editFormCubit: _editFormCubit,
-                      loadingHudCubit: _loadingHudCubit,
-                    ),
-                    const Center(child: Text('Responses')),
-                  ]),
-                )
+                _buildTabBar(),
+                _buildTabBarView(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTabBarView() {
+    return Expanded(
+      child: TabBarView(children: [
+        EditFormPage(
+          formId: widget.formId,
+          editFormCubit: _editFormCubit,
+          loadingHudCubit: _loadingHudCubit,
+        ),
+        const Center(child: Text('Responses')),
+        const Center(child: Text('Settings')),
+      ]),
+    );
+  }
+
+  Widget _buildTabBar() {
+    return const Padding(
+      padding: EdgeInsets.only(left: 16),
+      child: TabBar(
+        indicator: BoxDecoration(
+            border:
+                Border(bottom: BorderSide(color: Colors.black, width: 2.0))),
+        labelColor: Colors.black,
+        padding: EdgeInsets.zero,
+        indicatorPadding: EdgeInsets.zero,
+        labelPadding: EdgeInsets.only(right: 16),
+        indicatorSize: TabBarIndicatorSize.label,
+        isScrollable: true,
+        tabs: [
+          Tab(text: 'Questions'),
+          Tab(text: 'Responses'),
+          Tab(text: 'Settings'),
+        ],
       ),
     );
   }

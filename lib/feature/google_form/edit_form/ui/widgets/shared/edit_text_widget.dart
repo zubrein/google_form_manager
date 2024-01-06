@@ -9,6 +9,7 @@ class EditTextWidget extends StatelessWidget {
   final Function(String value)? onChange;
   final bool autofocus;
   final bool enabled;
+  final bool disableBorder;
 
   const EditTextWidget({
     super.key,
@@ -20,6 +21,7 @@ class EditTextWidget extends StatelessWidget {
     this.onChange,
     this.autofocus = false,
     this.enabled = true,
+    this.disableBorder = false,
   });
 
   @override
@@ -41,11 +43,20 @@ class EditTextWidget extends StatelessWidget {
         ),
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.black38),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.black12),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: disableBorder
+              ? BorderSide.none
+              : const BorderSide(color: Colors.black12),
         ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
+        disabledBorder: UnderlineInputBorder(
+          borderSide: disableBorder
+              ? BorderSide.none
+              : const BorderSide(color: Colors.black12),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: disableBorder
+              ? BorderSide.none
+              : const BorderSide(color: Colors.black),
         ),
       ),
       onChanged: onChange ?? (_) {},

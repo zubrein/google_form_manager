@@ -11,6 +11,7 @@ import 'cubit/edit_form_cubit.dart';
 import 'item_type_list_page.dart';
 import 'widgets/helper/create_question_item_helper.dart';
 import 'widgets/shared/base_item_with_widget_selector.dart';
+import 'widgets/shared/edit_text_widget.dart';
 
 class EditFormPage extends StatefulWidget {
   final String formId;
@@ -30,12 +31,13 @@ class EditFormPage extends StatefulWidget {
 class _EditFormPageState extends State<EditFormPage>
     with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     widget.loadingHudCubit.show();
-    widget.editFormCubit.fetchForm(widget.formId);
   }
 
   @override
@@ -75,10 +77,18 @@ class _EditFormPageState extends State<EditFormPage>
                 const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
             child: ListView.builder(
                 controller: _scrollController,
-                itemCount: widget.editFormCubit.baseItemList.length,
+                itemCount: widget.editFormCubit.baseItemList.length + 1,
                 itemBuilder: (context, position) {
-                  final formItem = widget.editFormCubit.baseItemList[position];
-                  return _buildFormItem(formItem, position);
+                  return position == 0
+                      ? Column(
+                          children: [
+                            _buildFormTitle(),
+                            _buildFormDescription(),
+                          ],
+                        )
+                      : _buildFormItem(
+                          widget.editFormCubit.baseItemList[position - 1],
+                          position - 1);
                 }),
           );
         },
@@ -87,7 +97,10 @@ class _EditFormPageState extends State<EditFormPage>
   }
 
   void _onListenEditFormCubit(context, state) async {
-    if (state is FormListUpdateState) {
+    if (state is ShowTitleState) {
+      _titleController.text = state.title;
+      _descriptionController.text = state.description;
+    } else if (state is FormListUpdateState) {
       widget.loadingHudCubit.cancel();
     } else if (state is FormSubmitFailedState) {
       widget.loadingHudCubit.showError(message: state.error);
@@ -268,6 +281,33 @@ class _EditFormPageState extends State<EditFormPage>
       }
     });
   }
+
+  Widget _buildFormTitle() {
+    return EditTextWidget(
+      controller: _titleController,
+      fontSize: 18,
+      fontColor: Colors.black,
+      fontWeight: FontWeight.w700,
+      onChange: _onChangeTitleText,
+      hint: 'Title',
+      disableBorder: true,
+      enabled: false,
+    );
+  }
+
+  Widget _buildFormDescription() {
+    return EditTextWidget(
+      controller: _descriptionController,
+      fontSize: 14,
+      fontColor: Colors.black54,
+      fontWeight: FontWeight.w500,
+      onChange: _onChangeTitleText,
+      hint: 'Title',
+      enabled: false,
+    );
+  }
+
+  void _onChangeTitleText(String value) {}
 
   @override
   void dispose() {

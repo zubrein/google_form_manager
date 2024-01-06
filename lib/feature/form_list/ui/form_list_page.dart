@@ -135,7 +135,9 @@ class _FormListPageState extends State<FormListPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => FormTabPage(formId: item.id!)));
+                builder: (context) => FormTabPage(
+                      formId: item.id!,
+                    )));
       },
       child: Card(
         child: Padding(
