@@ -3,6 +3,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.d
 import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_cubit.dart';
 import 'package:google_form_manager/feature/google_form/responses/summary/widgets/multiple_choice.dart';
 
+import 'widgets/checkbox.dart';
 import 'widgets/short_answer.dart';
 
 class SummaryTab extends StatefulWidget {
@@ -78,6 +79,11 @@ class _SummaryTabState extends State<SummaryTab> {
     } else if (type == QuestionType.shortAnswer ||
         type == QuestionType.paragraph) {
       return ShortAnswerResponseWidget(
+        answerList: answerList,
+        title: title,
+      );
+    }else if (type == QuestionType.checkboxes) {
+      return CheckBoxResponseWidget(
         answerList: answerList,
         title: title,
       );
