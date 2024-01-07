@@ -34,6 +34,7 @@ class _ShortAnswerResponseWidgetState extends State<ShortAnswerResponseWidget> {
         ListView.builder(
             itemCount: widget.answerList.length,
             shrinkWrap: true,
+            reverse: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, position) {
               return Container(
