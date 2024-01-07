@@ -29,6 +29,8 @@ class FormCubit extends Cubit<EditFormState> {
   final List<Request> _requestList = [];
   final List<int> _deleteListIndexes = [];
   final List<String> imageIdList = [];
+  List<FormResponse> responseList = [];
+  Map<String, QuestionType> questionIdVsTypeMap = {};
   bool isQuiz = false;
   int responseListSize = 0;
 
@@ -55,6 +57,10 @@ class FormCubit extends Cubit<EditFormState> {
       responderUrl = response.responderUri ?? '';
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
+          if (item.questionItem != null) {
+            questionIdVsTypeMap[item.questionItem!.question!.questionId!] =
+                checkQuestionType(item);
+          }
           return BaseItemEntity(
               itemId: item.itemId,
               item: item,
@@ -76,7 +82,7 @@ class FormCubit extends Cubit<EditFormState> {
   Future<void> fetchResponses(String formId) async {
     final response = await fetchFormResponsesUseCase(formId);
     responseListSize = response.length;
-    emit(FetchResponseSuccessState(response));
+    responseList = response;
   }
 
   void addOtherRequest(Request request, int index) {

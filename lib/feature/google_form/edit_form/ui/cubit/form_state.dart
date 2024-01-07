@@ -33,15 +33,6 @@ class ShowTitleState extends EditFormState {
   List<Object?> get props => [title, description, DateTime.now()];
 }
 
-class FetchResponseSuccessState extends EditFormState {
-  final List<FormResponse> responseList;
-
-  const FetchResponseSuccessState(this.responseList);
-
-  @override
-  List<Object?> get props => [responseList, DateTime.now()];
-}
-
 class FetchFormFailedState extends EditFormState {
   @override
   List<Object?> get props => [];
