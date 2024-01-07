@@ -49,7 +49,6 @@ class _MultipleChoiceResponseWidgetState
     return Expanded(
       child: ListView.builder(
           shrinkWrap: true,
-          reverse: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: answersWithColorMap.keys.toList().length,
           itemBuilder: (context, position) {

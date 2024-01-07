@@ -1,6 +1,12 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 final List<Color> colorArray = [
+  Colors.blue,
+  Colors.red,
+  Colors.orange,
+  Colors.green,
   const Color(0xFFFF6633),
   const Color(0xFF809900),
   const Color(0xFFFFFF99),

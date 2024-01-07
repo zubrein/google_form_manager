@@ -4,6 +4,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_
 import 'package:google_form_manager/feature/google_form/responses/summary/widgets/multiple_choice.dart';
 
 import 'widgets/checkbox.dart';
+import 'widgets/linear_scale.dart';
 import 'widgets/short_answer.dart';
 
 class SummaryTab extends StatefulWidget {
@@ -82,8 +83,13 @@ class _SummaryTabState extends State<SummaryTab> {
         answerList: answerList,
         title: title,
       );
-    }else if (type == QuestionType.checkboxes) {
+    } else if (type == QuestionType.checkboxes) {
       return CheckBoxResponseWidget(
+        answerList: answerList,
+        title: title,
+      );
+    } else if (type == QuestionType.linearScale) {
+      return LinearScaleResponseWidget(
         answerList: answerList,
         title: title,
       );
