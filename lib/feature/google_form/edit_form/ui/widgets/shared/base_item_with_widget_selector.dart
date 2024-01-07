@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/entities/base_item_entity.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
 
-import '../../cubit/edit_form_cubit.dart';
+import '../../cubit/form_cubit.dart';
 import '../../edit_form_mixin.dart';
 import '../../item_type_list_page.dart';
 import '../../utils/utils.dart';
@@ -11,14 +11,14 @@ import 'item_top_widget.dart';
 
 class BaseItemWithWidgetSelector extends StatefulWidget {
   final QuestionType questionType;
-  final EditFormCubit editFormCubit;
+  final FormCubit formCubit;
   final BaseItemEntity formItem;
   final int index;
 
   const BaseItemWithWidgetSelector({
     super.key,
     required this.questionType,
-    required this.editFormCubit,
+    required this.formCubit,
     required this.formItem,
     required this.index,
   });
@@ -128,7 +128,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
                   ItemTypeListPage(selectedType: widget.questionType)));
 
       if (result != null) {
-        editFormCubit.replaceItem(widget.index,
+        formCubit.replaceItem(widget.index,
             CreateQuestionItemHelper.getItem(result[0]), result[0]);
       }
     }
@@ -151,5 +151,5 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
   }
 
   @override
-  EditFormCubit get editFormCubit => widget.editFormCubit;
+  FormCubit get formCubit => widget.formCubit;
 }

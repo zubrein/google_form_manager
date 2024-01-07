@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
-import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/edit_form_cubit.dart';
+import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_cubit.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../../../domain/constants.dart';
@@ -14,14 +14,14 @@ class FileUploadWidget extends StatefulWidget {
   final int index;
   final Item? item;
   final OperationType operationType;
-  final EditFormCubit editFormCubit;
+  final FormCubit formCubit;
 
   const FileUploadWidget({
     super.key,
     required this.index,
     required this.item,
     required this.operationType,
-    required this.editFormCubit,
+    required this.formCubit,
   });
 
   @override
@@ -232,7 +232,7 @@ class _FileUploadWidgetState extends State<FileUploadWidget>
   bool? get isRequired => widget.item?.questionItem?.question?.required;
 
   @override
-  EditFormCubit get editFormCubit => widget.editFormCubit;
+  FormCubit get formCubit => widget.formCubit;
 
   @override
   bool get wantKeepAlive => true;

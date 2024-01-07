@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/constants.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
-import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/edit_form_cubit.dart';
+import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_cubit.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:googleapis/forms/v1.dart' as form;
 
@@ -15,14 +15,14 @@ class DateWidget extends StatefulWidget {
   final int index;
   final Item? item;
   final OperationType operationType;
-  final EditFormCubit editFormCubit;
+  final FormCubit formCubit;
 
   const DateWidget(
       {super.key,
       required this.index,
       required this.item,
       required this.operationType,
-      required this.editFormCubit});
+      required this.formCubit});
 
   @override
   State<DateWidget> createState() => _DateWidgetState();
@@ -89,7 +89,7 @@ class _DateWidgetState extends State<DateWidget>
   bool? get isRequired => widget.item?.questionItem?.question?.required;
 
   @override
-  EditFormCubit get editFormCubit => widget.editFormCubit;
+  FormCubit get formCubit => widget.formCubit;
 
   @override
   bool get wantKeepAlive => true;

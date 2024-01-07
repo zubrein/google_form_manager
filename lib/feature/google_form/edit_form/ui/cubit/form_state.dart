@@ -1,4 +1,4 @@
-part of 'edit_form_cubit.dart';
+part of 'form_cubit.dart';
 
 abstract class EditFormState extends Equatable {
   const EditFormState();
@@ -31,6 +31,15 @@ class ShowTitleState extends EditFormState {
 
   @override
   List<Object?> get props => [title, description, DateTime.now()];
+}
+
+class FetchResponseSuccessState extends EditFormState {
+  final List<FormResponse> responseList;
+
+  const FetchResponseSuccessState(this.responseList);
+
+  @override
+  List<Object?> get props => [responseList, DateTime.now()];
 }
 
 class FetchFormFailedState extends EditFormState {

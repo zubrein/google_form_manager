@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../domain/enums.dart';
-import 'cubit/edit_form_cubit.dart';
+import 'cubit/form_cubit.dart';
 import 'widgets/date/date_widget.dart';
 import 'widgets/file_upload/file_upload_widget.dart';
 import 'widgets/image/image_item_widget.dart';
@@ -15,7 +15,7 @@ import 'widgets/text_item/text_item_widget.dart';
 import 'widgets/time/time_widget.dart';
 
 mixin EditFormMixin {
-  EditFormCubit get editFormCubit;
+  FormCubit get formCubit;
 
   Widget _buildShortAnswerWidget(int position, Item? qItem, OperationType type,
       {bool isParagraph = false}) {
@@ -23,7 +23,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
       isParagraph: isParagraph,
     );
   }
@@ -33,7 +33,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
     );
   }
 
@@ -42,7 +42,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
     );
   }
 
@@ -52,7 +52,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
     );
   }
 
@@ -62,7 +62,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: oType,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
       type: qType,
     );
   }
@@ -72,7 +72,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
     );
   }
 
@@ -82,7 +82,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: oType,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
       type: qType,
     );
   }
@@ -92,7 +92,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
     );
   }
 
@@ -101,7 +101,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
     );
   }
 
@@ -110,7 +110,7 @@ mixin EditFormMixin {
       index: position,
       item: qItem,
       operationType: type,
-      editFormCubit: editFormCubit,
+      formCubit: formCubit,
     );
   }
 

@@ -29,7 +29,7 @@ import 'package:google_form_manager/feature/form_list/domain/repositories/form_l
 import 'package:google_form_manager/feature/form_list/domain/usecases/delete_form_list_usecase.dart'
     as _i19;
 import 'package:google_form_manager/feature/form_list/domain/usecases/fetch_form_list_usecase.dart'
-    as _i21;
+    as _i20;
 import 'package:google_form_manager/feature/form_list/ui/cubit/form_list_cubit.dart'
     as _i25;
 import 'package:google_form_manager/feature/google_form/edit_form/data/repositories/edit_form_repository_impl.dart'
@@ -44,8 +44,8 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/usecase
     as _i9;
 import 'package:google_form_manager/feature/google_form/edit_form/domain/usecases/fetch_form_usecase.dart'
     as _i10;
-import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/edit_form_cubit.dart'
-    as _i20;
+import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_cubit.dart'
+    as _i21;
 import 'package:google_form_manager/feature/templates/data/create_form_repository_impl.dart'
     as _i5;
 import 'package:google_form_manager/feature/templates/domain/repositories/create_form_repository.dart'
@@ -90,13 +90,14 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i19.DeleteFormListUseCase>(() =>
         _i19.DeleteFormListUseCase(repository: gh<_i11.FormListRepository>()));
-    gh.factory<_i20.EditFormCubit>(() => _i20.EditFormCubit(
+    gh.factory<_i20.FetchFormListUseCase>(() =>
+        _i20.FetchFormListUseCase(repository: gh<_i11.FormListRepository>()));
+    gh.factory<_i21.FormCubit>(() => _i21.FormCubit(
           gh<_i10.FetchFormUseCase>(),
           gh<_i3.CheckQuestionTypeUseCase>(),
+          gh<_i9.FetchFormResponsesUseCase>(),
           gh<_i17.BatchUpdateUseCase>(),
         ));
-    gh.factory<_i21.FetchFormListUseCase>(() =>
-        _i21.FetchFormListUseCase(repository: gh<_i11.FormListRepository>()));
     gh.factory<_i22.LogoutUseCase>(() => _i22.LogoutUseCase(
         repository: gh<_i15.UserAuthenticationRepository>()));
     gh.factory<_i23.SigningInUseCase>(() => _i23.SigningInUseCase(
@@ -106,7 +107,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i22.LogoutUseCase>(),
         ));
     gh.factory<_i25.FormListCubit>(() => _i25.FormListCubit(
-          gh<_i21.FetchFormListUseCase>(),
+          gh<_i20.FetchFormListUseCase>(),
           gh<_i19.DeleteFormListUseCase>(),
           gh<_i24.LoginCubit>(),
         ));

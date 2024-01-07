@@ -6,7 +6,7 @@ import 'package:googleapis/forms/v1.dart';
 import 'package:googleapis/forms/v1.dart' as form;
 
 import '../../bottom_modal_operation_constant.dart';
-import '../../cubit/edit_form_cubit.dart';
+import '../../cubit/form_cubit.dart';
 import '../helper/request_builder_helper_mixin.dart';
 import '../helper/title_desciption_adder_mixin.dart';
 import '../shared/edit_text_widget.dart';
@@ -16,14 +16,14 @@ class LinearScaleWidget extends StatefulWidget {
   final int index;
   final Item? item;
   final OperationType operationType;
-  final EditFormCubit editFormCubit;
+  final FormCubit formCubit;
 
   const LinearScaleWidget({
     super.key,
     required this.index,
     required this.item,
     required this.operationType,
-    required this.editFormCubit,
+    required this.formCubit,
   });
 
   @override
@@ -255,7 +255,7 @@ class _LinearScaleWidgetState extends State<LinearScaleWidget>
   bool? get isRequired => widget.item?.questionItem?.question?.required;
 
   @override
-  EditFormCubit get editFormCubit => widget.editFormCubit;
+  FormCubit get formCubit => widget.formCubit;
 
   @override
   bool get wantKeepAlive => true;

@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_form_manager/core/helper/google_apis_helper.dart';
-import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
@@ -12,29 +11,33 @@ import '../../domain/entities/base_item_entity.dart';
 import '../../domain/enums.dart';
 import '../../domain/usecases/batch_update_usecase.dart';
 import '../../domain/usecases/check_question_type_usecase.dart';
+import '../../domain/usecases/fetch_form_responses_usecase.dart';
 import '../../domain/usecases/fetch_form_usecase.dart';
 import '../utils/process_request_for_empty_feedback.dart';
 import '../widgets/helper/create_request_item_helper.dart';
 import '../widgets/helper/delete_request_item_helper.dart';
 
-part 'edit_form_state.dart';
+part 'form_state.dart';
 
 @injectable
-class EditFormCubit extends Cubit<EditFormState> {
+class FormCubit extends Cubit<EditFormState> {
   FetchFormUseCase fetchFormUseCase;
   CheckQuestionTypeUseCase checkQuestionTypeUseCase;
+  FetchFormResponsesUseCase fetchFormResponsesUseCase;
   BatchUpdateUseCase batchUpdateUseCase;
   List<BaseItemEntity> baseItemList = [];
   final List<Request> _requestList = [];
   final List<int> _deleteListIndexes = [];
   final List<String> imageIdList = [];
   bool isQuiz = false;
+  int responseListSize = 0;
 
   String responderUrl = '';
 
-  EditFormCubit(
+  FormCubit(
     this.fetchFormUseCase,
     this.checkQuestionTypeUseCase,
+    this.fetchFormResponsesUseCase,
     this.batchUpdateUseCase,
   ) : super(EditFormInitial());
 
@@ -44,6 +47,7 @@ class EditFormCubit extends Cubit<EditFormState> {
 
   Future<void> fetchForm(String formId) async {
     emit(FetchFormInitiatedState());
+    await fetchResponses(formId);
     final response = await fetchFormUseCase(formId);
     if (response != null) {
       isQuiz = response.settings?.quizSettings?.isQuiz ?? false;
@@ -69,9 +73,14 @@ class EditFormCubit extends Cubit<EditFormState> {
     }
   }
 
+  Future<void> fetchResponses(String formId) async {
+    final response = await fetchFormResponsesUseCase(formId);
+    responseListSize = response.length;
+    emit(FetchResponseSuccessState(response));
+  }
+
   void addOtherRequest(Request request, int index) {
     baseItemList[index].request = request;
-    printRequest(request, index);
   }
 
   QuestionType checkQuestionType(Item? item) {
@@ -121,16 +130,6 @@ class EditFormCubit extends Cubit<EditFormState> {
       }
     }
     emit(FormListUpdateState(baseItemList));
-  }
-
-  printRequest(Request request, int index) {
-    Log.info('''
-        index : $index
-        update Mask : ${request.updateItem?.updateMask}
-        title : ${request.updateItem?.item?.title}
-        description : ${request.updateItem?.item?.description}
-        required: ${request.updateItem?.item?.questionItem?.question?.required}
-        ''');
   }
 
   Future<void> _onDeleteSuccess(String formId, bool fromShare) async {

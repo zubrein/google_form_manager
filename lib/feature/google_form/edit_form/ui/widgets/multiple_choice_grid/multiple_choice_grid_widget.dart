@@ -5,7 +5,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.d
 import 'package:googleapis/forms/v1.dart';
 
 import '../../bottom_modal_operation_constant.dart';
-import '../../cubit/edit_form_cubit.dart';
+import '../../cubit/form_cubit.dart';
 import '../helper/request_builder_helper_mixin.dart';
 import '../helper/title_desciption_adder_mixin.dart';
 import 'column_list_widget.dart';
@@ -17,14 +17,14 @@ class MultipleChoiceGridWidget extends StatefulWidget {
   final Item? item;
   final OperationType operationType;
   final QuestionType type;
-  final EditFormCubit editFormCubit;
+  final FormCubit formCubit;
 
   const MultipleChoiceGridWidget({
     super.key,
     required this.index,
     required this.item,
     required this.operationType,
-    required this.editFormCubit,
+    required this.formCubit,
     required this.type,
   });
 
@@ -109,7 +109,7 @@ class _MultipleChoiceGridWidgetState extends State<MultipleChoiceGridWidget>
       widget.item?.questionGroupItem?.questions?.first.required;
 
   @override
-  EditFormCubit get editFormCubit => widget.editFormCubit;
+  FormCubit get formCubit => widget.formCubit;
 
   @override
   bool get wantKeepAlive => true;

@@ -8,7 +8,7 @@ import 'package:googleapis/forms/v1.dart';
 
 import '../domain/entities/base_item_entity.dart';
 import '../domain/enums.dart';
-import 'cubit/edit_form_cubit.dart';
+import 'cubit/form_cubit.dart';
 import 'item_type_list_page.dart';
 import 'widgets/helper/create_question_item_helper.dart';
 import 'widgets/shared/base_item_with_widget_selector.dart';
@@ -16,13 +16,13 @@ import 'widgets/shared/edit_text_widget.dart';
 
 class EditFormPage extends StatefulWidget {
   final String formId;
-  final EditFormCubit editFormCubit;
+  final FormCubit formCubit;
   final LoadingHudCubit loadingHudCubit;
 
   const EditFormPage(
       {super.key,
       required this.formId,
-      required this.editFormCubit,
+      required this.formCubit,
       required this.loadingHudCubit});
 
   @override
@@ -46,7 +46,7 @@ class _EditFormPageState extends State<EditFormPage>
     super.build(context);
     return WillPopScope(
       onWillPop: () async {
-        if (widget.editFormCubit.checkIfListIsEmpty()) {
+        if (widget.formCubit.checkIfListIsEmpty()) {
           pop();
         } else {
           await _showSaveDialog('exit');
@@ -66,9 +66,9 @@ class _EditFormPageState extends State<EditFormPage>
 
   Widget _buildFormListView() {
     return Expanded(
-      child: BlocConsumer<EditFormCubit, EditFormState>(
-        bloc: widget.editFormCubit,
-        listener: _onListenEditFormCubit,
+      child: BlocConsumer<FormCubit, EditFormState>(
+        bloc: widget.formCubit,
+        listener: _onListenFormCubit,
         buildWhen: (oldState, newState) {
           return newState is FormListUpdateState;
         },
@@ -78,14 +78,14 @@ class _EditFormPageState extends State<EditFormPage>
                 const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
             child: ListView.builder(
                 controller: _scrollController,
-                itemCount: widget.editFormCubit.baseItemList.length + 1,
+                itemCount: widget.formCubit.baseItemList.length + 1,
                 itemBuilder: (context, position) {
                   return position == 0
                       ? state is FetchFormInitiatedState
                           ? const SizedBox.shrink()
                           : _buildFormTitleDescSection()
                       : _buildFormItem(
-                          widget.editFormCubit.baseItemList[position - 1],
+                          widget.formCubit.baseItemList[position - 1],
                           position - 1);
                 }),
           );
@@ -102,8 +102,7 @@ class _EditFormPageState extends State<EditFormPage>
         child: DecoratedBox(
             decoration: const BoxDecoration(color: Colors.green),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 1)
-                  .copyWith(left: 8, right: 1),
+              padding: const EdgeInsets.all(8),
               child: DecoratedBox(
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -128,7 +127,7 @@ class _EditFormPageState extends State<EditFormPage>
     );
   }
 
-  void _onListenEditFormCubit(context, state) async {
+  void _onListenFormCubit(context, state) async {
     if (state is ShowTitleState) {
       _titleController.text = state.title;
       _descriptionController.text = state.description;
@@ -151,7 +150,7 @@ class _EditFormPageState extends State<EditFormPage>
             message:
                 'Your progress has been submitted successfully. Do you want to share?',
             onTapContinueButton: () async {
-              await shareForm(widget.editFormCubit.responderUrl)
+              await shareForm(widget.formCubit.responderUrl)
                   .then((value) => Navigator.of(context).pop());
             },
             onTapCancelButton: () {
@@ -163,7 +162,7 @@ class _EditFormPageState extends State<EditFormPage>
   }
 
   bool _checkIfQuestionTypeIsUnknown(Item item) {
-    final type = widget.editFormCubit.checkQuestionType(item);
+    final type = widget.formCubit.checkQuestionType(item);
     return type != QuestionType.unknown ? true : false;
   }
 
@@ -171,8 +170,8 @@ class _EditFormPageState extends State<EditFormPage>
     return _checkIfQuestionTypeIsUnknown(formItem.item!)
         ? BaseItemWithWidgetSelector(
             key: formItem.key,
-            editFormCubit: widget.editFormCubit,
-            questionType: widget.editFormCubit.checkQuestionType(formItem.item),
+            formCubit: widget.formCubit,
+            questionType: widget.formCubit.checkQuestionType(formItem.item),
             formItem: formItem,
             index: position,
           )
@@ -191,8 +190,7 @@ class _EditFormPageState extends State<EditFormPage>
             onTapContinueButton: () {
               Navigator.of(context).pop();
               widget.loadingHudCubit.show();
-              widget.editFormCubit
-                  .submitRequest(widget.formId, fromShare: true);
+              widget.formCubit.submitRequest(widget.formId, fromShare: true);
             },
             onTapCancelButton: () {
               Navigator.pop(context);
@@ -238,7 +236,7 @@ class _EditFormPageState extends State<EditFormPage>
   Widget _buildTextItemAddButton() {
     return GestureDetector(
       onTap: () async {
-        widget.editFormCubit.addItem(
+        widget.formCubit.addItem(
           CreateQuestionItemHelper.getItem(
             QuestionType.text,
           ),
@@ -254,7 +252,7 @@ class _EditFormPageState extends State<EditFormPage>
   Widget _buildPageBreakAddButton() {
     return GestureDetector(
       onTap: () async {
-        widget.editFormCubit.addItem(
+        widget.formCubit.addItem(
           CreateQuestionItemHelper.getItem(
             QuestionType.pageBreak,
           ),
@@ -270,7 +268,7 @@ class _EditFormPageState extends State<EditFormPage>
   Widget _buildImageItemAddButton() {
     return GestureDetector(
       onTap: () async {
-        widget.editFormCubit.addItem(
+        widget.formCubit.addItem(
           CreateQuestionItemHelper.getItem(
             QuestionType.image,
           ),
@@ -289,7 +287,7 @@ class _EditFormPageState extends State<EditFormPage>
             MaterialPageRoute(builder: (context) => const ItemTypeListPage()));
 
         if (result != null) {
-          widget.editFormCubit.addItem(
+          widget.formCubit.addItem(
             CreateQuestionItemHelper.getItem(result[0]),
             result[0],
           );
@@ -321,7 +319,7 @@ class _EditFormPageState extends State<EditFormPage>
       fontColor: Colors.black,
       fontWeight: FontWeight.w700,
       onChange: _onChangeTitleText,
-      hint: 'Title',
+      hint: 'Form Title',
       enabled: false,
     );
   }
@@ -333,7 +331,7 @@ class _EditFormPageState extends State<EditFormPage>
       fontColor: Colors.black54,
       fontWeight: FontWeight.w500,
       onChange: _onChangeTitleText,
-      hint: 'Title',
+      hint: 'Form Description',
       enabled: false,
     );
   }
@@ -342,7 +340,7 @@ class _EditFormPageState extends State<EditFormPage>
 
   @override
   void dispose() {
-    widget.editFormCubit.deleteImagesFromDrive();
+    widget.formCubit.deleteImagesFromDrive();
     super.dispose();
   }
 

@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/ui/edit_form_page.dart';
+import 'package:google_form_manager/feature/google_form/responses/response_page.dart';
 
 import '../../core/di/dependency_initializer.dart';
 import '../../core/loading_hud/loading_hud_cubit.dart';
 import '../../util/utility.dart';
 import '../shared/widgets/alert_dialog_widget.dart';
-import 'edit_form/ui/cubit/edit_form_cubit.dart';
+import 'edit_form/ui/cubit/form_cubit.dart';
 import 'top_panel.dart';
 
 class FormTabPage extends StatefulWidget {
@@ -21,28 +24,27 @@ class FormTabPage extends StatefulWidget {
 }
 
 class _FormTabPageState extends State<FormTabPage> {
-  late EditFormCubit _editFormCubit;
+  late FormCubit _formCubit;
   late LoadingHudCubit _loadingHudCubit;
 
-  late StreamSubscription _editFormCubitSubscription;
+  late StreamSubscription _formCubitSubscription;
 
   @override
   void initState() {
     super.initState();
-    _editFormCubit = sl<EditFormCubit>();
+    _formCubit = sl<FormCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
-    _editFormCubit.fetchForm(widget.formId);
-    _editFormCubitSubscription =
-        _editFormCubit.stream.listen(_onListenEditFormCubit);
+    _formCubit.fetchForm(widget.formId);
+    _formCubitSubscription = _formCubit.stream.listen(_onListenFormCubit);
   }
 
   @override
   void dispose() {
-    _editFormCubitSubscription.cancel();
+    _formCubitSubscription.cancel();
     super.dispose();
   }
 
-  void _onListenEditFormCubit(state) async {
+  void _onListenFormCubit(state) async {
     if (state is FormListUpdateState) {
       _loadingHudCubit.cancel();
     }
@@ -75,34 +77,63 @@ class _FormTabPageState extends State<FormTabPage> {
       child: TabBarView(children: [
         EditFormPage(
           formId: widget.formId,
-          editFormCubit: _editFormCubit,
+          formCubit: _formCubit,
           loadingHudCubit: _loadingHudCubit,
         ),
-        const Center(child: Text('Responses')),
+        ResponsePage(formCubit: _formCubit),
         const Center(child: Text('Settings')),
       ]),
     );
   }
 
   Widget _buildTabBar() {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16),
-      child: TabBar(
-        indicator: BoxDecoration(
-            border:
-                Border(bottom: BorderSide(color: Colors.black, width: 2.0))),
-        labelColor: Colors.black,
-        padding: EdgeInsets.zero,
-        indicatorPadding: EdgeInsets.zero,
-        labelPadding: EdgeInsets.only(right: 16),
-        indicatorSize: TabBarIndicatorSize.label,
-        isScrollable: true,
-        tabs: [
-          Tab(text: 'Questions'),
-          Tab(text: 'Responses'),
-          Tab(text: 'Settings'),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: BlocBuilder<FormCubit, EditFormState>(
+        bloc: _formCubit,
+        builder: (context, state) {
+          return TabBar(
+            indicator: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 2.0))),
+            labelColor: Colors.black,
+            padding: EdgeInsets.zero,
+            indicatorPadding: EdgeInsets.zero,
+            labelPadding: const EdgeInsets.only(right: 16),
+            indicatorSize: TabBarIndicatorSize.label,
+            isScrollable: true,
+            tabs: [
+              const Tab(text: 'Questions'),
+              Tab(child: _getResponseTabBarText(state)),
+              const Tab(text: 'Settings'),
+            ],
+          );
+        },
       ),
+    );
+  }
+
+  Widget _getResponseTabBarText(EditFormState state) {
+    final size = state is FormListUpdateState ? _formCubit.responseListSize : 0;
+
+    return Row(
+      children: [
+        const Text('Responses'),
+        if (size > 0) const Gap(4),
+        if (size > 0)
+          Container(
+            height: 24,
+            width: 24,
+            decoration: BoxDecoration(
+                color: Colors.black54, borderRadius: BorderRadius.circular(12)),
+            child: Center(
+              child: Text(
+                size.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          )
+      ],
     );
   }
 
@@ -110,11 +141,11 @@ class _FormTabPageState extends State<FormTabPage> {
     return TopPanel(
       onSaveButtonTap: () async {
         _loadingHudCubit.show();
-        _editFormCubit.submitRequest(widget.formId);
+        _formCubit.submitRequest(widget.formId);
       },
       onShareButtonTap: () async {
-        if (_editFormCubit.checkIfListIsEmpty()) {
-          await shareForm(_editFormCubit.responderUrl);
+        if (_formCubit.checkIfListIsEmpty()) {
+          await shareForm(_formCubit.responderUrl);
         } else {
           _showSaveDialog('cancel');
         }
@@ -134,7 +165,7 @@ class _FormTabPageState extends State<FormTabPage> {
             onTapContinueButton: () {
               Navigator.of(context).pop();
               _loadingHudCubit.show();
-              _editFormCubit.submitRequest(widget.formId, fromShare: true);
+              _formCubit.submitRequest(widget.formId, fromShare: true);
             },
             onTapCancelButton: () {
               Navigator.pop(context);

@@ -5,7 +5,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.d
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 
-import '../../cubit/edit_form_cubit.dart';
+import '../../cubit/form_cubit.dart';
 import '../shared/edit_text_widget.dart';
 
 mixin TitleDescriptionAdderMixin {
@@ -15,7 +15,7 @@ mixin TitleDescriptionAdderMixin {
 
   OperationType get operationType;
 
-  EditFormCubit get editFormCubit;
+  FormCubit get formCubit;
 
   Set<String> get titleDescUpdateMask;
 
@@ -82,10 +82,10 @@ mixin TitleDescriptionAdderMixin {
   void titleDescAddRequest({String? debounceTag}) {
     if (debounceTag != null) {
       EasyDebounce.debounce(debounceTag, debounceDuration, () {
-        editFormCubit.addOtherRequest(titleDescRequest, widgetIndex);
+        formCubit.addOtherRequest(titleDescRequest, widgetIndex);
       });
     } else {
-      editFormCubit.addOtherRequest(titleDescRequest, widgetIndex);
+      formCubit.addOtherRequest(titleDescRequest, widgetIndex);
     }
   }
 }

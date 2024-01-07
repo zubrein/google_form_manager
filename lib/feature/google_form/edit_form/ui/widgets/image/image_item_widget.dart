@@ -6,7 +6,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.d
 import 'package:googleapis/forms/v1.dart';
 
 import '../../bottom_modal_operation_constant.dart';
-import '../../cubit/edit_form_cubit.dart';
+import '../../cubit/form_cubit.dart';
 import '../../utils/image_picker_helper.dart';
 import '../helper/request_builder_helper_mixin.dart';
 import '../helper/title_desciption_adder_mixin.dart';
@@ -15,14 +15,14 @@ class ImageItemWidget extends StatefulWidget {
   final int index;
   final Item? item;
   final OperationType operationType;
-  final EditFormCubit editFormCubit;
+  final FormCubit formCubit;
 
   const ImageItemWidget({
     super.key,
     required this.index,
     required this.item,
     required this.operationType,
-    required this.editFormCubit,
+    required this.formCubit,
   });
 
   @override
@@ -146,7 +146,7 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
   bool? get isRequired => null;
 
   @override
-  EditFormCubit get editFormCubit => widget.editFormCubit;
+  FormCubit get formCubit => widget.formCubit;
 
   @override
   bool get wantKeepAlive => true;
@@ -244,7 +244,7 @@ class _ImageItemWidgetState extends State<ImageItemWidget>
     setState(() {});
     final entity = await ImagePickerHelper.pickImage();
     widget.item!.imageItem!.image!.sourceUri = entity?.url;
-    editFormCubit.addUploadedImageID(entity?.id ?? '');
+    formCubit.addUploadedImageID(entity?.id ?? '');
     if (widget.item!.imageItem!.image!.sourceUri != null) {
       if (operationType == OperationType.update) {
         request.updateItem?.item?.imageItem?.image?.sourceUri =

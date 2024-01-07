@@ -4,7 +4,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/constan
 import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
 
-import '../../cubit/edit_form_cubit.dart';
+import '../../cubit/form_cubit.dart';
 import '../shared/base_item_widget.dart';
 import 'create_request_item_helper.dart';
 import 'update_request_item_helper.dart';
@@ -24,7 +24,7 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
 
   VoidCallback? get onAnswerKeyPressed;
 
-  EditFormCubit get editFormCubit;
+  FormCubit get formCubit;
 
   final Set<String> updateMask = {};
 
@@ -39,12 +39,12 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    isQuiz = editFormCubit.isQuiz;
+    isQuiz = formCubit.isQuiz;
     request = prepareInitialRequest(
       operationType: operationType,
       questionType: questionType,
       index: widgetIndex,
-      isQuiz: editFormCubit.isQuiz,
+      isQuiz: formCubit.isQuiz,
     );
     init();
   }
@@ -80,15 +80,15 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   void addRequest({String? debounceTag}) {
     if (debounceTag != null) {
       EasyDebounce.debounce(debounceTag, debounceDuration, () {
-        editFormCubit.addOtherRequest(request, widgetIndex);
+        formCubit.addOtherRequest(request, widgetIndex);
       });
     } else {
-      editFormCubit.addOtherRequest(request, widgetIndex);
+      formCubit.addOtherRequest(request, widgetIndex);
     }
   }
 
   void onDeleteButtonTap() {
-    editFormCubit.deleteItem(widgetIndex);
+    formCubit.deleteItem(widgetIndex);
   }
 
   void onRequiredButtonToggle(value) {
