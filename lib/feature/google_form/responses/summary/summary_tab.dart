@@ -4,6 +4,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_
 import 'package:google_form_manager/feature/google_form/responses/summary/widgets/multiple_choice.dart';
 
 import 'widgets/checkbox.dart';
+import 'widgets/date_answer.dart';
 import 'widgets/linear_scale.dart';
 import 'widgets/short_answer.dart';
 
@@ -90,6 +91,11 @@ class _SummaryTabState extends State<SummaryTab> {
       );
     } else if (type == QuestionType.linearScale) {
       return LinearScaleResponseWidget(
+        answerList: answerList,
+        title: title,
+      );
+    } else if (type == QuestionType.date) {
+      return DateAnswerResponseWidget(
         answerList: answerList,
         title: title,
       );
