@@ -30,26 +30,18 @@ class _SummaryTabState extends State<SummaryTab> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: _formCubit.questionIdVsTypeMap.keys.length,
+        itemCount: _formCubit.questionTypeVsIdMap.keys.length,
         itemBuilder: (context, position) {
-          String title = '';
+          String title = _formCubit.titleList[position];
           final List<String> answerList = [];
-          final String questionId =
-              _formCubit.questionIdVsTypeMap.keys.toList()[position].toString();
 
-          for (var element in _formCubit.responseList) {
-            element.answers?[questionId]?.textAnswers?.answers
-                ?.forEach((element) {
-              answerList.add(element.value ?? '');
-            });
-          }
-
-          for (var element in _formCubit.baseItemList) {
-            if (element.item?.questionItem != null) {
-              if (element.item!.questionItem!.question!.questionId ==
-                  questionId) {
-                title = element.item?.title ?? '';
-              }
+          for (var questionId
+              in _formCubit.questionTypeVsIdMap.values.toList()[position]) {
+            for (var response in _formCubit.responseList) {
+              response.answers?[questionId]?.textAnswers?.answers
+                  ?.forEach((element) {
+                answerList.add(element.value ?? '');
+              });
             }
           }
 
@@ -59,7 +51,7 @@ class _SummaryTabState extends State<SummaryTab> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _getResponseWidget(
-                  _formCubit.questionIdVsTypeMap[questionId]!,
+                  _formCubit.questionTypeVsIdMap.keys.toList()[position],
                   answerList,
                   title,
                 ),

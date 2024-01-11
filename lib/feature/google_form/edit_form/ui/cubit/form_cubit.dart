@@ -31,6 +31,8 @@ class FormCubit extends Cubit<EditFormState> {
   final List<String> imageIdList = [];
   List<FormResponse> responseList = [];
   Map<String, QuestionType> questionIdVsTypeMap = {};
+  Map<QuestionType, List<String>> questionTypeVsIdMap = {};
+  List<String> titleList = [];
   bool isQuiz = false;
   int responseListSize = 0;
 
@@ -57,9 +59,20 @@ class FormCubit extends Cubit<EditFormState> {
       responderUrl = response.responderUri ?? '';
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
+          titleList.add(item.title ?? '');
           if (item.questionItem != null) {
-            questionIdVsTypeMap[item.questionItem!.question!.questionId!] =
-                checkQuestionType(item);
+            questionTypeVsIdMap[checkQuestionType(item)] = [
+              item.questionItem!.question!.questionId!
+            ];
+          }
+          if (item.questionGroupItem != null) {
+            final List<String> questionIdList = [];
+
+            item.questionGroupItem?.questions?.forEach((element) {
+              questionIdList.add(element.questionId!);
+            });
+
+            questionTypeVsIdMap[checkQuestionType(item)] = questionIdList;
           }
           return BaseItemEntity(
               itemId: item.itemId,
