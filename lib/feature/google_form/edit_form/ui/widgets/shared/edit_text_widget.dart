@@ -30,6 +30,8 @@ class EditTextWidget extends StatelessWidget {
       controller: controller,
       autofocus: autofocus,
       enabled: enabled,
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
       style: TextStyle(
         fontSize: fontSize,
         color: fontColor,

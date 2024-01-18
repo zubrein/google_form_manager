@@ -102,14 +102,11 @@ class _EditFormPageState extends State<EditFormPage>
         child: DecoratedBox(
             decoration: const BoxDecoration(color: Colors.green),
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(4),
               child: DecoratedBox(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

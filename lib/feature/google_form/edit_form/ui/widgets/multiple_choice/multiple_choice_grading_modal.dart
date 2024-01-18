@@ -149,7 +149,7 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
         padding: const EdgeInsets.only(top: 12.0),
         child: Row(
           children: [
-            getIcon(index) ?? const Icon(Icons.error),
+            _getIcon(index) ?? const Icon(Icons.error),
             const Gap(8),
             Expanded(
               child: _buildOptionTextWidget(index),
@@ -161,7 +161,7 @@ class _MultipleChoiceGradingModalState extends State<MultipleChoiceGradingModal>
     );
   }
 
-  Icon? getIcon(int index) {
+  Icon? _getIcon(int index) {
     if (widget.type == QuestionType.multipleChoice) {
       if (caStrings.contains(widget.optionList[index].value)) {
         return const Icon(
