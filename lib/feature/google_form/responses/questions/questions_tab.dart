@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../edit_form/domain/entities/question_answer_entity.dart';
 import '../../edit_form/domain/entities/response_entity.dart';
 import '../../edit_form/domain/enums.dart';
 import '../../edit_form/ui/cubit/form_cubit.dart';
+import 'short_answer/short_answer.dart';
 import 'widgets/multiple_choice.dart';
 
 class QuestionsResponseTab extends StatefulWidget {
@@ -34,26 +34,9 @@ class _QuestionsResponseTabState extends State<QuestionsResponseTab> {
         body: Column(
       children: [
         _topSection(),
-        _getQuestionWidget(selectedQuestion),
+        Expanded(child: _getQuestionWidget(selectedQuestion)),
       ],
-    )
-
-        // ListView.builder(
-        //     itemCount: _formCubit.responseEntityList.length,
-        //     itemBuilder: (context, position) {
-        //       return Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: Card(
-        //           child: Padding(
-        //             padding: const EdgeInsets.all(8.0),
-        //             child: _getQuestionWidget(
-        //               _formCubit.responseEntityList[position],
-        //             ),
-        //           ),
-        //         ),
-        //       );
-        //     }),
-        );
+    ));
   }
 
   Widget _getQuestionWidget(ResponseEntity responseEntity) {
@@ -63,35 +46,12 @@ class _QuestionsResponseTabState extends State<QuestionsResponseTab> {
       return MultipleChoiceQuestionWidget(
         responseEntity: responseEntity,
       );
-    }
-    // else if (type == QuestionType.shortAnswer ||
-    //     type == QuestionType.paragraph) {
-    //   return ShortAnswerResponseWidget(
-    //     answerList: answerList,
-    //     title: title,
-    //   );
-    // } else if (type == QuestionType.checkboxes) {
-    //   return CheckBoxResponseWidget(
-    //     answerList: answerList,
-    //     title: title,
-    //   );
-    // } else if (type == QuestionType.linearScale) {
-    //   return LinearScaleResponseWidget(
-    //     answerList: answerList,
-    //     title: title,
-    //   );
-    // } else if (type == QuestionType.date) {
-    //   return DateAnswerResponseWidget(
-    //     answerList: answerList,
-    //     title: title,
-    //   );
-    // } else if (type == QuestionType.time) {
-    //   return TimeAnswerResponseWidget(
-    //     answerList: answerList,
-    //     title: title,
-    //   );
-    // }
-    else {
+    } else if (responseEntity.type == QuestionType.shortAnswer ||
+        responseEntity.type == QuestionType.paragraph) {
+      return ShortAnswerQuestionWidget(
+        responseEntity: responseEntity,
+      );
+    } else {
       return const SizedBox.shrink();
     }
   }
