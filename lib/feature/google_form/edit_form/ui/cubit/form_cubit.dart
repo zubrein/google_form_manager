@@ -2,12 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_form_manager/core/helper/google_apis_helper.dart';
+import 'package:google_form_manager/feature/google_form/edit_form/domain/entities/question_answer_entity.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../domain/constants.dart';
 import '../../domain/entities/base_item_entity.dart';
+import '../../domain/entities/response_entity.dart';
 import '../../domain/enums.dart';
 import '../../domain/usecases/batch_update_usecase.dart';
 import '../../domain/usecases/check_question_type_usecase.dart';
@@ -30,9 +32,7 @@ class FormCubit extends Cubit<EditFormState> {
   final List<int> _deleteListIndexes = [];
   final List<String> imageIdList = [];
   List<FormResponse> responseList = [];
-  Map<String, QuestionType> questionIdVsTypeMap = {};
-  Map<QuestionType, List<String>> questionTypeVsIdMap = {};
-  List<String> titleList = [];
+  List<ResponseEntity> responseEntityList = [];
   bool isQuiz = false;
   int responseListSize = 0;
 
@@ -59,21 +59,7 @@ class FormCubit extends Cubit<EditFormState> {
       responderUrl = response.responderUri ?? '';
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
-          titleList.add(item.title ?? '');
-          if (item.questionItem != null) {
-            questionTypeVsIdMap[checkQuestionType(item)] = [
-              item.questionItem!.question!.questionId!
-            ];
-          }
-          if (item.questionGroupItem != null) {
-            final List<String> questionIdList = [];
-
-            item.questionGroupItem?.questions?.forEach((element) {
-              questionIdList.add(element.questionId!);
-            });
-
-            questionTypeVsIdMap[checkQuestionType(item)] = questionIdList;
-          }
+          _prepareResponseEntityList(item);
           return BaseItemEntity(
               itemId: item.itemId,
               item: item,
@@ -89,6 +75,34 @@ class FormCubit extends Cubit<EditFormState> {
       emit(FormListUpdateState(baseItemList));
     } else {
       emit(FetchFormFailedState());
+    }
+  }
+
+  void _prepareResponseEntityList(Item item) {
+    if (item.questionItem != null) {
+      final List<String> answerList = [];
+
+      for (var response in responseList) {
+        response.answers?[item.questionItem!.question!.questionId!]?.textAnswers
+            ?.answers
+            ?.forEach((element) {
+          answerList.add(element.value ?? '');
+        });
+      }
+      responseEntityList.add(
+        ResponseEntity(
+          checkQuestionType(item),
+          item.title ?? '',
+          item.description ?? '',
+          item,
+          [
+            QuestionAnswerEntity(
+              item.questionItem!.question!.questionId!,
+              answerList,
+            )
+          ],
+        ),
+      );
     }
   }
 

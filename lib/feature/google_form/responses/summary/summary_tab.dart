@@ -4,6 +4,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_
 import 'package:google_form_manager/feature/google_form/responses/summary/widgets/multiple_choice.dart';
 import 'package:google_form_manager/feature/google_form/responses/summary/widgets/time_answer.dart';
 
+import '../../edit_form/domain/entities/question_answer_entity.dart';
 import 'widgets/checkbox.dart';
 import 'widgets/date_answer.dart';
 import 'widgets/linear_scale.dart';
@@ -30,20 +31,20 @@ class _SummaryTabState extends State<SummaryTab> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: _formCubit.questionTypeVsIdMap.keys.length,
+        itemCount: _formCubit.responseEntityList.length,
         itemBuilder: (context, position) {
-          String title = _formCubit.titleList[position];
-          final List<String> answerList = [];
-
-          for (var questionId
-              in _formCubit.questionTypeVsIdMap.values.toList()[position]) {
-            for (var response in _formCubit.responseList) {
-              response.answers?[questionId]?.textAnswers?.answers
-                  ?.forEach((element) {
-                answerList.add(element.value ?? '');
-              });
-            }
-          }
+          // String title = _formCubit.responseEntityList[position].title;
+          // final List<String> answerList = [];
+          //
+          // for (var questionId
+          //     in _formCubit.questionTypeVsIdMap.values.toList()[position]) {
+          //   for (var response in _formCubit.responseList) {
+          //     response.answers?[questionId]?.textAnswers?.answers
+          //         ?.forEach((element) {
+          //       answerList.add(element.value ?? '');
+          //     });
+          //   }
+          // }
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -51,9 +52,9 @@ class _SummaryTabState extends State<SummaryTab> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _getResponseWidget(
-                  _formCubit.questionTypeVsIdMap.keys.toList()[position],
-                  answerList,
-                  title,
+                  _formCubit.responseEntityList[position].type,
+                  _formCubit.responseEntityList[position].questionAnswerEntity,
+                  _formCubit.responseEntityList[position].title,
                 ),
               ),
             ),
@@ -63,38 +64,38 @@ class _SummaryTabState extends State<SummaryTab> {
 
   Widget _getResponseWidget(
     QuestionType type,
-    List<String> answerList,
+    List<QuestionAnswerEntity> answerList,
     String title,
   ) {
     if (type == QuestionType.multipleChoice || type == QuestionType.dropdown) {
       return MultipleChoiceResponseWidget(
-        answerList: answerList,
+        answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
         title: title,
       );
     } else if (type == QuestionType.shortAnswer ||
         type == QuestionType.paragraph) {
       return ShortAnswerResponseWidget(
-        answerList: answerList,
+        answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
         title: title,
       );
     } else if (type == QuestionType.checkboxes) {
       return CheckBoxResponseWidget(
-        answerList: answerList,
+        answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
         title: title,
       );
     } else if (type == QuestionType.linearScale) {
       return LinearScaleResponseWidget(
-        answerList: answerList,
+        answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
         title: title,
       );
     } else if (type == QuestionType.date) {
       return DateAnswerResponseWidget(
-        answerList: answerList,
+        answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
         title: title,
       );
     } else if (type == QuestionType.time) {
       return TimeAnswerResponseWidget(
-        answerList: answerList,
+        answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
         title: title,
       );
     } else {
