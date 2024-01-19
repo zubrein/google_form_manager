@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_cubit.dart';
 import 'package:google_form_manager/feature/google_form/responses/summary/summary_tab.dart';
 
+import 'individual/individual_tab.dart';
 import 'questions/questions_tab.dart';
 
 class ResponsePage extends StatefulWidget {
@@ -70,7 +71,7 @@ class _ResponsePageState extends State<ResponsePage>
       child: TabBarView(controller: _tabController, children: [
         SummaryTab(formCubit: widget.formCubit),
         QuestionsResponseTab(formCubit: widget.formCubit),
-        SummaryTab(formCubit: widget.formCubit),
+        IndividualTab(formCubit: widget.formCubit),
       ]),
     );
   }
