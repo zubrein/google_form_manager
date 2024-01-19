@@ -82,6 +82,10 @@ class FormCubit extends Cubit<EditFormState> {
     if (item.questionItem != null) {
       final List<String> answerList = [];
 
+      responseList.sort((a, b) {
+        return a.createTime!.compareTo(b.createTime!);
+      });
+
       for (var response in responseList) {
         response.answers?[item.questionItem!.question!.questionId!]?.textAnswers
             ?.answers

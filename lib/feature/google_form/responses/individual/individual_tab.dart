@@ -4,8 +4,11 @@ import 'package:googleapis/forms/v1.dart';
 import '../../edit_form/domain/entities/response_entity.dart';
 import '../../edit_form/domain/enums.dart';
 import '../../edit_form/ui/cubit/form_cubit.dart';
+import 'widgets/date.dart';
 import 'widgets/dropdown.dart';
 import 'widgets/multiple_choice.dart';
+import 'widgets/short_answer.dart';
+import 'widgets/time.dart';
 
 class IndividualTab extends StatefulWidget {
   final FormCubit formCubit;
@@ -114,26 +117,29 @@ class _IndividualTabState extends State<IndividualTab> {
         responseEntity: responseEntity,
         formResponse: response,
       );
+    } else if (responseEntity.type == QuestionType.shortAnswer ||
+        responseEntity.type == QuestionType.paragraph) {
+      return ShortAnswerIndWidget(
+        responseEntity: responseEntity,
+        formResponse: response,
+      );
     }
-    // else if (responseEntity.type == QuestionType.shortAnswer ||
-    //     responseEntity.type == QuestionType.paragraph) {
-    //   return ShortAnswerQuestionWidget(
-    //     responseEntity: responseEntity,
-    //   );
-    // } else if (responseEntity.type == QuestionType.linearScale) {
+    //  else if (responseEntity.type == QuestionType.linearScale) {
     //   return LinearScaleQuestionWidget(
     //     responseEntity: responseEntity,
     //   );
-    // } else if (responseEntity.type == QuestionType.date) {
-    //   return DateQuestionWidget(
-    //     responseEntity: responseEntity,
-    //   );
-    // } else if (responseEntity.type == QuestionType.time) {
-    //   return TimeQuestionWidget(
-    //     responseEntity: responseEntity,
-    //   );
     // }
-    else {
+    else if (responseEntity.type == QuestionType.date) {
+      return DateIndWidget(
+        responseEntity: responseEntity,
+        formResponse: response,
+      );
+    } else if (responseEntity.type == QuestionType.time) {
+      return TimeIndWidget(
+        responseEntity: responseEntity,
+        formResponse: response,
+      );
+    } else {
       return const SizedBox.shrink();
     }
   }
