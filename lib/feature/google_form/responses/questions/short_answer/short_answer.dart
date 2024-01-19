@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:googleapis/forms/v1.dart';
 
 import '../../../edit_form/domain/entities/response_entity.dart';
 
@@ -23,9 +22,6 @@ class _ShortAnswerQuestionWidgetState extends State<ShortAnswerQuestionWidget> {
   @override
   Widget build(BuildContext context) {
     _prepareResponseMap();
-    List<Option> options = widget.responseEntity.item?.questionItem?.question
-            ?.choiceQuestion?.options ??
-        [];
 
     return Padding(
       padding:
@@ -36,7 +32,7 @@ class _ShortAnswerQuestionWidgetState extends State<ShortAnswerQuestionWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildQuestionView(options),
+              _buildQuestionView(),
               ListView.builder(
                   shrinkWrap: true,
                   reverse: true,
@@ -47,9 +43,11 @@ class _ShortAnswerQuestionWidgetState extends State<ShortAnswerQuestionWidget> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(frequencyMap.keys.toList()[position]),
                                 const Divider()
@@ -74,7 +72,7 @@ class _ShortAnswerQuestionWidgetState extends State<ShortAnswerQuestionWidget> {
     );
   }
 
-  Widget _buildQuestionView(List<Option> options) {
+  Widget _buildQuestionView() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -85,7 +83,8 @@ class _ShortAnswerQuestionWidgetState extends State<ShortAnswerQuestionWidget> {
               width: double.infinity,
               child: Text(
                 widget.responseEntity.title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
             const Gap(8),

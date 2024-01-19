@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../../edit_form/domain/entities/response_entity.dart';
 import '../../edit_form/domain/enums.dart';
 import '../../edit_form/ui/cubit/form_cubit.dart';
+import 'linear_scale/linear_scale.dart';
+import 'multiple_choice/multiple_choice.dart';
 import 'short_answer/short_answer.dart';
-import 'widgets/multiple_choice.dart';
 
 class QuestionsResponseTab extends StatefulWidget {
   final FormCubit formCubit;
@@ -49,6 +50,10 @@ class _QuestionsResponseTabState extends State<QuestionsResponseTab> {
     } else if (responseEntity.type == QuestionType.shortAnswer ||
         responseEntity.type == QuestionType.paragraph) {
       return ShortAnswerQuestionWidget(
+        responseEntity: responseEntity,
+      );
+    } else if (responseEntity.type == QuestionType.linearScale) {
+      return LinearScaleQuestionWidget(
         responseEntity: responseEntity,
       );
     } else {
