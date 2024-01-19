@@ -6,6 +6,7 @@ import '../../edit_form/domain/enums.dart';
 import '../../edit_form/ui/cubit/form_cubit.dart';
 import 'widgets/date.dart';
 import 'widgets/dropdown.dart';
+import 'widgets/linear_scale.dart';
 import 'widgets/multiple_choice.dart';
 import 'widgets/short_answer.dart';
 import 'widgets/time.dart';
@@ -123,13 +124,12 @@ class _IndividualTabState extends State<IndividualTab> {
         responseEntity: responseEntity,
         formResponse: response,
       );
-    }
-    //  else if (responseEntity.type == QuestionType.linearScale) {
-    //   return LinearScaleQuestionWidget(
-    //     responseEntity: responseEntity,
-    //   );
-    // }
-    else if (responseEntity.type == QuestionType.date) {
+    } else if (responseEntity.type == QuestionType.linearScale) {
+      return LinearScaleIndWidget(
+        responseEntity: responseEntity,
+        formResponse: response,
+      );
+    } else if (responseEntity.type == QuestionType.date) {
       return DateIndWidget(
         responseEntity: responseEntity,
         formResponse: response,
