@@ -7,6 +7,7 @@ import 'date/date_response.dart';
 import 'linear_scale/linear_scale.dart';
 import 'multiple_choice/multiple_choice.dart';
 import 'short_answer/short_answer.dart';
+import 'time/time_response.dart';
 
 class QuestionsResponseTab extends StatefulWidget {
   final FormCubit formCubit;
@@ -59,6 +60,10 @@ class _QuestionsResponseTabState extends State<QuestionsResponseTab> {
       );
     } else if (responseEntity.type == QuestionType.date) {
       return DateQuestionWidget(
+        responseEntity: responseEntity,
+      );
+    } else if (responseEntity.type == QuestionType.time) {
+      return TimeQuestionWidget(
         responseEntity: responseEntity,
       );
     } else {
