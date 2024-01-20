@@ -79,12 +79,11 @@ class FormCubit extends Cubit<EditFormState> {
   }
 
   void _prepareResponseEntityList(Item item) {
+    responseList.sort((a, b) {
+      return a.createTime!.compareTo(b.createTime!);
+    });
     if (item.questionItem != null) {
       final List<String> answerList = [];
-
-      responseList.sort((a, b) {
-        return a.createTime!.compareTo(b.createTime!);
-      });
 
       for (var response in responseList) {
         response.answers?[item.questionItem!.question!.questionId!]?.textAnswers
@@ -105,6 +104,34 @@ class FormCubit extends Cubit<EditFormState> {
               answerList,
             )
           ],
+        ),
+      );
+    }
+
+    if (item.questionGroupItem != null) {
+      final List<QuestionAnswerEntity> entityList = [];
+
+      item.questionGroupItem?.questions?.forEach((question) {
+        final List<String> answerList = [];
+        for (var response in responseList) {
+          response.answers?[question.questionId!]?.textAnswers?.answers
+              ?.forEach((element) {
+            answerList.add(element.value ?? '');
+          });
+        }
+        entityList.add(QuestionAnswerEntity(
+          question.questionId!,
+          answerList,
+        ));
+      });
+
+      responseEntityList.add(
+        ResponseEntity(
+          checkQuestionType(item),
+          item.title ?? '',
+          item.description ?? '',
+          item,
+          entityList,
         ),
       );
     }

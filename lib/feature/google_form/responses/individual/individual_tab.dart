@@ -4,6 +4,7 @@ import 'package:googleapis/forms/v1.dart';
 import '../../edit_form/domain/entities/response_entity.dart';
 import '../../edit_form/domain/enums.dart';
 import '../../edit_form/ui/cubit/form_cubit.dart';
+import 'widgets/choice_grid.dart';
 import 'widgets/date.dart';
 import 'widgets/dropdown.dart';
 import 'widgets/linear_scale.dart';
@@ -136,6 +137,12 @@ class _IndividualTabState extends State<IndividualTab> {
       );
     } else if (responseEntity.type == QuestionType.time) {
       return TimeIndWidget(
+        responseEntity: responseEntity,
+        formResponse: response,
+      );
+    } else if (responseEntity.type == QuestionType.multipleChoiceGrid ||
+        responseEntity.type == QuestionType.checkboxGrid) {
+      return ChoiceGridIndWidget(
         responseEntity: responseEntity,
         formResponse: response,
       );
