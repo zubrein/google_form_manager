@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../edit_form/domain/entities/response_entity.dart';
 import '../../edit_form/domain/enums.dart';
 import '../../edit_form/ui/cubit/form_cubit.dart';
+import 'choice_grid/choice_grid.dart';
 import 'date/date_response.dart';
 import 'linear_scale/linear_scale.dart';
 import 'multiple_choice/multiple_choice.dart';
@@ -64,6 +65,11 @@ class _QuestionsResponseTabState extends State<QuestionsResponseTab> {
       );
     } else if (responseEntity.type == QuestionType.time) {
       return TimeQuestionWidget(
+        responseEntity: responseEntity,
+      );
+    } else if (responseEntity.type == QuestionType.multipleChoiceGrid ||
+        responseEntity.type == QuestionType.checkboxGrid) {
+      return ChoiceGridQuestionWidget(
         responseEntity: responseEntity,
       );
     } else {
