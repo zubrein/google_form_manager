@@ -35,6 +35,7 @@ class FormCubit extends Cubit<EditFormState> {
   List<ResponseEntity> responseEntityList = [];
   bool isQuiz = false;
   int responseListSize = 0;
+  int totalPoint = 0;
 
   String responderUrl = '';
 
@@ -85,6 +86,10 @@ class FormCubit extends Cubit<EditFormState> {
     if (item.questionItem != null) {
       final List<String> answerList = [];
 
+      int score = item.questionItem?.question?.grading?.pointValue ?? 0;
+
+      totalPoint += score;
+
       for (var response in responseList) {
         response.answers?[item.questionItem!.question!.questionId!]?.textAnswers
             ?.answers
@@ -112,6 +117,9 @@ class FormCubit extends Cubit<EditFormState> {
       final List<QuestionAnswerEntity> entityList = [];
 
       item.questionGroupItem?.questions?.forEach((question) {
+        int score = question.grading?.pointValue ?? 0;
+
+        totalPoint += score;
         final List<String> answerList = [];
         for (var response in responseList) {
           response.answers?[question.questionId!]?.textAnswers?.answers

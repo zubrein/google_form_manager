@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/entities/response_entity.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_cubit.dart';
@@ -33,23 +34,148 @@ class _SummaryTabState extends State<SummaryTab> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: _formCubit.responseEntityList.length,
+        itemCount: _formCubit.responseEntityList.length + 1,
         itemBuilder: (context, position) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
+          return position == 0
+              ? _buildTopWidget()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _getResponseWidget(
+                        _formCubit.responseEntityList[position - 1].type,
+                        _formCubit.responseEntityList[position - 1]
+                            .questionAnswerEntity,
+                        _formCubit.responseEntityList[position - 1].title,
+                        responseEntity:
+                            _formCubit.responseEntityList[position - 1],
+                      ),
+                    ),
+                  ),
+                );
+        });
+  }
+
+  Widget _buildTopWidget() {
+    return _formCubit.isQuiz
+        ? Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0).copyWith(top: 16),
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: _getResponseWidget(
-                  _formCubit.responseEntityList[position].type,
-                  _formCubit.responseEntityList[position].questionAnswerEntity,
-                  _formCubit.responseEntityList[position].title,
-                  responseEntity: _formCubit.responseEntityList[position],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildAverageWidget(),
+                    _buildMedianWidget(),
+                    _buildRangeWidget(),
+                  ],
                 ),
               ),
             ),
-          );
-        });
+          )
+        : const SizedBox.shrink();
+  }
+
+  Widget _buildMedianWidget() {
+    return Column(
+      children: [
+        const Text(
+          'Median',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        const Gap(8),
+        Text('${median()}/${_formCubit.totalPoint}'),
+      ],
+    );
+  }
+
+  Widget _buildAverageWidget() {
+    return Column(
+      children: [
+        const Text(
+          'Average',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        const Gap(8),
+        Text('${average()}/${_formCubit.totalPoint}'),
+      ],
+    );
+  }
+
+  Widget _buildRangeWidget() {
+    return Column(
+      children: [
+        const Text(
+          'Range',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        const Gap(8),
+        Text(range()),
+      ],
+    );
+  }
+
+  int median() {
+    final List<double> numbers = [];
+
+    for (var response in _formCubit.responseList) {
+      double totalScore = 0.0;
+      response.answers?.values.toList().forEach((answer) {
+        double score = answer.grade?.score ?? 0.0;
+        totalScore += score;
+      });
+      numbers.add(totalScore);
+    }
+
+    numbers.sort();
+    int middleIndex = numbers.length ~/ 2;
+
+    if (numbers.length % 2 == 1) {
+      return numbers[middleIndex].floor();
+    } else {
+      return (numbers[middleIndex - 1]).floor();
+    }
+  }
+
+  String range() {
+    final List<double> numbers = [];
+
+    for (var response in _formCubit.responseList) {
+      double totalScore = 0.0;
+      response.answers?.values.toList().forEach((answer) {
+        double score = answer.grade?.score ?? 0.0;
+        totalScore += score;
+      });
+      numbers.add(totalScore);
+    }
+
+    numbers.sort();
+    return numbers.length > 1
+        ? '${numbers.first.floor()}-${numbers.last.floor()}'
+        : '${numbers.first.floor()}';
+  }
+
+  double average() {
+    final List<double> numbers = [];
+
+    for (var response in _formCubit.responseList) {
+      double totalScore = 0.0;
+      response.answers?.values.toList().forEach((answer) {
+        double score = answer.grade?.score ?? 0.0;
+        totalScore += score;
+      });
+      numbers.add(totalScore);
+    }
+
+    double sum = 0;
+    for (double number in numbers) {
+      sum += number;
+    }
+
+    return sum / _formCubit.responseList.length;
   }
 
   Widget _getResponseWidget(
