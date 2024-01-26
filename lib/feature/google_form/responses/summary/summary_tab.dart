@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_form_manager/feature/google_form/edit_form/domain/entities/response_entity.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/ui/cubit/form_cubit.dart';
 import 'package:google_form_manager/feature/google_form/responses/summary/widgets/multiple_choice.dart';
@@ -6,6 +7,7 @@ import 'package:google_form_manager/feature/google_form/responses/summary/widget
 
 import '../../edit_form/domain/entities/question_answer_entity.dart';
 import 'widgets/checkbox.dart';
+import 'widgets/choice_grid.dart';
 import 'widgets/date_answer.dart';
 import 'widgets/linear_scale.dart';
 import 'widgets/short_answer.dart';
@@ -33,19 +35,6 @@ class _SummaryTabState extends State<SummaryTab> {
     return ListView.builder(
         itemCount: _formCubit.responseEntityList.length,
         itemBuilder: (context, position) {
-          // String title = _formCubit.responseEntityList[position].title;
-          // final List<String> answerList = [];
-          //
-          // for (var questionId
-          //     in _formCubit.questionTypeVsIdMap.values.toList()[position]) {
-          //   for (var response in _formCubit.responseList) {
-          //     response.answers?[questionId]?.textAnswers?.answers
-          //         ?.forEach((element) {
-          //       answerList.add(element.value ?? '');
-          //     });
-          //   }
-          // }
-
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
@@ -55,6 +44,7 @@ class _SummaryTabState extends State<SummaryTab> {
                   _formCubit.responseEntityList[position].type,
                   _formCubit.responseEntityList[position].questionAnswerEntity,
                   _formCubit.responseEntityList[position].title,
+                  responseEntity: _formCubit.responseEntityList[position],
                 ),
               ),
             ),
@@ -65,8 +55,9 @@ class _SummaryTabState extends State<SummaryTab> {
   Widget _getResponseWidget(
     QuestionType type,
     List<QuestionAnswerEntity> answerList,
-    String title,
-  ) {
+    String title, {
+    ResponseEntity? responseEntity,
+  }) {
     if (type == QuestionType.multipleChoice || type == QuestionType.dropdown) {
       return MultipleChoiceResponseWidget(
         answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
@@ -97,6 +88,12 @@ class _SummaryTabState extends State<SummaryTab> {
       return TimeAnswerResponseWidget(
         answerList: answerList.isNotEmpty ? answerList[0].answerList : [],
         title: title,
+      );
+    } else if (type == QuestionType.multipleChoiceGrid ||
+        type == QuestionType.checkboxGrid) {
+      return ChoiceGridResponseWidget(
+        title: title,
+        responseEntity: responseEntity!,
       );
     } else {
       return const SizedBox.shrink();
