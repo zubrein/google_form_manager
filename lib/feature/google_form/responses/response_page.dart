@@ -35,12 +35,16 @@ class _ResponsePageState extends State<ResponsePage>
       bloc: widget.formCubit,
       builder: (context, state) {
         if (state is FormListUpdateState) {
-          return Column(
-            children: [
-              _buildTabBar(),
-              _buildTabBarView(),
-            ],
-          );
+          return widget.formCubit.responseList.isNotEmpty
+              ? Column(
+                  children: [
+                    _buildTabBar(),
+                    _buildTabBarView(),
+                  ],
+                )
+              : const Center(
+                  child: Text('No response data available'),
+                );
         } else {
           return const SizedBox.shrink();
         }
