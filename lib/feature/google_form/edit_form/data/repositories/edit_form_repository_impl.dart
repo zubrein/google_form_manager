@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:google_form_manager/core/helper/google_apis_helper.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/youtube/v3.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../domain/repository/edit_form_repository.dart';
@@ -44,5 +45,26 @@ class EditFormRepositoryImpl extends EditFormRepository {
       return formResponses.responses ?? [];
     }
     return [];
+  }
+
+  @override
+  Future<SearchListResponse> getVideoList(String query) async {
+    final youtubeApi = await GoogleApisHelper.getYoutubeApi();
+
+    SearchListResponse searchListResponse = SearchListResponse();
+    if (youtubeApi != null) {
+      try {
+        searchListResponse = await youtubeApi.search.list(
+          ['snippet'],
+          q: query,
+          maxResults: 20,
+        );
+      } catch (error) {
+        print('Error fetching videos: $error');
+        return SearchListResponse(); // Return an empty list if an error occurs
+      }
+    }
+
+    return searchListResponse;
   }
 }

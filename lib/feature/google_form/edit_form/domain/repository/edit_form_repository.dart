@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/youtube/v3.dart';
 
 abstract class EditFormRepository {
   Future<Form?> getForm(String formId);
@@ -10,4 +11,6 @@ abstract class EditFormRepository {
     BatchUpdateFormRequest batchUpdateRequest,
     String formId,
   );
+
+  Future<SearchListResponse> getVideoList(String query);
 }

@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../domain/entities/base_item_entity.dart';
+import '../domain/entities/youtube_data_entity.dart';
 import '../domain/enums.dart';
 import 'cubit/form_cubit.dart';
 import 'item_type_list_page.dart';
 import 'widgets/helper/create_question_item_helper.dart';
 import 'widgets/shared/base_item_with_widget_selector.dart';
 import 'widgets/shared/edit_text_widget.dart';
+import 'widgets/video/video_widget_dialog.dart';
 
 class EditFormPage extends StatefulWidget {
   final String formId;
@@ -250,9 +253,24 @@ class _EditFormPageState extends State<EditFormPage>
   Widget _buildVideoAddButton() {
     return GestureDetector(
       onTap: () async {
+        final result = await showDialog(
+            useRootNavigator: false,
+            context: context,
+            builder: (_) {
+              return VideoWidgetDialog(
+                  context: context, formCubit: widget.formCubit);
+            });
+
+        YoutubeDataEntity youtubeDataEntity = result[0] as YoutubeDataEntity;
+
         widget.formCubit.addItem(
-          CreateQuestionItemHelper.getItem(
-            QuestionType.video,
+          Item(
+            title: '',
+            description: '',
+            videoItem: VideoItem(
+              caption: '',
+              video: Video(youtubeUri: youtubeDataEntity.url),
+            ),
           ),
           QuestionType.video,
         );

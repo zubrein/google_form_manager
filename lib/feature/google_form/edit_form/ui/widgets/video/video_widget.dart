@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as mat;
 import 'package:gap/gap.dart';
+import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../bottom_modal_operation_constant.dart';
 import '../../cubit/form_cubit.dart';
@@ -54,9 +57,19 @@ class _VideoWidgetState extends State<VideoWidget>
             ? buildEditDescriptionWidget(
                 description: 'Caption', isCaption: true)
             : const SizedBox.shrink(),
-        const Gap(32),
+        const Gap(16),
+        SizedBox(
+          height: 150,
+          child: mat.Image.network(
+            _getThumbnailUrl(widget.item?.videoItem?.video?.youtubeUri ?? ''),
+          ),
+        )
       ],
     );
+  }
+
+  void _prepareRequest(){
+
   }
 
   @override
@@ -166,4 +179,11 @@ class _VideoWidgetState extends State<VideoWidget>
 
   @override
   VoidCallback? get onAnswerKeyPressed => () {};
+
+  String _getThumbnailUrl(String url) {
+    Log.info(url);
+    final videoId = YoutubePlayer.convertUrlToId('https://$url');
+    Log.info(videoId.toString());
+    return 'https://img.youtube.com/vi/$videoId/mqdefault.jpg';
+  }
 }

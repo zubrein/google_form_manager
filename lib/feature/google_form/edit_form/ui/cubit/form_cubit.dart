@@ -5,6 +5,7 @@ import 'package:google_form_manager/core/helper/google_apis_helper.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/entities/question_answer_entity.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/youtube/v3.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../domain/constants.dart';
@@ -15,6 +16,7 @@ import '../../domain/usecases/batch_update_usecase.dart';
 import '../../domain/usecases/check_question_type_usecase.dart';
 import '../../domain/usecases/fetch_form_responses_usecase.dart';
 import '../../domain/usecases/fetch_form_usecase.dart';
+import '../../domain/usecases/fetch_youtube_list_usecase.dart';
 import '../utils/process_request_for_empty_feedback.dart';
 import '../widgets/helper/create_request_item_helper.dart';
 import '../widgets/helper/delete_request_item_helper.dart';
@@ -26,6 +28,7 @@ class FormCubit extends Cubit<EditFormState> {
   FetchFormUseCase fetchFormUseCase;
   CheckQuestionTypeUseCase checkQuestionTypeUseCase;
   FetchFormResponsesUseCase fetchFormResponsesUseCase;
+  FetchYoutubeListUseCase fetchYoutubeListUseCase;
   BatchUpdateUseCase batchUpdateUseCase;
   List<BaseItemEntity> baseItemList = [];
   final List<Request> _requestList = [];
@@ -44,6 +47,7 @@ class FormCubit extends Cubit<EditFormState> {
     this.checkQuestionTypeUseCase,
     this.fetchFormResponsesUseCase,
     this.batchUpdateUseCase,
+    this.fetchYoutubeListUseCase,
   ) : super(EditFormInitial());
 
   void addUploadedImageID(String id) {
@@ -77,6 +81,11 @@ class FormCubit extends Cubit<EditFormState> {
     } else {
       emit(FetchFormFailedState());
     }
+  }
+
+  Future<List<SearchResult>> fetchYoutubeList(String query) async {
+    final searchListResponse = await fetchYoutubeListUseCase(query);
+    return searchListResponse?.items ?? [];
   }
 
   void _prepareResponseEntityList(Item item) {
