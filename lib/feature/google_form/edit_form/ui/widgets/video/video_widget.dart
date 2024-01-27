@@ -6,6 +6,7 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.d
 import 'package:googleapis/forms/v1.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../domain/constants.dart';
 import '../../bottom_modal_operation_constant.dart';
 import '../../cubit/form_cubit.dart';
 import '../helper/request_builder_helper_mixin.dart';
@@ -37,6 +38,7 @@ class _VideoWidgetState extends State<VideoWidget>
   @override
   void init() {
     showDescription = widget.item?.videoItem?.caption != null;
+    _prepareRequest();
   }
 
   @override
@@ -68,8 +70,18 @@ class _VideoWidgetState extends State<VideoWidget>
     );
   }
 
-  void _prepareRequest(){
-
+  void _prepareRequest() {
+    if (widget.operationType == OperationType.update) {
+      request.updateItem?.item?.videoItem?.video?.youtubeUri =
+          widget.item?.videoItem?.video?.youtubeUri;
+      updateMask.add(Constants.video);
+      request.updateItem?.updateMask = updateMaskBuilder(updateMask);
+      addRequest();
+    } else if (widget.operationType == OperationType.create) {
+      request.createItem?.item?.videoItem?.video?.youtubeUri =
+          widget.item?.videoItem?.video?.youtubeUri;
+      addRequest();
+    }
   }
 
   @override
