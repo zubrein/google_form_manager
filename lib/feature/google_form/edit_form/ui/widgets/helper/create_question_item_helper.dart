@@ -30,6 +30,8 @@ class CreateQuestionItemHelper {
         return getTextItem();
       case QuestionType.pageBreak:
         return getPageBreakItem();
+      case QuestionType.video:
+        return getVideoItem();
 
       default:
         return Item();
@@ -119,6 +121,13 @@ class CreateQuestionItemHelper {
 
   static Item getTextItem() {
     return Item(title: '', description: '', textItem: TextItem());
+  }
+
+  static Item getVideoItem() {
+    return Item(
+        title: '',
+        description: '',
+        videoItem: VideoItem(caption: '', video: Video(youtubeUri: '')));
   }
 
   static Item getPageBreakItem() {

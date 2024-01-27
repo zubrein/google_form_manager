@@ -43,6 +43,8 @@ class CheckQuestionTypeUseCase {
       return QuestionType.text;
     } else if (item?.pageBreakItem != null) {
       return QuestionType.pageBreak;
+    }else if (item?.videoItem != null) {
+      return QuestionType.video;
     }
 
     return QuestionType.unknown;

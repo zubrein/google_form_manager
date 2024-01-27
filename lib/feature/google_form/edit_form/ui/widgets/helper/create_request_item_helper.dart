@@ -40,6 +40,8 @@ class CreateRequestItemHelper {
         return prepareTextItemCreateRequest(widgetIndex);
       case QuestionType.pageBreak:
         return preparePageBreakCreateRequest(widgetIndex);
+      case QuestionType.video:
+        return prepareVideoCreateRequest(widgetIndex);
 
       default:
         return Request();
@@ -83,6 +85,8 @@ class CreateRequestItemHelper {
         return prepareTextItemCreateRequest(widgetIndex);
       case QuestionType.pageBreak:
         return preparePageBreakCreateRequest(widgetIndex);
+      case QuestionType.video:
+        return prepareVideoCreateRequest(widgetIndex);
 
       default:
         return Request();
@@ -392,6 +396,17 @@ class CreateRequestItemHelper {
     return Request(
         createItem: CreateItemRequest(
       item: (Item(title: '', description: '', pageBreakItem: PageBreakItem())),
+      location: Location(index: widgetIndex),
+    ));
+  }
+
+  static Request prepareVideoCreateRequest(int widgetIndex) {
+    return Request(
+        createItem: CreateItemRequest(
+      item: (Item(
+          title: '',
+          description: '',
+          videoItem: VideoItem(caption: '', video: Video(youtubeUri: '')))),
       location: Location(index: widgetIndex),
     ));
   }

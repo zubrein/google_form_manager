@@ -53,11 +53,14 @@ mixin TitleDescriptionAdderMixin {
     }
   }
 
-  Widget buildEditDescriptionWidget(
-      {String description = 'Description', bool enabled = true}) {
+  Widget buildEditDescriptionWidget({
+    String description = 'Description',
+    bool enabled = true,
+    bool isCaption = false,
+  }) {
     return EditTextWidget(
       controller: descriptionController,
-      onChange: _onChangeDescriptionText,
+      onChange: isCaption ? _onChangeCaptionText : _onChangeDescriptionText,
       hint: description,
       enabled: enabled,
     );
@@ -75,6 +78,24 @@ mixin TitleDescriptionAdderMixin {
       titleDescAddRequest(debounceTag: descriptionDebounceTag);
     } else if (operationType == OperationType.create) {
       titleDescRequest.createItem?.item?.description = widgetItem?.description;
+      titleDescAddRequest(debounceTag: descriptionDebounceTag);
+    }
+  }
+
+  void _onChangeCaptionText(String value) {
+    var descriptionDebounceTag = '$widgetIndex caption';
+    widgetItem?.videoItem?.caption = value;
+
+    if (operationType == OperationType.update) {
+      titleDescRequest.updateItem?.item?.videoItem?.caption =
+          widgetItem?.videoItem?.caption;
+      titleDescUpdateMask.add(Constants.caption);
+      titleDescRequest.updateItem?.updateMask =
+          updateMaskBuilder(titleDescUpdateMask);
+      titleDescAddRequest(debounceTag: descriptionDebounceTag);
+    } else if (operationType == OperationType.create) {
+      titleDescRequest.createItem?.item?.videoItem?.caption =
+          widgetItem?.videoItem?.caption;
       titleDescAddRequest(debounceTag: descriptionDebounceTag);
     }
   }

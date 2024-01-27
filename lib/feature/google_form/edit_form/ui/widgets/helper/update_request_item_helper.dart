@@ -40,6 +40,8 @@ class UpdateRequestItemHelper {
         return prepareTextItemUpdateRequest(widgetIndex);
       case QuestionType.pageBreak:
         return preparePageBreakUpdateRequest(widgetIndex);
+      case QuestionType.video:
+        return prepareVideoUpdateRequest(widgetIndex);
       default:
         return Request();
     }
@@ -228,6 +230,18 @@ class UpdateRequestItemHelper {
         updateItem: UpdateItemRequest(
             item: (Item(
                 title: '', description: '', pageBreakItem: PageBreakItem())),
+            location: Location(index: widgetIndex),
+            updateMask: ''));
+  }
+
+  static Request prepareVideoUpdateRequest(int widgetIndex) {
+    return Request(
+        updateItem: UpdateItemRequest(
+            item: (Item(
+                title: '',
+                description: '',
+                videoItem:
+                    VideoItem(caption: '', video: Video(youtubeUri: '')))),
             location: Location(index: widgetIndex),
             updateMask: ''));
   }

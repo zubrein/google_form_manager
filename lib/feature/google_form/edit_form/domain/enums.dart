@@ -14,6 +14,7 @@ enum QuestionType {
   image,
   text,
   pageBreak,
+  video,
   fileUpload,
   unknown,
 }
@@ -32,6 +33,7 @@ Map<QuestionType, String> questionTypeNameMap = {
   QuestionType.image: 'Image',
   QuestionType.text: 'text',
   QuestionType.pageBreak: 'Page Break',
+  QuestionType.video: 'Video',
   QuestionType.fileUpload: 'File upload',
 };
 
@@ -49,6 +51,7 @@ Map<QuestionType, IconData> questionTypeIconMap = {
   QuestionType.image: Icons.image,
   QuestionType.text: Icons.text_fields_outlined,
   QuestionType.pageBreak: Icons.insert_page_break,
+  QuestionType.video: Icons.slow_motion_video_outlined,
   QuestionType.fileUpload: Icons.upload_outlined,
 };
 

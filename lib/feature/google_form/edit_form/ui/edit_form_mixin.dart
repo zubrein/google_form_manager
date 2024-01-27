@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_form_manager/feature/google_form/edit_form/ui/widgets/video/video_widget.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../domain/enums.dart';
@@ -46,8 +47,8 @@ mixin EditFormMixin {
     );
   }
 
-  Widget _buildLinearScaleWidget(
-      int position, Item? qItem, OperationType type) {
+  Widget _buildLinearScaleWidget(int position, Item? qItem,
+      OperationType type) {
     return LinearScaleWidget(
       index: position,
       item: qItem,
@@ -56,8 +57,8 @@ mixin EditFormMixin {
     );
   }
 
-  Widget _buildMultipleChoiceWidget(
-      int position, Item? qItem, OperationType oType, QuestionType qType) {
+  Widget _buildMultipleChoiceWidget(int position, Item? qItem,
+      OperationType oType, QuestionType qType) {
     return MultipleChoiceWidget(
       index: position,
       item: qItem,
@@ -76,8 +77,8 @@ mixin EditFormMixin {
     );
   }
 
-  Widget _buildMultipleChoiceGridWidget(
-      int position, Item? qItem, OperationType oType, QuestionType qType) {
+  Widget _buildMultipleChoiceGridWidget(int position, Item? qItem,
+      OperationType oType, QuestionType qType) {
     return MultipleChoiceGridWidget(
       index: position,
       item: qItem,
@@ -114,11 +115,19 @@ mixin EditFormMixin {
     );
   }
 
-  Widget buildFormItem(
-      {required QuestionType qType,
-      required Item? item,
-      required int index,
-      required OperationType opType}) {
+  Widget _buildVideoWidget(int position, Item? qItem, OperationType type) {
+    return VideoWidget(
+      index: position,
+      item: qItem,
+      operationType: type,
+      formCubit: formCubit,
+    );
+  }
+
+  Widget buildFormItem({required QuestionType qType,
+    required Item? item,
+    required int index,
+    required OperationType opType}) {
     switch (qType) {
       case QuestionType.shortAnswer:
         return _buildShortAnswerWidget(index, item, opType);
@@ -153,6 +162,8 @@ mixin EditFormMixin {
         return _buildTextItemWidget(index, item, opType);
       case QuestionType.pageBreak:
         return _buildPageBreakWidget(index, item, opType);
+      case QuestionType.video:
+        return _buildVideoWidget(index, item, opType);
 
       default:
         return const SizedBox.shrink();

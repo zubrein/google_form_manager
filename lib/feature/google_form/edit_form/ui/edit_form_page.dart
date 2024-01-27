@@ -221,6 +221,7 @@ class _EditFormPageState extends State<EditFormPage>
                 _buildNewItemAddButton(),
                 _buildImageItemAddButton(),
                 _buildTextItemAddButton(),
+                _buildVideoAddButton(),
                 _buildPageBreakAddButton(),
               ],
             ),
@@ -243,6 +244,22 @@ class _EditFormPageState extends State<EditFormPage>
       },
       child: const SizedBox(
           height: 50, width: 50, child: Icon(Icons.text_fields_outlined)),
+    );
+  }
+
+  Widget _buildVideoAddButton() {
+    return GestureDetector(
+      onTap: () async {
+        widget.formCubit.addItem(
+          CreateQuestionItemHelper.getItem(
+            QuestionType.video,
+          ),
+          QuestionType.video,
+        );
+        scrollToBottom();
+      },
+      child: const SizedBox(
+          height: 50, width: 50, child: Icon(Icons.slow_motion_video_sharp)),
     );
   }
 
