@@ -12,6 +12,7 @@ import '../../core/loading_hud/loading_hud_cubit.dart';
 import '../../util/utility.dart';
 import '../shared/widgets/alert_dialog_widget.dart';
 import 'edit_form/ui/cubit/form_cubit.dart';
+import 'settings/settings_tab.dart';
 import 'top_panel.dart';
 
 class FormTabPage extends StatefulWidget {
@@ -81,7 +82,7 @@ class _FormTabPageState extends State<FormTabPage> {
           loadingHudCubit: _loadingHudCubit,
         ),
         ResponsePage(formCubit: _formCubit),
-        const Center(child: Text('Settings')),
+        SettingsTab(formCubit: _formCubit),
       ]),
     );
   }
