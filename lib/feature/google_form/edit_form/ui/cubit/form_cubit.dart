@@ -83,6 +83,23 @@ class FormCubit extends Cubit<EditFormState> {
     }
   }
 
+  Future<void> changeQuizSettings(bool toggle, String formId) async {
+    emit(FetchFormInitiatedState());
+    baseItemList.clear();
+    final settingsRequest = Request(
+        updateSettings: UpdateSettingsRequest(
+            settings: FormSettings(
+              quizSettings: QuizSettings(isQuiz: toggle),
+            ),
+            updateMask: Constants.quizSettings));
+    await batchUpdateUseCase(
+      BatchUpdateFormRequest(
+          requests: [settingsRequest], includeFormInResponse: true),
+      formId,
+    );
+    await fetchForm(formId);
+  }
+
   Future<List<SearchResult>> fetchYoutubeList(String query) async {
     final searchListResponse = await fetchYoutubeListUseCase(query);
     return searchListResponse?.items ?? [];

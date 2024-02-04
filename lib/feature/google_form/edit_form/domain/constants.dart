@@ -25,6 +25,7 @@ class Constants {
   static String wrongAnsFeedback = 'questionItem.question.grading.whenWrong.text';
   static String point = 'questionItem.question.grading.pointValue';
   static String video = 'videoItem.video.youtubeUri';
+  static String quizSettings = 'quizSettings.isQuiz';
 
   static String createFormLabel = 'Create Form';
   static String loginText = 'Signing with google';

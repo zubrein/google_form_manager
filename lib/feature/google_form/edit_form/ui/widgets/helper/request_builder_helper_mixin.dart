@@ -39,7 +39,6 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    isQuiz = formCubit.isQuiz;
     request = prepareInitialRequest(
       operationType: operationType,
       questionType: questionType,
@@ -103,6 +102,7 @@ mixin RequestBuilderHelper<T extends StatefulWidget> on State<T> {
   }
 
   Widget baseWidget() {
+    isQuiz = formCubit.isQuiz;
     return BaseItemWidget(
       questionType: questionType,
       onRequiredSwitchToggle: onRequiredButtonToggle,

@@ -82,7 +82,11 @@ class _FormTabPageState extends State<FormTabPage> {
           loadingHudCubit: _loadingHudCubit,
         ),
         ResponsePage(formCubit: _formCubit),
-        SettingsTab(formCubit: _formCubit),
+        SettingsTab(
+          formCubit: _formCubit,
+          formId: widget.formId,
+          loadingHudCubit: _loadingHudCubit,
+        ),
       ]),
     );
   }
