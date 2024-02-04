@@ -4,11 +4,13 @@ import 'package:gap/gap.dart';
 class TopPanel extends StatelessWidget {
   final VoidCallback onSaveButtonTap;
   final VoidCallback onShareButtonTap;
+  final VoidCallback onPreviewButtonTap;
 
   const TopPanel({
     super.key,
     required this.onSaveButtonTap,
     required this.onShareButtonTap,
+    required this.onPreviewButtonTap,
   });
 
   @override
@@ -54,7 +56,7 @@ class TopPanel extends StatelessWidget {
 
   GestureDetector _buildPreviewButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: onPreviewButtonTap,
       child: DecoratedBox(
         decoration: BoxDecoration(
             border: Border.all(color: Colors.white),

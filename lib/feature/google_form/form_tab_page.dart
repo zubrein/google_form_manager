@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/google_form/responses/response_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/di/dependency_initializer.dart';
 import '../../core/loading_hud/loading_hud_cubit.dart';
@@ -155,6 +156,9 @@ class _FormTabPageState extends State<FormTabPage> {
           _showSaveDialog('cancel');
         }
       },
+      onPreviewButtonTap: () {
+        _launchUrl();
+      },
     );
   }
 
@@ -181,5 +185,11 @@ class _FormTabPageState extends State<FormTabPage> {
             cancelText: cancelText,
           );
         });
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(Uri.parse(_formCubit.responderUrl))) {
+      throw Exception('Could not launch url');
+    }
   }
 }
