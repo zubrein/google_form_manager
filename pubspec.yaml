@@ -51,7 +51,13 @@ flutter:
     - assets/google.png
     - assets/logo.png
     - assets/google_form_logo.png
-    - assets/youtube_logo.png
+    - assets/blank_form.png
+    - assets/contact_information.png
+    - assets/event_registration.png
+    - assets/party_invite.png
+    - assets/rsvp.png
+    - assets/find_a_time.png
+    - assets/tshirt_size.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

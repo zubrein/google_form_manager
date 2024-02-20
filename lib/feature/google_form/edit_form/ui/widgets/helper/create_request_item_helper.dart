@@ -5,35 +5,67 @@ import 'create_question_item_helper.dart';
 
 class CreateRequestItemHelper {
   static Request prepareCreateRequest(
-      QuestionType questionType, int widgetIndex) {
+    QuestionType questionType,
+    int widgetIndex, {
+    String title = '',
+  }) {
     switch (questionType) {
       case QuestionType.shortAnswer:
         return prepareShortAnswerCreateRequest(
           widgetIndex,
+          title: title,
         );
       case QuestionType.paragraph:
-        return prepareShortAnswerCreateRequest(widgetIndex, isParagraph: true);
+        return prepareShortAnswerCreateRequest(
+          widgetIndex,
+          isParagraph: true,
+          title: title,
+        );
       case QuestionType.multipleChoice:
-        return prepareMultipleChoiceCreateRequest(widgetIndex,
-            type: QuestionType.multipleChoice);
+        return prepareMultipleChoiceCreateRequest(
+          widgetIndex,
+          type: QuestionType.multipleChoice,
+          title: title,
+        );
       case QuestionType.checkboxes:
-        return prepareMultipleChoiceCreateRequest(widgetIndex,
-            type: QuestionType.checkboxes);
+        return prepareMultipleChoiceCreateRequest(
+          widgetIndex,
+          type: QuestionType.checkboxes,
+          title: title,
+        );
       case QuestionType.dropdown:
-        return prepareMultipleChoiceCreateRequest(widgetIndex,
-            type: QuestionType.dropdown);
+        return prepareMultipleChoiceCreateRequest(
+          widgetIndex,
+          type: QuestionType.dropdown,
+          title: title,
+        );
       case QuestionType.date:
-        return prepareDateCreateRequest(widgetIndex);
+        return prepareDateCreateRequest(
+          widgetIndex,
+          title: title,
+        );
       case QuestionType.time:
-        return prepareTimeCreateRequest(widgetIndex);
+        return prepareTimeCreateRequest(
+          widgetIndex,
+          title: title,
+        );
       case QuestionType.linearScale:
-        return prepareLinearScaleCreateRequest(widgetIndex);
+        return prepareLinearScaleCreateRequest(
+          widgetIndex,
+          title: title,
+        );
       case QuestionType.multipleChoiceGrid:
-        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
-            type: QuestionType.multipleChoiceGrid);
+        return prepareMultipleChoiceGridCreateRequest(
+          widgetIndex,
+          type: QuestionType.multipleChoiceGrid,
+          title: title,
+        );
       case QuestionType.checkboxGrid:
-        return prepareMultipleChoiceGridCreateRequest(widgetIndex,
-            type: QuestionType.checkboxGrid);
+        return prepareMultipleChoiceGridCreateRequest(
+          widgetIndex,
+          type: QuestionType.checkboxGrid,
+          title: title,
+        );
       case QuestionType.image:
         return prepareImageCreateRequest(widgetIndex);
       case QuestionType.text:
@@ -96,11 +128,12 @@ class CreateRequestItemHelper {
   static Request prepareShortAnswerCreateRequest(
     int widgetIndex, {
     bool isParagraph = false,
+    String title = '',
   }) {
     return Request(
       createItem: CreateItemRequest(
         item: Item(
-          title: '',
+          title: title,
           description: '',
           questionItem: QuestionItem(
             question: Question(
@@ -139,12 +172,15 @@ class CreateRequestItemHelper {
     );
   }
 
-  static Request prepareMultipleChoiceCreateRequest(int widgetIndex,
-      {required QuestionType type}) {
+  static Request prepareMultipleChoiceCreateRequest(
+    int widgetIndex, {
+    required QuestionType type,
+    String title = '',
+  }) {
     return Request(
       createItem: CreateItemRequest(
         item: Item(
-          title: '',
+          title: title,
           description: '',
           questionItem: QuestionItem(
             question: Question(
@@ -188,11 +224,14 @@ class CreateRequestItemHelper {
     );
   }
 
-  static Request prepareDateCreateRequest(int widgetIndex) {
+  static Request prepareDateCreateRequest(
+    int widgetIndex, {
+    String title = '',
+  }) {
     return Request(
       createItem: CreateItemRequest(
         item: Item(
-          title: '',
+          title: title,
           description: '',
           questionItem: QuestionItem(
             question: Question(
@@ -232,11 +271,14 @@ class CreateRequestItemHelper {
     );
   }
 
-  static Request prepareTimeCreateRequest(int widgetIndex) {
+  static Request prepareTimeCreateRequest(
+    int widgetIndex, {
+    String title = '',
+  }) {
     return Request(
       createItem: CreateItemRequest(
         item: Item(
-          title: '',
+          title: title,
           description: '',
           questionItem: QuestionItem(
             question: Question(
@@ -274,11 +316,14 @@ class CreateRequestItemHelper {
     );
   }
 
-  static Request prepareLinearScaleCreateRequest(int widgetIndex) {
+  static Request prepareLinearScaleCreateRequest(
+    int widgetIndex, {
+    String title = '',
+  }) {
     return Request(
       createItem: CreateItemRequest(
         item: Item(
-          title: '',
+          title: title,
           description: '',
           questionItem: QuestionItem(
             question: Question(
@@ -314,12 +359,15 @@ class CreateRequestItemHelper {
     );
   }
 
-  static Request prepareMultipleChoiceGridCreateRequest(int widgetIndex,
-      {required QuestionType type}) {
+  static Request prepareMultipleChoiceGridCreateRequest(
+    int widgetIndex, {
+    required QuestionType type,
+    String title = '',
+  }) {
     return Request(
       createItem: CreateItemRequest(
         item: Item(
-          title: '',
+          title: title,
           description: '',
           questionGroupItem: QuestionGroupItem(
               questions: [

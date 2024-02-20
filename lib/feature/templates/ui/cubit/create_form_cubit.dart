@@ -4,6 +4,8 @@ import 'package:google_form_manager/feature/google_form/edit_form/domain/usecase
 import 'package:googleapis/forms/v1.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../google_form/edit_form/ui/widgets/helper/create_request_item_helper.dart';
+import '../../domain/entities/template_entity.dart';
 import '../../domain/usecases/create_form_usecase.dart';
 
 part 'create_form_state.dart';
@@ -25,6 +27,22 @@ class CreateFormCubit extends Cubit<CreateFormState> {
           isQuiz: isQuiz,
         ),
         formId);
+
+    result.fold((success) {
+      emit(CreateFormSuccessState(formId));
+    }, (error) {
+      emit(CreateFormFailedState(error.toString()));
+    });
+  }
+
+  Future<void> createTemplate(
+      String formName, List<TemplateItemEntity> item) async {
+    emit(CreateFormInitiatedState());
+    final formId = await createFormUseCase(formName);
+    final result = await batchUpdateUseCase(
+      createTemplateRequests(item),
+      formId,
+    );
 
     result.fold((success) {
       emit(CreateFormSuccessState(formId));
@@ -60,4 +78,17 @@ class CreateFormCubit extends Cubit<CreateFormState> {
         ],
         includeFormInResponse: true,
       );
+
+  BatchUpdateFormRequest createTemplateRequests(
+      List<TemplateItemEntity> items) {
+    List<Request> requests = [];
+
+    for (var i = 0; i < items.length; i++) {
+      requests.add(CreateRequestItemHelper.prepareCreateRequest(
+          items[i].questionType, i,
+          title: items[i].title));
+    }
+
+    return BatchUpdateFormRequest(requests: requests);
+  }
 }

@@ -4,9 +4,13 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
+import 'package:google_form_manager/feature/google_form/edit_form/domain/enums.dart';
 import 'package:google_form_manager/feature/google_form/form_tab_page.dart';
+import 'package:google_form_manager/feature/templates/domain/entities/template_entity.dart';
+import 'package:google_form_manager/feature/templates/ui/constants.dart';
 import 'package:google_form_manager/feature/templates/ui/create_form_name_input_dialog.dart';
 import 'package:google_form_manager/feature/templates/ui/cubit/create_form_cubit.dart';
+import 'package:google_form_manager/feature/templates/ui/template_button.dart';
 
 import '../../google_form/edit_form/domain/constants.dart';
 
@@ -38,37 +42,39 @@ class _TemplatePageState extends State<TemplatePage> {
         ),
         body: BlocConsumer<CreateFormCubit, CreateFormState>(
           bloc: _createFormCubit,
-          listener: (context, state) {
-            if (state is CreateFormInitiatedState) {
-              _loadingHudCubit.show();
-            } else if (state is CreateFormSuccessState) {
-              _loadingHudCubit.cancel();
-              Navigator.of(context).pop();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FormTabPage(
-                            formId: state.formId,
-                          )));
-            } else if (state is CreateFormFailedState) {
-              _loadingHudCubit.showError(message: state.error);
-            }
-          },
+          listener: _onListenFormCubit,
           builder: (context, state) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _buildLabel(Constants.createFormLabel),
-                  const Gap(16),
-                  Row(
-                    children: [
-                      _buildAddButton(),
-                      const Gap(16),
-                      _buildQuizButton(),
-                    ],
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildLabel(Constants.createFormLabel),
+                    const Gap(16),
+                    GridView.count(
+                      crossAxisCount: 3,
+                      shrinkWrap: true,
+                      children: [
+                        _buildAddButton(),
+                        _buildQuizButton(),
+                      ],
+                    ),
+                    const Gap(32),
+                    _buildLabel(Constants.personalFormLabel),
+                    const Gap(16),
+                    GridView.count(
+                      crossAxisCount: 3,
+                      shrinkWrap: true,
+                      children: [
+                        _buildContactInformationButton(),
+                        _buildFindTimeButton(),
+                        _buildRSVPButton(),
+                        _buildPartyInviteButton(),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -77,9 +83,28 @@ class _TemplatePageState extends State<TemplatePage> {
     );
   }
 
+  void _onListenFormCubit(context, state) {
+    if (state is CreateFormInitiatedState) {
+      _loadingHudCubit.show();
+    } else if (state is CreateFormSuccessState) {
+      _loadingHudCubit.cancel();
+      Navigator.of(context).pop();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => FormTabPage(
+                    formId: state.formId,
+                  )));
+    } else if (state is CreateFormFailedState) {
+      _loadingHudCubit.showError(message: state.error);
+    }
+  }
+
   Widget _buildAddButton() {
-    return GestureDetector(
-      onTap: () async {
+    return TemplateButton(
+      buttonName: 'Create Form',
+      buttonImage: blankFormImage,
+      buttonOnClick: () async {
         final result = await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -90,20 +115,74 @@ class _TemplatePageState extends State<TemplatePage> {
           _createFormCubit.createForm(result[0]);
         }
       },
-      child: Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Center(
-          child: Icon(
-            Icons.add,
-            size: 40,
-          ),
-        ),
-      ),
+    );
+  }
+
+  Widget _buildContactInformationButton() {
+    return TemplateButton(
+      buttonName: 'Contact Information',
+      buttonImage: contactInformationImage,
+      buttonOnClick: () async {
+        _createFormCubit.createTemplate('Contact Information', [
+          TemplateItemEntity(QuestionType.shortAnswer, 'Name'),
+          TemplateItemEntity(QuestionType.shortAnswer, 'Email'),
+          TemplateItemEntity(QuestionType.paragraph, 'Address'),
+          TemplateItemEntity(QuestionType.shortAnswer, 'Phone Number'),
+          TemplateItemEntity(QuestionType.paragraph, 'Comments'),
+        ]);
+      },
+    );
+  }
+
+  Widget _buildFindTimeButton() {
+    return TemplateButton(
+      buttonName: 'Find a Time',
+      buttonImage: findTimeImage,
+      buttonOnClick: () async {
+        _createFormCubit.createTemplate('Find a Time', [
+          TemplateItemEntity(QuestionType.shortAnswer, 'Name'),
+          TemplateItemEntity(QuestionType.shortAnswer, 'Email'),
+          TemplateItemEntity(QuestionType.paragraph, 'Address'),
+          TemplateItemEntity(QuestionType.shortAnswer, 'Phone Number'),
+          TemplateItemEntity(QuestionType.paragraph, 'Comments'),
+        ]);
+      },
+    );
+  }
+
+  Widget _buildRSVPButton() {
+    return TemplateButton(
+      buttonName: 'RSVP',
+      buttonImage: rsvpImage,
+      buttonOnClick: () async {
+        final result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const CreateFormNameInputDialog();
+          },
+        );
+        if (result != null) {
+          _createFormCubit.createForm(result[0]);
+        }
+      },
+    );
+  }
+
+  Widget _buildPartyInviteButton() {
+    return TemplateButton(
+      buttonName: 'Party Invite',
+      buttonImage: partyInviteImage,
+      buttonOnClick: () async {
+        final result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const CreateFormNameInputDialog();
+          },
+        );
+        if (result != null) {
+          _createFormCubit.createForm(result[0]);
+        }
+      },
     );
   }
 
