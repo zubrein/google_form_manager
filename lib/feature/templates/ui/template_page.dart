@@ -13,6 +13,11 @@ import 'package:google_form_manager/feature/templates/ui/cubit/create_form_cubit
 import 'package:google_form_manager/feature/templates/ui/template_button.dart';
 
 import '../../google_form/edit_form/domain/constants.dart';
+import 'template_pages/event_registration_template.dart';
+import 'template_pages/event_rsvp_template.dart';
+import 'template_pages/find_time_template.dart';
+import 'template_pages/party_time_template.dart';
+import 'template_pages/tshirt_size_template.dart';
 
 class TemplatePage extends StatefulWidget {
   const TemplatePage({super.key});
@@ -68,9 +73,21 @@ class _TemplatePageState extends State<TemplatePage> {
                       shrinkWrap: true,
                       children: [
                         _buildContactInformationButton(),
-                        _buildFindTimeButton(),
-                        _buildRSVPButton(),
-                        _buildPartyInviteButton(),
+                        FindTimeTemplate(
+                          createFormCubit: _createFormCubit,
+                        ),
+                        EventRsvpTemplate(
+                          createFormCubit: _createFormCubit,
+                        ),
+                        PartyInviteTemplate(
+                          createFormCubit: _createFormCubit,
+                        ),
+                        TShirtSizeTemplate(
+                          createFormCubit: _createFormCubit,
+                        ),
+                        EventRegistrationTemplate(
+                          createFormCubit: _createFormCubit,
+                        ),
                       ],
                     ),
                   ],
@@ -130,58 +147,6 @@ class _TemplatePageState extends State<TemplatePage> {
           TemplateItemEntity(QuestionType.shortAnswer, 'Phone Number'),
           TemplateItemEntity(QuestionType.paragraph, 'Comments'),
         ]);
-      },
-    );
-  }
-
-  Widget _buildFindTimeButton() {
-    return TemplateButton(
-      buttonName: 'Find a Time',
-      buttonImage: findTimeImage,
-      buttonOnClick: () async {
-        _createFormCubit.createTemplate('Find a Time', [
-          TemplateItemEntity(QuestionType.shortAnswer, 'Name'),
-          TemplateItemEntity(QuestionType.shortAnswer, 'Email'),
-          TemplateItemEntity(QuestionType.paragraph, 'Address'),
-          TemplateItemEntity(QuestionType.shortAnswer, 'Phone Number'),
-          TemplateItemEntity(QuestionType.paragraph, 'Comments'),
-        ]);
-      },
-    );
-  }
-
-  Widget _buildRSVPButton() {
-    return TemplateButton(
-      buttonName: 'RSVP',
-      buttonImage: rsvpImage,
-      buttonOnClick: () async {
-        final result = await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const CreateFormNameInputDialog();
-          },
-        );
-        if (result != null) {
-          _createFormCubit.createForm(result[0]);
-        }
-      },
-    );
-  }
-
-  Widget _buildPartyInviteButton() {
-    return TemplateButton(
-      buttonName: 'Party Invite',
-      buttonImage: partyInviteImage,
-      buttonOnClick: () async {
-        final result = await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const CreateFormNameInputDialog();
-          },
-        );
-        if (result != null) {
-          _createFormCubit.createForm(result[0]);
-        }
       },
     );
   }

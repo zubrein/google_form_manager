@@ -36,11 +36,14 @@ class CreateFormCubit extends Cubit<CreateFormState> {
   }
 
   Future<void> createTemplate(
-      String formName, List<TemplateItemEntity> item) async {
+    String formName,
+    List<TemplateItemEntity> item, {
+    BatchUpdateFormRequest? request,
+  }) async {
     emit(CreateFormInitiatedState());
     final formId = await createFormUseCase(formName);
     final result = await batchUpdateUseCase(
-      createTemplateRequests(item),
+      request ?? createTemplateRequests(item),
       formId,
     );
 
