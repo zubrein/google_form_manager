@@ -78,19 +78,28 @@ class _EditFormPageState extends State<EditFormPage>
           return Padding(
             padding:
                 const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
-            child: ReorderableListView(
-              onReorder: (int oldIndex, int newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final BaseItemEntity item =
-                      widget.formCubit.baseItemList.removeAt(oldIndex);
-                  widget.formCubit.baseItemList.insert(newIndex, item);
-                  widget.formCubit.moveItem(newIndex, oldIndex);
-                });
-              },
-              children: _buildFormList(),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildFormTitleDescSection(),
+                  ReorderableListView(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (oldIndex < newIndex) {
+                          newIndex -= 1;
+                        }
+                        final BaseItemEntity item =
+                            widget.formCubit.baseItemList.removeAt(oldIndex);
+                        widget.formCubit.baseItemList.insert(newIndex, item);
+                        widget.formCubit.moveItem(newIndex, oldIndex);
+                      });
+                    },
+                    children: _buildFormList(),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -363,7 +372,7 @@ class _EditFormPageState extends State<EditFormPage>
       fontWeight: FontWeight.w700,
       onChange: _onChangeTitleText,
       hint: 'Form Title',
-      enabled: false,
+      enabled: true,
     );
   }
 
@@ -373,13 +382,39 @@ class _EditFormPageState extends State<EditFormPage>
       fontSize: 16,
       fontColor: Colors.black54,
       fontWeight: FontWeight.w500,
-      onChange: _onChangeTitleText,
+      onChange: _onChangeDescriptionText,
       hint: 'Form Description',
-      enabled: false,
+      enabled: true,
     );
   }
 
-  void _onChangeTitleText(String value) {}
+  void _onChangeTitleText(String value) {
+    if (widget.formCubit.formInfoUpdateRequest != null) {
+      widget.formCubit.formInfoUpdateRequest?.updateFormInfo?.info?.title =
+          value;
+      widget.formCubit.formInfoUpdateRequest?.updateFormInfo?.updateMask =
+          'title';
+      value;
+    } else {
+      widget.formCubit.formInfoUpdateRequest = Request(
+          updateFormInfo: UpdateFormInfoRequest(
+              info: Info(title: value), updateMask: 'title,description'));
+    }
+  }
+
+  void _onChangeDescriptionText(String value) {
+    if (widget.formCubit.formInfoUpdateRequest != null) {
+      widget.formCubit.formInfoUpdateRequest?.updateFormInfo?.info
+          ?.description = value;
+      widget.formCubit.formInfoUpdateRequest?.updateFormInfo?.updateMask =
+          'description';
+      value;
+    } else {
+      widget.formCubit.formInfoUpdateRequest = Request(
+          updateFormInfo: UpdateFormInfoRequest(
+              info: Info(description: value), updateMask: 'title,description'));
+    }
+  }
 
   @override
   void dispose() {

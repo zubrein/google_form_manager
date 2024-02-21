@@ -38,6 +38,7 @@ class FormCubit extends Cubit<EditFormState> {
   List<FormResponse> responseList = [];
   List<MoveItemEntity> moveItemList = [];
   List<ResponseEntity> responseEntityList = [];
+  Request? formInfoUpdateRequest;
   bool isQuiz = false;
   int responseListSize = 0;
   int totalPoint = 0;
@@ -272,7 +273,9 @@ class FormCubit extends Cubit<EditFormState> {
         emit(FormSubmitFailedState(error.toString(), fromShare));
       });
     } else {
-      if (_deleteListIndexes.isEmpty && moveItemList.isEmpty) {
+      if (_deleteListIndexes.isEmpty &&
+          moveItemList.isEmpty &&
+          formInfoUpdateRequest == null) {
         emit(FormSubmitFailedState(Constants.noChangesText, fromShare));
       } else {
         emit(FormSubmitSuccessState(fromShare));
@@ -299,8 +302,19 @@ class FormCubit extends Cubit<EditFormState> {
     }
   }
 
+  Future<void> submitFormInfoRequest(String formId) async {
+    if (formInfoUpdateRequest != null) {
+      await batchUpdateUseCase(
+        BatchUpdateFormRequest(
+            requests: [formInfoUpdateRequest!], includeFormInResponse: true),
+        formId,
+      );
+    }
+  }
+
   Future<void> submitRequest(String formId, {bool fromShare = false}) async {
     await submitMoveRequest(formId);
+    await submitFormInfoRequest(formId);
 
     _deleteListIndexes.sort();
     List<Request> deleteRequestList = [];
