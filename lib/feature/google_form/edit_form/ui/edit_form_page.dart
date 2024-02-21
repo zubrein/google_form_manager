@@ -78,22 +78,34 @@ class _EditFormPageState extends State<EditFormPage>
           return Padding(
             padding:
                 const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
-            child: ListView.builder(
-                controller: _scrollController,
-                itemCount: widget.formCubit.baseItemList.length + 1,
-                itemBuilder: (context, position) {
-                  return position == 0
-                      ? state is FetchFormInitiatedState
-                          ? const SizedBox.shrink()
-                          : _buildFormTitleDescSection()
-                      : _buildFormItem(
-                          widget.formCubit.baseItemList[position - 1],
-                          position - 1);
-                }),
+            child: ReorderableListView(
+              onReorder: (int oldIndex, int newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final BaseItemEntity item =
+                      widget.formCubit.baseItemList.removeAt(oldIndex);
+                  widget.formCubit.baseItemList.insert(newIndex, item);
+                  widget.formCubit.moveItem(newIndex, oldIndex);
+                });
+              },
+              children: _buildFormList(),
+            ),
           );
         },
       ),
     );
+  }
+
+  List<Widget> _buildFormList() {
+    final List<Widget> formList = [];
+
+    for (int i = 0; i < widget.formCubit.baseItemList.length; i++) {
+      formList.add(_buildFormItem(widget.formCubit.baseItemList[i], i));
+    }
+
+    return formList;
   }
 
   Widget _buildFormTitleDescSection() {

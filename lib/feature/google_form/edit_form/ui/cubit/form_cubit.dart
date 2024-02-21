@@ -10,6 +10,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../domain/constants.dart';
 import '../../domain/entities/base_item_entity.dart';
+import '../../domain/entities/move_item_entity.dart';
 import '../../domain/entities/response_entity.dart';
 import '../../domain/enums.dart';
 import '../../domain/usecases/batch_update_usecase.dart';
@@ -35,6 +36,7 @@ class FormCubit extends Cubit<EditFormState> {
   final List<int> _deleteListIndexes = [];
   final List<String> imageIdList = [];
   List<FormResponse> responseList = [];
+  List<MoveItemEntity> moveItemList = [];
   List<ResponseEntity> responseEntityList = [];
   bool isQuiz = false;
   int responseListSize = 0;
@@ -230,6 +232,22 @@ class FormCubit extends Cubit<EditFormState> {
     emit(FormListUpdateState(baseItemList));
   }
 
+  void moveItem(int newIndex, int oldIndex) async {
+    if (baseItemList[oldIndex].itemId != null) {
+      moveItemList.add(MoveItemEntity(oldIndex, newIndex));
+    }
+    for (int i = 0; i < baseItemList.length; i++) {
+      final element = baseItemList[i];
+      if (element.request != null) {
+        if (element.opType == OperationType.create) {
+          element.request!.createItem!.location!.index = i;
+        } else if (element.opType == OperationType.update) {
+          element.request!.updateItem!.location!.index = i;
+        }
+      }
+    }
+  }
+
   Future<void> _onDeleteSuccess(String formId, bool fromShare) async {
     for (int index = 0; index < baseItemList.length; index++) {
       final value = baseItemList[index];
@@ -254,7 +272,7 @@ class FormCubit extends Cubit<EditFormState> {
         emit(FormSubmitFailedState(error.toString(), fromShare));
       });
     } else {
-      if (_deleteListIndexes.isEmpty) {
+      if (_deleteListIndexes.isEmpty && moveItemList.isEmpty) {
         emit(FormSubmitFailedState(Constants.noChangesText, fromShare));
       } else {
         emit(FormSubmitSuccessState(fromShare));
@@ -262,7 +280,28 @@ class FormCubit extends Cubit<EditFormState> {
     }
   }
 
+  Future<void> submitMoveRequest(String formId) async {
+    List<Request> moveRequestList = [];
+    for (var element in moveItemList) {
+      moveRequestList.add(Request(
+          moveItem: MoveItemRequest(
+        newLocation: Location(index: element.newIndex),
+        originalLocation: Location(index: element.oldIndex),
+      )));
+    }
+
+    if (moveRequestList.isNotEmpty) {
+      await batchUpdateUseCase(
+        BatchUpdateFormRequest(
+            requests: moveRequestList, includeFormInResponse: true),
+        formId,
+      );
+    }
+  }
+
   Future<void> submitRequest(String formId, {bool fromShare = false}) async {
+    await submitMoveRequest(formId);
+
     _deleteListIndexes.sort();
     List<Request> deleteRequestList = [];
     for (int i = 0; i < _deleteListIndexes.length; i++) {
@@ -291,6 +330,7 @@ class FormCubit extends Cubit<EditFormState> {
   }
 
   void prepareRequestInitialList() {
+    moveItemList.clear();
     _deleteListIndexes.clear();
     _requestList.clear();
   }
