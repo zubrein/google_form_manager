@@ -36,7 +36,7 @@ class FormCubit extends Cubit<EditFormState> {
   final List<int> _deleteListIndexes = [];
   final List<String> imageIdList = [];
   List<FormResponse> responseList = [];
-  List<MoveItemEntity> moveItemList = [];
+  Map<String, MoveItemEntity> moveItemList = {};
   List<ResponseEntity> responseEntityList = [];
   Request? formInfoUpdateRequest;
   bool isQuiz = false;
@@ -58,6 +58,7 @@ class FormCubit extends Cubit<EditFormState> {
   }
 
   Future<void> fetchForm(String formId) async {
+    int count = 0;
     emit(FetchFormInitiatedState());
     await fetchResponses(formId);
     final response = await fetchFormUseCase(formId);
@@ -67,6 +68,8 @@ class FormCubit extends Cubit<EditFormState> {
       responderUrl = response.responderUri ?? '';
       if (remoteItems != null) {
         baseItemList.addAll(remoteItems.map((item) {
+          moveItemList.addAll({item.itemId!: MoveItemEntity(count, -1)});
+          count++;
           _prepareResponseEntityList(item);
           return BaseItemEntity(
               itemId: item.itemId,
@@ -233,10 +236,11 @@ class FormCubit extends Cubit<EditFormState> {
     emit(FormListUpdateState(baseItemList));
   }
 
-  void moveItem(int newIndex, int oldIndex) async {
-    if (baseItemList[oldIndex].itemId != null) {
-      moveItemList.add(MoveItemEntity(oldIndex, newIndex));
+  void moveItem(int newIndex, BaseItemEntity item) async {
+    if (item.itemId != null) {
+      moveItemList[item.itemId]?.newIndex = newIndex;
     }
+
     for (int i = 0; i < baseItemList.length; i++) {
       final element = baseItemList[i];
       if (element.request != null) {
@@ -266,7 +270,8 @@ class FormCubit extends Cubit<EditFormState> {
         formId,
       );
 
-      isOtherRequestSubmitted.fold((success) {
+      isOtherRequestSubmitted.fold((success) async {
+        await submitMoveRequest(formId);
         emit(FormSubmitSuccessState(fromShare));
         prepareRequestInitialList();
       }, (error) {
@@ -278,19 +283,25 @@ class FormCubit extends Cubit<EditFormState> {
           formInfoUpdateRequest == null) {
         emit(FormSubmitFailedState(Constants.noChangesText, fromShare));
       } else {
+        await submitMoveRequest(formId);
         emit(FormSubmitSuccessState(fromShare));
+        prepareRequestInitialList();
       }
     }
   }
 
   Future<void> submitMoveRequest(String formId) async {
     List<Request> moveRequestList = [];
-    for (var element in moveItemList) {
-      moveRequestList.add(Request(
-          moveItem: MoveItemRequest(
-        newLocation: Location(index: element.newIndex),
-        originalLocation: Location(index: element.oldIndex),
-      )));
+    for (var element in moveItemList.values.toList()) {
+      if (element.newIndex != -1) {
+        moveRequestList.add(
+          Request(
+              moveItem: MoveItemRequest(
+            newLocation: Location(index: element.newIndex),
+            originalLocation: Location(index: element.oldIndex),
+          )),
+        );
+      }
     }
 
     if (moveRequestList.isNotEmpty) {
@@ -313,7 +324,6 @@ class FormCubit extends Cubit<EditFormState> {
   }
 
   Future<void> submitRequest(String formId, {bool fromShare = false}) async {
-    await submitMoveRequest(formId);
     await submitFormInfoRequest(formId);
 
     _deleteListIndexes.sort();

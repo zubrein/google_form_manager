@@ -93,7 +93,10 @@ class _EditFormPageState extends State<EditFormPage>
                         final BaseItemEntity item =
                             widget.formCubit.baseItemList.removeAt(oldIndex);
                         widget.formCubit.baseItemList.insert(newIndex, item);
-                        widget.formCubit.moveItem(newIndex, oldIndex);
+                        widget.formCubit.moveItem(
+                          newIndex,
+                          widget.formCubit.baseItemList[newIndex],
+                        );
                       });
                     },
                     children: _buildFormList(),
