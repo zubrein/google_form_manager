@@ -158,6 +158,7 @@ class _FormListPageState extends State<FormListPage> {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           splashColor: Colors.transparent,
+          highlightElevation: 0,
           child: Image.asset('assets/app_image/add.png'),
         ),
       ),
@@ -240,6 +241,7 @@ class _FormListPageState extends State<FormListPage> {
                     )));
       },
       child: Card(
+        elevation: 0.3,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -251,7 +253,9 @@ class _FormListPageState extends State<FormListPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildLabel(item.title.toString()),
-                    Text(item.createdDate.toString()),
+                    const Gap(8),
+                    Text(item.createdDate.toString(),
+                        style: const TextStyle(color: Color(0xff828282))),
                   ],
                 ),
               ),
@@ -296,7 +300,7 @@ class _FormListPageState extends State<FormListPage> {
                     controller.open();
                   }
                 },
-                icon: const Icon(Icons.more_horiz),
+                icon: const Icon(Icons.more_vert),
                 tooltip: 'Show menu',
               ),
             ),
@@ -336,7 +340,7 @@ class _FormListPageState extends State<FormListPage> {
     return Text(
       label,
       style: const TextStyle(
-          fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w700),
+          fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w700),
     );
   }
 }
