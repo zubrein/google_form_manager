@@ -100,7 +100,7 @@ class _SummaryTabState extends State<SummaryTab> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         const Gap(8),
-        Text('${average()}/${_formCubit.totalPoint}'),
+        Text('${average().toStringAsFixed(1)}/${_formCubit.totalPoint}'),
       ],
     );
   }
@@ -174,8 +174,11 @@ class _SummaryTabState extends State<SummaryTab> {
     for (double number in numbers) {
       sum += number;
     }
-
-    return sum / _formCubit.responseList.length;
+    if (_formCubit.responseList.isNotEmpty) {
+      return sum / _formCubit.responseList.length;
+    } else {
+      return 0.0;
+    }
   }
 
   Widget _getResponseWidget(

@@ -26,7 +26,7 @@ class _MultipleChoiceResponseWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.title,
+          widget.title.isNotEmpty ? widget.title : 'Question left blank',
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         Text(
@@ -34,13 +34,15 @@ class _MultipleChoiceResponseWidgetState
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
         const Gap(16),
-        Row(
-          children: [
-            _buildEasyPieChart(),
-            const Gap(16),
-            _buildOptionColorList()
-          ],
-        ),
+        widget.answerList.isNotEmpty
+            ? Row(
+                children: [
+                  _buildEasyPieChart(),
+                  const Gap(16),
+                  _buildOptionColorList()
+                ],
+              )
+            : const Text('No response available'),
       ],
     );
   }

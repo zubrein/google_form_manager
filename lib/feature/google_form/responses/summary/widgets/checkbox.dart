@@ -24,10 +24,11 @@ class _CheckBoxResponseWidgetState extends State<CheckBoxResponseWidget> {
   void initState() {
     super.initState();
 
-    getHighestFrequency();
-
-    for (var element in widget.answerList) {
-      data.add(_ChartData(element, getFrequency(element)));
+    if (widget.answerList.isNotEmpty) {
+      getHighestFrequency();
+      for (var element in widget.answerList) {
+        data.add(_ChartData(element, getFrequency(element)));
+      }
     }
 
     _tooltip = TooltipBehavior(enable: false);
@@ -47,24 +48,26 @@ class _CheckBoxResponseWidgetState extends State<CheckBoxResponseWidget> {
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
         const Gap(16),
-        SfCartesianChart(
-            primaryXAxis:
-                CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
-            primaryYAxis: NumericAxis(
-              minimum: 0,
-              maximum: getHighestFrequency(),
-              interval: 1,
-              majorGridLines: const MajorGridLines(width: 0),
-            ),
-            tooltipBehavior: _tooltip,
-            series: <CartesianSeries<_ChartData, String>>[
-              BarSeries<_ChartData, String>(
-                  dataSource: data,
-                  xValueMapper: (_ChartData data, _) => data.x,
-                  yValueMapper: (_ChartData data, _) => data.y,
-                  width: 0.4,
-                  color: Colors.blue)
-            ]),
+        widget.answerList.isNotEmpty
+            ? SfCartesianChart(
+                primaryXAxis: CategoryAxis(
+                    majorGridLines: const MajorGridLines(width: 0)),
+                primaryYAxis: NumericAxis(
+                  minimum: 0,
+                  maximum: getHighestFrequency(),
+                  interval: 1,
+                  majorGridLines: const MajorGridLines(width: 0),
+                ),
+                tooltipBehavior: _tooltip,
+                series: <CartesianSeries<_ChartData, String>>[
+                    BarSeries<_ChartData, String>(
+                        dataSource: data,
+                        xValueMapper: (_ChartData data, _) => data.x,
+                        yValueMapper: (_ChartData data, _) => data.y,
+                        width: 0.4,
+                        color: Colors.blue)
+                  ])
+            : const Text('No response available'),
       ],
     );
   }
