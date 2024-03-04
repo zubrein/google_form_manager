@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:google_form_manager/core/helper/google_apis_helper.dart';
+import 'package:googleapis/drive/v2.dart';
 import 'package:googleapis/forms/v1.dart';
+import 'package:googleapis/sheets/v4.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'package:injectable/injectable.dart';
 
@@ -45,6 +47,84 @@ class EditFormRepositoryImpl extends EditFormRepository {
       return formResponses.responses ?? [];
     }
     return [];
+  }
+
+  @override
+  Future<void> saveToSheet(String formId, List<List<String>> values) async {
+    final sheetsApi = await GoogleApisHelper.getSheetsApi();
+    String sheetId = '';
+
+    final sheetList = await _fetchSheetListFromRemote();
+
+    for (var sheet in sheetList) {
+      if (sheet.title == formId) {
+        sheetId = sheet.id!;
+      }
+    }
+
+    if (sheetId.isNotEmpty) {
+      final isDeleted = await _deleteSheet(sheetId);
+      if (isDeleted) {
+        if (sheetsApi != null) {
+          await _createSheet(sheetsApi, formId, values);
+        }
+      }
+    } else {
+      if (sheetsApi != null) {
+        await _createSheet(sheetsApi, formId, values);
+      }
+    }
+  }
+
+  Future<List<File>> _fetchSheetListFromRemote() async {
+    List<File> sheetList = [];
+    final driveApi = await GoogleApisHelper.getDriveApi();
+
+    if (driveApi != null) {
+      final fileList = await driveApi.files.list(
+          q: "mimeType = 'application/vnd.google-apps.spreadsheet' and trashed=false");
+      sheetList = fileList.items ?? [];
+    }
+
+    return sheetList;
+  }
+
+  Future<void> _createSheet(
+      SheetsApi sheetsApi, String formId, List<List<String>> values) async {
+    final createdSheet = await sheetsApi.spreadsheets.create(Spreadsheet(
+        properties: SpreadsheetProperties(
+      title: formId,
+    )));
+
+    _insertData(sheetsApi, createdSheet.spreadsheetId!, values);
+  }
+
+  Future<void> _insertData(SheetsApi sheetsApi, String spreadsheetId,
+      List<List<String>> values) async {
+    final requestBody = ValueRange()..values = values;
+
+    try {
+      await sheetsApi.spreadsheets.values.append(
+          requestBody, spreadsheetId, 'Sheet1!A1',
+          valueInputOption: 'RAW');
+      print('Data inserted successfully.');
+    } catch (e) {
+      print('Error inserting data: $e');
+    }
+  }
+
+  Future<bool> _deleteSheet(String sheetId) async {
+    var driveApi = await GoogleApisHelper.getDriveApi();
+    if (driveApi != null) {
+      try {
+        await driveApi.files.delete(sheetId);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   @override

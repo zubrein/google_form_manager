@@ -12,8 +12,8 @@ class FormListRepositoryImpl extends FormListRepository {
     final driveApi = await GoogleApisHelper.getDriveApi();
 
     if (driveApi != null) {
-      final fileList = await driveApi.files
-          .list(q: "mimeType = 'application/vnd.google-apps.form' and trashed=false");
+      final fileList = await driveApi.files.list(
+          q: "mimeType = 'application/vnd.google-apps.form' and trashed=false");
       formList = fileList.items ?? [];
     } else {
       Log.info('Drive api not found');
@@ -21,6 +21,7 @@ class FormListRepositoryImpl extends FormListRepository {
 
     return formList;
   }
+
   @override
   Future<bool> deleteForm(String formId) async {
     var driveApi = await GoogleApisHelper.getDriveApi();

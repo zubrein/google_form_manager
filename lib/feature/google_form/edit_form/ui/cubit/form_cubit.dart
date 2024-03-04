@@ -8,6 +8,7 @@ import 'package:googleapis/forms/v1.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../form_list/domain/usecases/save_to_usecase.dart';
 import '../../domain/constants.dart';
 import '../../domain/entities/base_item_entity.dart';
 import '../../domain/entities/move_item_entity.dart';
@@ -30,6 +31,7 @@ class FormCubit extends Cubit<EditFormState> {
   CheckQuestionTypeUseCase checkQuestionTypeUseCase;
   FetchFormResponsesUseCase fetchFormResponsesUseCase;
   FetchYoutubeListUseCase fetchYoutubeListUseCase;
+  SaveToSheetUseCase saveToSheetUseCase;
   BatchUpdateUseCase batchUpdateUseCase;
   List<BaseItemEntity> baseItemList = [];
   final List<Request> _requestList = [];
@@ -51,6 +53,7 @@ class FormCubit extends Cubit<EditFormState> {
     this.fetchFormResponsesUseCase,
     this.batchUpdateUseCase,
     this.fetchYoutubeListUseCase,
+    this.saveToSheetUseCase,
   ) : super(EditFormInitial());
 
   void addUploadedImageID(String id) {
@@ -87,6 +90,24 @@ class FormCubit extends Cubit<EditFormState> {
     } else {
       emit(FetchFormFailedState());
     }
+  }
+
+  Future<void> saveToSheet(String formId) async {
+    List<List<String>> values = [];
+
+    for (var response in responseEntityList) {
+      final List<String> resListWithQuestion = [];
+      resListWithQuestion.add(response.title);
+      for (var qAns in response.questionAnswerEntity) {
+        for (var element in qAns.answerList) {
+          resListWithQuestion.add(element);
+        }
+      }
+      values.add(resListWithQuestion);
+    }
+
+    await saveToSheetUseCase(formId, values);
+    emit(const FormSubmitSuccessState(false));
   }
 
   Future<void> changeQuizSettings(bool toggle, String formId) async {

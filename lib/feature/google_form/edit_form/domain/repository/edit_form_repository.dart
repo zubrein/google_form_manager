@@ -13,4 +13,6 @@ abstract class EditFormRepository {
   );
 
   Future<SearchListResponse> getVideoList(String query);
+
+  Future<void> saveToSheet(String formId, List<List<String>> values);
 }
