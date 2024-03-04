@@ -13,9 +13,11 @@ import 'package:google_form_manager/feature/templates/ui/cubit/create_form_cubit
 import 'package:google_form_manager/feature/templates/ui/template_button.dart';
 
 import '../../google_form/edit_form/domain/constants.dart';
+import 'template_pages/event_feedback_template.dart';
 import 'template_pages/event_registration_template.dart';
 import 'template_pages/event_rsvp_template.dart';
 import 'template_pages/find_time_template.dart';
+import 'template_pages/order_request_template.dart';
 import 'template_pages/party_time_template.dart';
 import 'template_pages/tshirt_size_template.dart';
 
@@ -70,6 +72,7 @@ class _TemplatePageState extends State<TemplatePage> {
                     const Gap(16),
                     GridView.count(
                       crossAxisCount: 3,
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       children: [
                         _buildContactInformationButton(),
@@ -86,6 +89,22 @@ class _TemplatePageState extends State<TemplatePage> {
                           createFormCubit: _createFormCubit,
                         ),
                         EventRegistrationTemplate(
+                          createFormCubit: _createFormCubit,
+                        ),
+                      ],
+                    ),
+                    const Gap(32),
+                    _buildLabel(Constants.workFormLabel),
+                    const Gap(16),
+                    GridView.count(
+                      crossAxisCount: 3,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        EventFeedbackTemplate(
+                          createFormCubit: _createFormCubit,
+                        ),
+                        OrderRequestTemplate(
                           createFormCubit: _createFormCubit,
                         ),
                       ],

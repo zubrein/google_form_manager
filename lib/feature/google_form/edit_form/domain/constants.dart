@@ -29,6 +29,7 @@ class Constants {
 
   static String createFormLabel = 'Create Form';
   static String personalFormLabel = 'Personal';
+  static String workFormLabel = 'Work';
   static String loginText = 'Signing with google';
   static String noChangesText = 'No changes done yet';
 }
