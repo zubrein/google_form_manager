@@ -50,9 +50,9 @@ flutter:
 
   assets:
     - assets/google.png
-    - assets/logo.png
     - assets/google_form_logo.png
     - assets/template_image/
+    - assets/app_image/
 
   # fonts:
   #   - family: Schyler

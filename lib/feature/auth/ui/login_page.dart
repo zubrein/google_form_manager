@@ -43,16 +43,18 @@ class _LoginPageState extends State<LoginPage> {
                   (Route route) => route.settings.name == 'login');
             }
           },
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/logo.png',
-                  height: 150,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 70.0),
+                child: Image.asset(
+                  'assets/app_image/login_page_banner.png',
                 ),
-                const Gap(70),
-                GestureDetector(
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30.0),
+                child: GestureDetector(
                   onTap: () async {
                     if (await checkInternet()) {
                       _loginCubit.signingIn();
@@ -62,34 +64,15 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     }
                   },
-                  child: Container(
-                    height: 60,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/google.png',
-                              height: 30,
-                              width: 30,
-                            ),
-                            const Gap(16),
-                            Text(Constants.loginText),
-                          ],
-                        ),
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Image.asset(
+                      'assets/app_image/signin_logo.png',
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
