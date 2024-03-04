@@ -110,8 +110,10 @@ class _QuestionsResponseTabState extends State<QuestionsResponseTab> {
             return DropdownMenuItem<ResponseEntity>(
               value: value,
               child: Text(
-                value.title,
-                style: const TextStyle(fontSize: 14),
+                value.title.isEmpty ? 'Question left blank' : value.title,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontStyle: value.title.isEmpty ? FontStyle.italic : null),
                 overflow: TextOverflow.ellipsis,
               ),
             );

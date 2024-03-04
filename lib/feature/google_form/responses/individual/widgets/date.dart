@@ -37,13 +37,22 @@ class _DateIndWidgetState extends State<DateIndWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.responseEntity.title.isNotEmpty
-                ? Text(
-                    widget.responseEntity.title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w700),
-                  )
-                : const SizedBox.shrink(),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                widget.responseEntity.title.isEmpty
+                    ? 'Question left blank'
+                    : widget.responseEntity.title,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: widget.responseEntity.title.isEmpty
+                        ? FontStyle.italic
+                        : null,
+                    fontWeight: widget.responseEntity.title.isEmpty
+                        ? FontWeight.w400
+                        : FontWeight.w700),
+              ),
+            ),
             const Gap(8),
             widget.responseEntity.description.isNotEmpty
                 ? Text(

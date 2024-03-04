@@ -45,9 +45,16 @@ class _ChoiceGridResponseWidgetState extends State<ChoiceGridResponseWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            widget.title.isEmpty ? 'Question left blank' : widget.title,
+            style: TextStyle(
+                fontSize: 16,
+                fontStyle: widget.title.isEmpty ? FontStyle.italic : null,
+                fontWeight:
+                widget.title.isEmpty ? FontWeight.w400 : FontWeight.w700),
+          ),
         ),
         const Gap(32),
         SizedBox(
