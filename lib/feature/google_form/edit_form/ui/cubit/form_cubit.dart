@@ -293,8 +293,8 @@ class FormCubit extends Cubit<EditFormState> {
 
       isOtherRequestSubmitted.fold((success) async {
         await submitMoveRequest(formId);
-        emit(FormSubmitSuccessState(fromShare));
         prepareRequestInitialList();
+        emit(FormSubmitSuccessState(fromShare));
       }, (error) {
         emit(FormSubmitFailedState(error.toString(), fromShare));
       });
@@ -305,8 +305,8 @@ class FormCubit extends Cubit<EditFormState> {
         emit(FormSubmitFailedState(Constants.noChangesText, fromShare));
       } else {
         await submitMoveRequest(formId);
-        emit(FormSubmitSuccessState(fromShare));
         prepareRequestInitialList();
+        emit(FormSubmitSuccessState(fromShare));
       }
     }
   }
@@ -375,6 +375,9 @@ class FormCubit extends Cubit<EditFormState> {
   }
 
   void prepareRequestInitialList() {
+    for (int index = 0; index < baseItemList.length; index++) {
+      baseItemList[index].request = null;
+    }
     moveItemList.clear();
     _deleteListIndexes.clear();
     _requestList.clear();

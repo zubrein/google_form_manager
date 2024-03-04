@@ -159,30 +159,31 @@ class _EditFormPageState extends State<EditFormPage>
     } else if (state is FormSubmitFailedState) {
       widget.loadingHudCubit.showError(message: state.error);
     } else if (state is FormSubmitSuccessState) {
-      await _onFormSubmitSuccess(context);
+      // await _onFormSubmitSuccess(context);
+      widget.loadingHudCubit.cancel();
     }
   }
 
-  Future<void> _onFormSubmitSuccess(BuildContext context) async {
-    await showDialog(
-        useRootNavigator: false,
-        context: context,
-        builder: (_) {
-          return confirmationDialog(
-            context: context,
-            message:
-                'Your progress has been submitted successfully. Do you want to share?',
-            onTapContinueButton: () async {
-              await shareForm(widget.formCubit.responderUrl)
-                  .then((value) => Navigator.of(context).pop());
-            },
-            onTapCancelButton: () {
-              Navigator.pop(context);
-            },
-            cancelText: 'exit',
-          );
-        }).then((value) => pop());
-  }
+  // Future<void> _onFormSubmitSuccess(BuildContext context) async {
+  //   await showDialog(
+  //       useRootNavigator: false,
+  //       context: context,
+  //       builder: (_) {
+  //         return confirmationDialog(
+  //           context: context,
+  //           message:
+  //               'Your progress has been submitted successfully. Do you want to share?',
+  //           onTapContinueButton: () async {
+  //             await shareForm(widget.formCubit.responderUrl)
+  //                 .then((value) => Navigator.of(context).pop());
+  //           },
+  //           onTapCancelButton: () {
+  //             Navigator.pop(context);
+  //           },
+  //           cancelText: 'exit',
+  //         );
+  //       }).then((value) => pop());
+  // }
 
   bool _checkIfQuestionTypeIsUnknown(Item item) {
     final type = widget.formCubit.checkQuestionType(item);
