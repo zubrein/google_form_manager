@@ -142,16 +142,25 @@ class _FormListPageState extends State<FormListPage> {
   }
 
   Widget _buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const TemplatePage()),
-        ).then((value) {
-          _formListCubit.fetchFormList();
-        });
-      },
-      child: const Icon(Icons.add),
+    return SizedBox(
+      height: 80,
+      width: 80,
+      child: FittedBox(
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const TemplatePage()),
+            ).then((value) {
+              _formListCubit.fetchFormList();
+            });
+          },
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          splashColor: Colors.transparent,
+          child: Image.asset('assets/app_image/add.png'),
+        ),
+      ),
     );
   }
 
