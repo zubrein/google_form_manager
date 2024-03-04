@@ -39,7 +39,18 @@ class _FormListPageState extends State<FormListPage> {
       loadingHudCubit: _loadingHudCubit,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Form list'),
+          title: const Text(
+            'Form list',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+          backgroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) {
+              return _buildMenuIcon(context);
+            },
+          ),
+          actions: [_buildSubscriptionButton(context)],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),
@@ -53,20 +64,16 @@ class _FormListPageState extends State<FormListPage> {
             },
             child: BlocConsumer(
               bloc: _formListCubit,
-              listener: (BuildContext context, Object? state) {
-                if (state is FormListFetchInitiatedState) {
-                  _loadingHudCubit.show();
-                } else if (state is FormListFetchSuccessState) {
-                  _loadingHudCubit.cancel();
-                }
-              },
+              listener: _listenFormListCubit,
               builder: (context, state) {
                 if (state is FormListFetchSuccessState) {
-                  return ListView.builder(
-                      itemCount: state.formList.length,
-                      itemBuilder: (context, position) {
-                        return _buildFormListItem(state.formList[position]);
-                      });
+                  return state.formList.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: state.formList.length,
+                          itemBuilder: (context, position) {
+                            return _buildFormListItem(state.formList[position]);
+                          })
+                      : _buildEmptyListBanner();
                 } else {
                   return const SizedBox.shrink();
                 }
@@ -74,28 +81,112 @@ class _FormListPageState extends State<FormListPage> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const TemplatePage()),
-            ).then((value) {
-              _formListCubit.fetchFormList();
-            });
-          },
-          child: const Icon(Icons.add),
-        ),
-        drawer: Drawer(
-            width: 220,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
-              child: ListView(
-                children: [_buildLogoutButton()],
-              ),
-            )),
+        floatingActionButton: _buildFloatingActionButton(context),
+        drawer: _buildDrawer(),
       ),
     );
+  }
+
+  Widget _buildEmptyListBanner() {
+    return SizedBox(
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Gap(42),
+              Image.asset(
+                'assets/app_image/form_list_empty_banner.png',
+              ),
+              const Gap(16),
+              const Text(
+                'You don\'t have a form yet',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+              ),
+              const Gap(16),
+              const Text(
+                'You don\'t have a google form creation at the moment.',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 80.0),
+              child: Image.asset(
+                'assets/app_image/arrow.png',
+                height: 150,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+        width: 220,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
+          child: ListView(
+            children: [_buildLogoutButton()],
+          ),
+        ));
+  }
+
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TemplatePage()),
+        ).then((value) {
+          _formListCubit.fetchFormList();
+        });
+      },
+      child: const Icon(Icons.add),
+    );
+  }
+
+  void _listenFormListCubit(BuildContext context, Object? state) {
+    if (state is FormListFetchInitiatedState) {
+      _loadingHudCubit.show();
+    } else if (state is FormListFetchSuccessState) {
+      _loadingHudCubit.cancel();
+    }
+  }
+
+  Widget _buildSubscriptionButton(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+        icon: Image.asset(
+          'assets/app_image/subscription_logo.png',
+          width: 28,
+          height: 28,
+          fit: BoxFit.fill,
+        ));
+  }
+
+  Widget _buildMenuIcon(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+        icon: Image.asset(
+          'assets/app_image/menu_bar_icon.png',
+          width: 28,
+          height: 28,
+          fit: BoxFit.fill,
+        ));
   }
 
   Widget _buildLogoutButton() {
@@ -144,18 +235,7 @@ class _FormListPageState extends State<FormListPage> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              SizedBox(
-                height: 70,
-                width: 50,
-                child: Image.network(
-                  item.thumbnailLink!,
-                  headers: <String, String>{
-                    'Authorization': 'Bearer ${_formListCubit.token}',
-                    'Custom-Header': 'Custom-Value',
-                  },
-                  fit: BoxFit.fill,
-                ),
-              ),
+              _buildFormItemThumbnailIcon(item),
               const Gap(16),
               Expanded(
                 child: Column(
@@ -171,6 +251,21 @@ class _FormListPageState extends State<FormListPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildFormItemThumbnailIcon(File item) {
+    return SizedBox(
+      height: 70,
+      width: 50,
+      child: Image.network(
+        item.thumbnailLink!,
+        headers: <String, String>{
+          'Authorization': 'Bearer ${_formListCubit.token}',
+          'Custom-Header': 'Custom-Value',
+        },
+        fit: BoxFit.fill,
       ),
     );
   }
