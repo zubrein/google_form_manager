@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
-import 'package:google_form_manager/util/utility.dart';
 import 'package:googleapis/forms/v1.dart';
 
 import '../domain/entities/base_item_entity.dart';

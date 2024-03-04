@@ -6,6 +6,7 @@ import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/constants.dart';
+import 'package:google_form_manager/util/utility.dart';
 
 import 'cubit/login_cubit.dart';
 
@@ -52,8 +53,14 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const Gap(70),
                 GestureDetector(
-                  onTap: () {
-                    _loginCubit.signingIn();
+                  onTap: () async {
+                    if (await checkInternet()) {
+                      _loginCubit.signingIn();
+                    } else {
+                      _loadingHudCubit.showError(
+                        message: 'No internet connection',
+                      );
+                    }
                   },
                   child: Container(
                     height: 60,

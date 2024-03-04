@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -42,3 +43,11 @@ Future<void> shareForm(String url) async {
   }
 }
 
+Future<bool> checkInternet() async {
+  final connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    return false;
+  }
+
+  return true;
+}
