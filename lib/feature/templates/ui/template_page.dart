@@ -46,6 +46,7 @@ class _TemplatePageState extends State<TemplatePage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          titleSpacing: 0.0,
           title: const Text(
             'Create new form',
             style: TextStyle(
@@ -230,14 +231,17 @@ class _TemplatePageState extends State<TemplatePage> {
   }
 
   Widget _buildBackIcon(BuildContext context) {
-    return IconButton(
-        onPressed: () {
-          Navigator.of(context).maybePop();
-        },
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Colors.black,
-        ));
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: IconButton(
+          onPressed: () {
+            Navigator.of(context).maybePop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          )),
+    );
   }
 
   Widget _buildSubscriptionButton(BuildContext context) {

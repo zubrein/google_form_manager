@@ -39,6 +39,7 @@ class _FormListPageState extends State<FormListPage> {
       loadingHudCubit: _loadingHudCubit,
       child: Scaffold(
         appBar: AppBar(
+          titleSpacing: 0.0,
           title: const Text(
             'Form list',
             style: TextStyle(

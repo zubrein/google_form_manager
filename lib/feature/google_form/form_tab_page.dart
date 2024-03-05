@@ -58,12 +58,31 @@ class _FormTabPageState extends State<FormTabPage> {
       child: Base(
         loadingHudCubit: _loadingHudCubit,
         child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            titleSpacing: 0.0,
+            title: const Text(
+              'Edit form',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700),
+            ),
+            backgroundColor: Colors.white,
+            leading: Builder(
+              builder: (context) {
+                return _buildBackIcon(context);
+              },
+            ),
+            actions: [_buildSubscriptionButton(context)],
+          ),
           body: DefaultTabController(
             length: 3,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _buildTopPanel(),
+                const Divider(height: 0),
                 _buildTabBar(),
                 _buildTabBarView(),
               ],
@@ -72,6 +91,31 @@ class _FormTabPageState extends State<FormTabPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildBackIcon(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: IconButton(
+          onPressed: () {
+            Navigator.of(context).maybePop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          )),
+    );
+  }
+
+  Widget _buildSubscriptionButton(BuildContext context) {
+    return IconButton(
+        onPressed: () {},
+        icon: Image.asset(
+          'assets/app_image/subscription_logo.png',
+          width: 28,
+          height: 28,
+          fit: BoxFit.fill,
+        ));
   }
 
   Widget _buildTabBarView() {
@@ -101,13 +145,16 @@ class _FormTabPageState extends State<FormTabPage> {
           return TabBar(
             indicator: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 2.0))),
-            labelColor: Colors.black,
-            padding: EdgeInsets.zero,
-            indicatorPadding: EdgeInsets.zero,
-            labelPadding: const EdgeInsets.only(right: 16),
+                    bottom: BorderSide(color: Color(0xff6818B9), width: 3.0))),
+            labelColor: const Color(0xff6818B9),
             indicatorSize: TabBarIndicatorSize.label,
+            labelStyle: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+            unselectedLabelColor: Colors.grey,
             isScrollable: true,
+            tabAlignment: TabAlignment.center,
             tabs: [
               const Tab(text: 'Questions'),
               Tab(child: _getResponseTabBarText(state)),
@@ -123,19 +170,21 @@ class _FormTabPageState extends State<FormTabPage> {
     final size = state is FormListUpdateState ? _formCubit.responseListSize : 0;
 
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Text('Responses'),
         if (size > 0) const Gap(4),
         if (size > 0)
           Container(
-            height: 24,
-            width: 24,
+            height: 16,
+            width: 16,
             decoration: BoxDecoration(
-                color: Colors.black54, borderRadius: BorderRadius.circular(12)),
+                color: const Color(0xff6818B9),
+                borderRadius: BorderRadius.circular(12)),
             child: Center(
               child: Text(
                 size.toString(),
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(fontSize: 14, color: Colors.white),
               ),
             ),
           )
