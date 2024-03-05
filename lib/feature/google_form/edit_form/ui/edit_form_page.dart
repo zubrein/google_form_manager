@@ -55,6 +55,7 @@ class _EditFormPageState extends State<EditFormPage>
         return false;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             _buildFormListView(),
@@ -121,31 +122,39 @@ class _EditFormPageState extends State<EditFormPage>
 
   Widget _buildFormTitleDescSection() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: DecoratedBox(
-            decoration: const BoxDecoration(color: Colors.green),
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(6),
+      padding: const EdgeInsets.only(bottom: 16),
+      child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: const Color(0xff6818B9),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xff6818B9).withOpacity(0.15),
+                spreadRadius: 3,
+                blurRadius: 7,
+                offset: const Offset(0, 0), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(1),
+            child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      _buildFormTitle(),
+                      const Gap(8),
+                      _buildFormDescription(),
+                      const Gap(8),
+                    ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        _buildFormTitle(),
-                        const Gap(8),
-                        _buildFormDescription(),
-                        const Gap(8),
-                      ],
-                    ),
-                  )),
-            )),
-      ),
+                )),
+          )),
     );
   }
 

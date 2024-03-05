@@ -38,7 +38,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         children: [
           widget.questionType == QuestionType.pageBreak
@@ -47,7 +47,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
           ClipRRect(
             borderRadius: _buildItemBorderRadius(),
             child: DecoratedBox(
-                decoration: const BoxDecoration(color: Colors.green),
+                decoration: const BoxDecoration(color: Color(0xff6818B9)),
                 child: Padding(
                   padding: _buildInnerBoxPadding(),
                   child: DecoratedBox(
@@ -80,7 +80,7 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
       alignment: Alignment.centerLeft,
       child: DecoratedBox(
           decoration: BoxDecoration(
-              color: Colors.green,
+              color: Color(0xff6818B9),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(4),
                 topRight: Radius.circular(4),
@@ -106,17 +106,17 @@ class _BaseItemWithWidgetSelectorState extends State<BaseItemWithWidgetSelector>
   }
 
   EdgeInsets _buildInnerBoxPadding() {
-    return const EdgeInsets.symmetric(vertical: 1).copyWith(left: 8, right: 1);
+    return const EdgeInsets.only(left: 3);
   }
 
   BoxDecoration _buildInnerBoxDecoration() {
-    return const BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.only(
-        topRight: Radius.circular(8),
-        bottomRight: Radius.circular(8),
-      ),
-    );
+    return BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(8),
+          bottomRight: Radius.circular(8),
+        ),
+        border: Border.all(color: Colors.grey.withOpacity(.3)));
   }
 
   void _onTapTopWidget() async {

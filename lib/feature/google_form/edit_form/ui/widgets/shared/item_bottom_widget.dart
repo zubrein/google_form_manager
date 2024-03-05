@@ -93,7 +93,10 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
   Widget _buildDeleteIcon() {
     return GestureDetector(
       onTap: widget.onDelete,
-      child: const Icon(Icons.delete_rounded, size: 22, color: Colors.black87),
+      child: Image.asset(
+        'assets/app_image/delete_icon.png',
+        height: 18,
+      ),
     );
   }
 
@@ -102,7 +105,7 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
 
     for (int i = 0; i < 3; i++) {
       menu.add(_buildMenuDot());
-      menu.add(const Gap(2));
+      menu.add(const Gap(3));
     }
 
     return InkWell(
@@ -120,10 +123,11 @@ class _ItemBottomWidgetState extends State<ItemBottomWidget> {
   }
 
   DecoratedBox _buildMenuDot() {
-    const size = 4.0;
+    const size = 3.0;
     return DecoratedBox(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5), color: Colors.black45),
+          borderRadius: BorderRadius.circular(5),
+          color: const Color(0xff6818B9)),
       child: const SizedBox(
         height: size,
         width: size,

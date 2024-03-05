@@ -23,7 +23,8 @@ class _SwitchWidgetState extends State<SwitchWidget> {
   @override
   Widget build(BuildContext context) {
     return FlutterSwitch(
-      activeColor: Colors.green,
+      activeColor: const Color(0xff6818B9),
+      inactiveColor: Colors.black,
       width: 30.0,
       height: 16.0,
       toggleSize: 12.0,
