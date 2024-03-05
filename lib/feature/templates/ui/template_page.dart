@@ -44,8 +44,20 @@ class _TemplatePageState extends State<TemplatePage> {
     return Base(
       loadingHudCubit: _loadingHudCubit,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Create form'),
+          title: const Text(
+            'Create new form',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+          backgroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) {
+              return _buildBackIcon(context);
+            },
+          ),
+          actions: [_buildSubscriptionButton(context)],
         ),
         body: BlocConsumer<CreateFormCubit, CreateFormState>(
           bloc: _createFormCubit,
@@ -57,58 +69,63 @@ class _TemplatePageState extends State<TemplatePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildLabel(Constants.createFormLabel),
                     const Gap(16),
                     GridView.count(
-                      crossAxisCount: 3,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8.0,
                       shrinkWrap: true,
                       children: [
                         _buildAddButton(),
                         _buildQuizButton(),
                       ],
                     ),
-                    const Gap(32),
-                    _buildLabel(Constants.personalFormLabel),
                     const Gap(16),
-                    GridView.count(
-                      crossAxisCount: 3,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        _buildContactInformationButton(),
-                        FindTimeTemplate(
-                          createFormCubit: _createFormCubit,
-                        ),
-                        EventRsvpTemplate(
-                          createFormCubit: _createFormCubit,
-                        ),
-                        PartyInviteTemplate(
-                          createFormCubit: _createFormCubit,
-                        ),
-                        TShirtSizeTemplate(
-                          createFormCubit: _createFormCubit,
-                        ),
-                        EventRegistrationTemplate(
-                          createFormCubit: _createFormCubit,
-                        ),
-                      ],
-                    ),
-                    const Gap(32),
-                    _buildLabel(Constants.workFormLabel),
+                    _buildSectionBox(
+                        Constants.personalFormLabel,
+                        GridView.count(
+                          crossAxisCount: 2,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                          shrinkWrap: true,
+                          children: [
+                            _buildContactInformationButton(),
+                            FindTimeTemplate(
+                              createFormCubit: _createFormCubit,
+                            ),
+                            EventRsvpTemplate(
+                              createFormCubit: _createFormCubit,
+                            ),
+                            PartyInviteTemplate(
+                              createFormCubit: _createFormCubit,
+                            ),
+                            TShirtSizeTemplate(
+                              createFormCubit: _createFormCubit,
+                            ),
+                            EventRegistrationTemplate(
+                              createFormCubit: _createFormCubit,
+                            ),
+                          ],
+                        )),
                     const Gap(16),
-                    GridView.count(
-                      crossAxisCount: 3,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        EventFeedbackTemplate(
-                          createFormCubit: _createFormCubit,
-                        ),
-                        OrderRequestTemplate(
-                          createFormCubit: _createFormCubit,
-                        ),
-                      ],
-                    ),
+                    _buildSectionBox(
+                        Constants.workFormLabel,
+                        GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            EventFeedbackTemplate(
+                              createFormCubit: _createFormCubit,
+                            ),
+                            OrderRequestTemplate(
+                              createFormCubit: _createFormCubit,
+                            ),
+                          ],
+                        )),
+                    const Gap(16),
                   ],
                 ),
               ),
@@ -140,6 +157,14 @@ class _TemplatePageState extends State<TemplatePage> {
     return TemplateButton(
       buttonName: 'Create Form',
       buttonImage: blankFormImage,
+      addButton: Center(
+        child: SizedBox(
+            height: 40,
+            width: 40,
+            child: Image.asset(
+              blankFormImage,
+            )),
+      ),
       buttonOnClick: () async {
         final result = await showDialog(
           context: context,
@@ -171,8 +196,18 @@ class _TemplatePageState extends State<TemplatePage> {
   }
 
   Widget _buildQuizButton() {
-    return GestureDetector(
-      onTap: () async {
+    return TemplateButton(
+      buttonName: 'Create Quiz',
+      buttonImage: blankFormImage,
+      addButton: Center(
+        child: SizedBox(
+            height: 40,
+            width: 40,
+            child: Image.asset(
+              blankFormImage,
+            )),
+      ),
+      buttonOnClick: () async {
         final result = await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -183,20 +218,6 @@ class _TemplatePageState extends State<TemplatePage> {
           _createFormCubit.createForm(result[0], isQuiz: true);
         }
       },
-      child: Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Center(
-          child: Icon(
-            Icons.quiz_outlined,
-            size: 40,
-          ),
-        ),
-      ),
     );
   }
 
@@ -205,6 +226,51 @@ class _TemplatePageState extends State<TemplatePage> {
       label,
       style: const TextStyle(
           fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w700),
+    );
+  }
+
+  Widget _buildBackIcon(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          Navigator.of(context).maybePop();
+        },
+        icon: const Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+        ));
+  }
+
+  Widget _buildSubscriptionButton(BuildContext context) {
+    return IconButton(
+        onPressed: () {},
+        icon: Image.asset(
+          'assets/app_image/subscription_logo.png',
+          width: 28,
+          height: 28,
+          fit: BoxFit.fill,
+        ));
+  }
+
+  Widget _buildSectionBox(String label, Widget list) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.black12),
+          borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Gap(8),
+            _buildLabel(label),
+            const Divider(
+              height: 28,
+            ),
+            list,
+            const Gap(8),
+          ],
+        ),
+      ),
     );
   }
 }

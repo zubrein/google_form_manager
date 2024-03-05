@@ -1,6 +1,6 @@
 String base = 'assets/template_image/';
 
-String blankFormImage = '${base}blank_form.png';
+String blankFormImage = 'assets/app_image/plus_icon.png';
 
 //Personal template
 String contactInformationImage = '${base}contact_information.png';

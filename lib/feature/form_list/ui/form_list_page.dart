@@ -175,9 +175,7 @@ class _FormListPageState extends State<FormListPage> {
 
   Widget _buildSubscriptionButton(BuildContext context) {
     return IconButton(
-        onPressed: () {
-          Scaffold.of(context).openDrawer();
-        },
+        onPressed: () {},
         icon: Image.asset(
           'assets/app_image/subscription_logo.png',
           width: 28,

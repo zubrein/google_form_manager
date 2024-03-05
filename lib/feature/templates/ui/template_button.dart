@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class TemplateButton extends StatelessWidget {
   final String buttonName;
   final String buttonImage;
+  final Widget? addButton;
   final Function() buttonOnClick;
 
   const TemplateButton({
@@ -11,34 +11,44 @@ class TemplateButton extends StatelessWidget {
     required this.buttonName,
     required this.buttonImage,
     required this.buttonOnClick,
+    this.addButton,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: buttonOnClick,
-      child: SizedBox(
-        height: 100,
-        width: 100,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: Image.asset(
-                buttonImage,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.withOpacity(0.1)),
+              borderRadius: BorderRadius.circular(8)),
+          child: Column(
+            children: [
+              Expanded(
+                child: ColoredBox(
+                  color: const Color(0xffEFEBF9),
+                  child: addButton ??
+                      Image.asset(
+                        buttonImage,
+                        fit: BoxFit.fill,
+                      ),
+                ),
               ),
-            ),
-            const Gap(8),
-            Text(
-              buttonName,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  buttonName,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
