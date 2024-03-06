@@ -50,11 +50,16 @@ class _LinearScaleResponseWidgetState extends State<LinearScaleResponseWidget> {
                 widget.title.isEmpty ? FontWeight.w400 : FontWeight.w700),
           ),
         ),
+        const Gap(4),
         Text(
           '${widget.answerList.length} responses',
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        const Gap(16),
+        const Divider(),
         SfCartesianChart(
             primaryXAxis:
                 CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),

@@ -87,7 +87,14 @@ class _SummaryTabState extends State<SummaryTab> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         const Gap(8),
-        Text('${median()}/${_formCubit.totalPoint}'),
+        Text(
+          '${median()}/${_formCubit.totalPoint}',
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -100,7 +107,14 @@ class _SummaryTabState extends State<SummaryTab> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         const Gap(8),
-        Text('${average().toStringAsFixed(1)}/${_formCubit.totalPoint}'),
+        Text(
+          '${average().toStringAsFixed(1)}/${_formCubit.totalPoint}',
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -113,7 +127,14 @@ class _SummaryTabState extends State<SummaryTab> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         const Gap(8),
-        Text(range()),
+        Text(
+          range(),
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }

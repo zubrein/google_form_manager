@@ -22,7 +22,18 @@ class _ItemTypeListPageState extends State<ItemTypeListPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Please select a type'),
+          titleSpacing: 0.0,
+          title: const Text(
+            'Please select a type',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+          backgroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) {
+              return _buildBackIcon(context);
+            },
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -40,6 +51,20 @@ class _ItemTypeListPageState extends State<ItemTypeListPage> {
               }),
         ),
       ),
+    );
+  }
+
+  Widget _buildBackIcon(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: IconButton(
+          onPressed: () {
+            Navigator.of(context).maybePop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          )),
     );
   }
 

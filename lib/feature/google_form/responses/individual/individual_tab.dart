@@ -55,8 +55,10 @@ class _IndividualTabState extends State<IndividualTab> {
   }
 
   Widget _buildTopPanel() {
-    return ColoredBox(
-      color: Colors.grey.withOpacity(.2),
+    return Container(
+      decoration: BoxDecoration(
+          color: const Color(0xff6818B9),
+          borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
@@ -69,10 +71,14 @@ class _IndividualTabState extends State<IndividualTab> {
                 icon: const Icon(
                   Icons.keyboard_arrow_left,
                   size: 32,
+                  color: Colors.white,
                 )),
             Text(
               '$selectedResponseNumber  of  ${_formCubit.responseList.length}',
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
             ),
             IconButton(
                 onPressed: () {
@@ -81,6 +87,7 @@ class _IndividualTabState extends State<IndividualTab> {
                 icon: const Icon(
                   Icons.chevron_right,
                   size: 32,
+                  color: Colors.white,
                 ))
           ],
         ),

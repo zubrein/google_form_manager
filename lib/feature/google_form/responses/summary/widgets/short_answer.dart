@@ -33,11 +33,16 @@ class _ShortAnswerResponseWidgetState extends State<ShortAnswerResponseWidget> {
                     widget.title.isEmpty ? FontWeight.w400 : FontWeight.w700),
           ),
         ),
+        const Gap(4),
         Text(
           '${widget.answerList.length} responses',
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        const Gap(8),
+        const Divider(),
         ListView.builder(
             itemCount: widget.answerList.length,
             shrinkWrap: true,

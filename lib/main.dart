@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         '/formList': (context) => const FormListPage(),
       },
       theme: ThemeData(
-          textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme)),
+          textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme)),
       home: const LoginPage(),
     );
   }

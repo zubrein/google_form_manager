@@ -48,7 +48,7 @@ class _TemplatePageState extends State<TemplatePage> {
         appBar: AppBar(
           titleSpacing: 0.0,
           title: const Text(
-            'Create new form',
+            'Create New Form',
             style: TextStyle(
                 color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
           ),
