@@ -76,6 +76,21 @@ class EditFormRepositoryImpl extends EditFormRepository {
     }
   }
 
+  @override
+  Future<String> sheetUrl(String formId) async {
+    String sheetId = '';
+
+    final sheetList = await _fetchSheetListFromRemote();
+
+    for (var sheet in sheetList) {
+      if (sheet.title == formId) {
+        sheetId = sheet.id!;
+      }
+    }
+
+    return sheetId.isNotEmpty ? sheetId : '';
+  }
+
   Future<List<File>> _fetchSheetListFromRemote() async {
     List<File> sheetList = [];
     final driveApi = await GoogleApisHelper.getDriveApi();

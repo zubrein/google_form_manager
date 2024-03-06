@@ -92,6 +92,11 @@ class FormCubit extends Cubit<EditFormState> {
     }
   }
 
+  Future<String> sheetUrl(String formId) async {
+    final id = await saveToSheetUseCase.fetchSheetId(formId);
+    return id.isNotEmpty ? id : '';
+  }
+
   Future<void> saveToSheet(String formId) async {
     List<List<String>> values = [];
 

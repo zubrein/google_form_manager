@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
 import '../../shared/widgets/alert_dialog_widget.dart';
@@ -25,32 +27,150 @@ class _SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Make this a quiz',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  SwitchWidget(
-                    onToggle: (bool val) {
-                      _showAlertDialog(val);
-                    },
-                    isRequired: widget.formCubit.isQuiz,
-                  )
-                ],
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'General',
+                style: TextStyle(
+                  color: Color(0xff6818B9),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
+              const Gap(16),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Make this a quiz',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      SwitchWidget(
+                        onToggle: (bool val) {
+                          _showAlertDialog(val);
+                        },
+                        isRequired: widget.formCubit.isQuiz,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Divider(),
+              ),
+              const Text(
+                'Response',
+                style: TextStyle(
+                  color: Color(0xff6818B9),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Gap(16),
+              GestureDetector(
+                onTap: () async {
+                  widget.loadingHudCubit.show();
+                  await widget.formCubit
+                      .saveToSheet(widget.formId)
+                      .then((value) {
+                    widget.loadingHudCubit.cancel();
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AlertDialog(
+                            content: Text(
+                              'Data saved to google sheet successfully',
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        });
+                  });
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'assets/app_image/subscription_logo.png',
+                          height: 24,
+                          width: 24,
+                        ),
+                        const Gap(16),
+                        const Expanded(
+                          child: Text(
+                            'Save response to google sheet',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Gap(8),
+              GestureDetector(
+                onTap: () async {
+                  widget.loadingHudCubit.show();
+                  await widget.formCubit
+                      .sheetUrl(widget.formId)
+                      .then((sheetId) {
+                    widget.loadingHudCubit.cancel();
+                    if (sheetId.isNotEmpty) {
+                      _launchUrl(sheetId);
+                    } else {
+                      widget.loadingHudCubit.cancel();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const AlertDialog(
+                              content: Text(
+                                'Please save your response first.',
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          });
+                    }
+                  });
+                },
+                child:  Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'assets/app_image/subscription_logo.png',
+                          height: 24,
+                          width: 24,
+                        ),
+                        const Gap(16),
+                        const Expanded(
+                          child: Text(
+                            'Go To google sheet',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Gap(8),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   Future<void> _showAlertDialog(bool toggle) async {
@@ -78,5 +198,12 @@ class _SettingsTabState extends State<SettingsTab> {
 
   void pop() {
     Navigator.pop(context);
+  }
+
+  Future<void> _launchUrl(String sheetId) async {
+    if (!await launchUrl(
+        Uri.parse('https://docs.google.com/spreadsheets/d/$sheetId'))) {
+      throw Exception('Could not launch url');
+    }
   }
 }

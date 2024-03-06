@@ -11,4 +11,8 @@ class SaveToSheetUseCase {
   Future<void> call(String formId, List<List<String>> values) async {
     return await repository.saveToSheet(formId, values);
   }
+
+  Future<String> fetchSheetId(String formId) async {
+    return await repository.sheetUrl(formId);
+  }
 }
