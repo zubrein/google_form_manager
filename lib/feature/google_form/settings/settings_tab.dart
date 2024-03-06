@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_form_manager/feature/shared/google_ad_mixin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
@@ -23,7 +24,13 @@ class SettingsTab extends StatefulWidget {
   State<SettingsTab> createState() => _SettingsTabState();
 }
 
-class _SettingsTabState extends State<SettingsTab> {
+class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
+  @override
+  void initState() {
+    super.initState();
+    loadAd();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -77,21 +84,8 @@ class _SettingsTabState extends State<SettingsTab> {
               const Gap(16),
               GestureDetector(
                 onTap: () async {
-                  widget.loadingHudCubit.show();
-                  await widget.formCubit
-                      .saveToSheet(widget.formId)
-                      .then((value) {
-                    widget.loadingHudCubit.cancel();
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const AlertDialog(
-                            content: Text(
-                              'Data saved to google sheet successfully',
-                              textAlign: TextAlign.center,
-                            ),
-                          );
-                        });
+                  showAdCallback(() async {
+                    await _onSaveResponseButtonTapped(context);
                   });
                 },
                 child: Card(
@@ -121,29 +115,11 @@ class _SettingsTabState extends State<SettingsTab> {
               const Gap(8),
               GestureDetector(
                 onTap: () async {
-                  widget.loadingHudCubit.show();
-                  await widget.formCubit
-                      .sheetUrl(widget.formId)
-                      .then((sheetId) {
-                    widget.loadingHudCubit.cancel();
-                    if (sheetId.isNotEmpty) {
-                      _launchUrl(sheetId);
-                    } else {
-                      widget.loadingHudCubit.cancel();
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const AlertDialog(
-                              content: Text(
-                                'Please save your response first.',
-                                textAlign: TextAlign.center,
-                              ),
-                            );
-                          });
-                    }
+                  showAdCallback(() async {
+                    await _onGoToSheetButtonTap(context);
                   });
                 },
-                child:  Card(
+                child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -171,6 +147,47 @@ class _SettingsTabState extends State<SettingsTab> {
             ],
           ),
         ));
+  }
+
+  Future<void> _onGoToSheetButtonTap(BuildContext context) async {
+    widget.loadingHudCubit.show();
+    await widget.formCubit
+        .sheetUrl(widget.formId)
+        .then((sheetId) {
+      widget.loadingHudCubit.cancel();
+      if (sheetId.isNotEmpty) {
+        _launchUrl(sheetId);
+      } else {
+        widget.loadingHudCubit.cancel();
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                content: Text(
+                  'Please save your response first.',
+                  textAlign: TextAlign.center,
+                ),
+              );
+            });
+      }
+    });
+  }
+
+  Future<void> _onSaveResponseButtonTapped(BuildContext context) async {
+    widget.loadingHudCubit.show();
+    await widget.formCubit.saveToSheet(widget.formId).then((value) {
+      widget.loadingHudCubit.cancel();
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: Text(
+                'Data saved to google sheet successfully',
+                textAlign: TextAlign.center,
+              ),
+            );
+          });
+    });
   }
 
   Future<void> _showAlertDialog(bool toggle) async {

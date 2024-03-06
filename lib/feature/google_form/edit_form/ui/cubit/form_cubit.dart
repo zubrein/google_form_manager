@@ -112,7 +112,6 @@ class FormCubit extends Cubit<EditFormState> {
     }
 
     await saveToSheetUseCase(formId, values);
-    emit(const FormSubmitSuccessState(false));
   }
 
   Future<void> changeQuizSettings(bool toggle, String formId) async {

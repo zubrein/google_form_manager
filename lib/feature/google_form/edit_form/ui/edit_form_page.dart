@@ -169,6 +169,17 @@ class _EditFormPageState extends State<EditFormPage>
     } else if (state is FormSubmitSuccessState) {
       // await _onFormSubmitSuccess(context);
       widget.loadingHudCubit.cancel();
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: Text(
+                'Form updated successfully',
+                textAlign: TextAlign.center,
+              ),
+            );
+          });
+
     }
   }
 

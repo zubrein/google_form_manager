@@ -11,11 +11,11 @@ mixin GoogleAdMixin {
       ? 'ca-app-pub-3940256099942544/5354046379'
       : 'ca-app-pub-3940256099942544/6978759866';
 
-  void showAdCallback() {
+  void showAdCallback(Function() operation) {
     _rewardedInterstitialAd?.show(
         onUserEarnedReward: (AdWithoutView view, RewardItem rewardItem) {
+      operation.call();
       loadAd();
-      Log.info('Rewarded');
     });
   }
 
@@ -37,12 +37,10 @@ mixin GoogleAdMixin {
               // Called when the ad failed to show full screen content.
               onAdFailedToShowFullScreenContent: (ad, err) {
             Log.info('error $err');
-            ad.dispose();
           },
               // Called when the ad dismissed full screen content.
               onAdDismissedFullScreenContent: (ad) {
             Log.info('Ad dismissed');
-            ad.dispose();
           },
               // Called when a click is recorded for an ad.
               onAdClicked: (ad) {

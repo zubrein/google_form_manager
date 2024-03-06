@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/di/dependency_initializer.dart';
 import '../../core/loading_hud/loading_hud_cubit.dart';
 import '../../util/utility.dart';
+import '../shared/google_ad_mixin.dart';
 import '../shared/widgets/alert_dialog_widget.dart';
 import 'edit_form/ui/cubit/form_cubit.dart';
 import 'settings/settings_tab.dart';
@@ -25,7 +26,7 @@ class FormTabPage extends StatefulWidget {
   State<FormTabPage> createState() => _FormTabPageState();
 }
 
-class _FormTabPageState extends State<FormTabPage> {
+class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
   late FormCubit _formCubit;
   late LoadingHudCubit _loadingHudCubit;
 
@@ -34,6 +35,7 @@ class _FormTabPageState extends State<FormTabPage> {
   @override
   void initState() {
     super.initState();
+    loadAd();
     _formCubit = sl<FormCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
     _formCubit.fetchForm(widget.formId);
@@ -195,8 +197,10 @@ class _FormTabPageState extends State<FormTabPage> {
   Widget _buildTopPanel() {
     return TopPanel(
       onSaveButtonTap: () async {
-        _loadingHudCubit.show();
-        _formCubit.submitRequest(widget.formId);
+        showAdCallback(() {
+          _loadingHudCubit.show();
+          _formCubit.submitRequest(widget.formId);
+        });
       },
       onShareButtonTap: () async {
         if (_formCubit.checkIfListIsEmpty()) {
