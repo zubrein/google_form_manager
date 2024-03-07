@@ -133,13 +133,101 @@ class _FormListPageState extends State<FormListPage> {
 
   Widget _buildDrawer() {
     return Drawer(
-        width: 220,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
-          child: ListView(
-            children: [_buildLogoutButton()],
-          ),
+        width: 280,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 80,
+              color: const Color(0xff6818B9),
+            ),
+            const Gap(16),
+            _buildDrawerTitle('Subscription'),
+            const Gap(16),
+            _buildDrawerItem(
+              'assets/app_image/upgrade_to_premium.png',
+              'Upgrade to premium',
+              () {},
+            ),
+            const Gap(16),
+            _buildDrawerTitle('Support Us'),
+            const Gap(16),
+            _buildDrawerItem(
+              'assets/app_image/nav_share.png',
+              'Share the app link',
+              () {},
+            ),
+            _buildDrawerItem(
+              'assets/app_image/rate_us.png',
+              'Rate us',
+              () {},
+            ),
+            const Gap(16),
+            _buildDrawerTitle('Sign Out'),
+            const Gap(16),
+            _buildDrawerItem(
+              'assets/app_image/logout.png',
+              'Sign out',
+              () {
+                _formListCubit.logout();
+              },
+            ),
+          ],
         ));
+  }
+
+  Padding _buildDrawerTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xff6818B9),
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(
+    String icon,
+    String label,
+    Function() onTap,
+  ) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Image.asset(
+                  icon,
+                  height: 24,
+                  width: 24,
+                ),
+                const Gap(8),
+                Text(
+                  label,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+                const Expanded(child: SizedBox.shrink()),
+                Image.asset(
+                  'assets/app_image/right_arrow.png',
+                  height: 24,
+                  width: 24,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildFloatingActionButton(BuildContext context) {
@@ -196,37 +284,6 @@ class _FormListPageState extends State<FormListPage> {
           height: 28,
           fit: BoxFit.fill,
         ));
-  }
-
-  Widget _buildLogoutButton() {
-    return GestureDetector(
-      onTap: () {
-        _formListCubit.logout();
-      },
-      child: const Column(
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.logout,
-                size: 18,
-              ),
-              Gap(6),
-              Text('Logout',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                  )),
-            ],
-          ),
-          Gap(8),
-          Divider(
-            height: 1,
-            color: Colors.black87,
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildFormListItem(File item) {
