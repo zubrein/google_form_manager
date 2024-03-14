@@ -112,7 +112,7 @@ class _VideoWidgetDialogState extends State<VideoWidgetDialog> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Image.asset(
-          'assets/youtube_logo.png',
+          'assets/app_image/youtube_logo.png',
           height: 20,
         ),
         IconButton(
