@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import '../../../base.dart';
 import '../../../core/di/dependency_initializer.dart';
 import '../../../core/loading_hud/loading_hud_cubit.dart';
+import 'cubit/upgrade_to_premium_cubit.dart';
 
 class UpgradeToPremiumPage extends StatefulWidget {
   const UpgradeToPremiumPage({super.key});
@@ -14,11 +15,15 @@ class UpgradeToPremiumPage extends StatefulWidget {
 
 class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
   late LoadingHudCubit _loadingHudCubit;
+  late UpgradeToPremiumCubit _upgradeToPremiumCubit;
 
   @override
   void initState() {
     super.initState();
     _loadingHudCubit = sl<LoadingHudCubit>();
+    _upgradeToPremiumCubit = sl<UpgradeToPremiumCubit>();
+    _upgradeToPremiumCubit.getProducts();
+    _upgradeToPremiumCubit.listenPurchase();
   }
 
   @override
@@ -125,37 +130,59 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Card(child: _buildTagTexts('WEEKLY', '1.99', 'per week')),
-        Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xff6818B9)),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16, bottom: 8),
-                    child: _buildTagTexts('ANNUAL', '29.99', 'per year'),
-                  )),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: const Color(0xff6818B9),
+        InkWell(
+            onTap: () {
+              _upgradeToPremiumCubit.iApEngine.handlePurchase(
+                _upgradeToPremiumCubit.products[0],
+                _upgradeToPremiumCubit.productIds,
+              );
+            },
+            child: Card(child: _buildTagTexts('WEEKLY', '1.99', 'per week'))),
+        InkWell(
+          onTap: () {
+            _upgradeToPremiumCubit.iApEngine.handlePurchase(
+              _upgradeToPremiumCubit.products[1],
+              _upgradeToPremiumCubit.productIds,
+            );
+          },
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xff6818B9)),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16, bottom: 8),
+                      child: _buildTagTexts('ANNUAL', '29.99', 'per year'),
+                    )),
               ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: Text(
-                  'Save 85%',
-                  style: TextStyle(color: Colors.white),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: const Color(0xff6818B9),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                  child: Text(
+                    'Save 85%',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        Card(child: _buildTagTexts('MONTHLY', '4.99', 'per month')),
+        InkWell(
+            onTap: () {
+              _upgradeToPremiumCubit.iApEngine.handlePurchase(
+                _upgradeToPremiumCubit.products[2],
+                _upgradeToPremiumCubit.productIds,
+              );
+            },
+            child: Card(child: _buildTagTexts('MONTHLY', '4.99', 'per month'))),
       ],
     );
   }

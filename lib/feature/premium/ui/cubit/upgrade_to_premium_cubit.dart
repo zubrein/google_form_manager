@@ -1,0 +1,87 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:google_form_manager/core/helper/logger.dart';
+import 'package:google_form_manager/util/utility.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:injectable/injectable.dart';
+import 'package:onepref/onepref.dart';
+
+part 'upgrade_to_premium_state.dart';
+
+@singleton
+class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
+  UpgradeToPremiumCubit() : super(UpgradeToPremiumInitial());
+
+  late final List<ProductDetails> products = <ProductDetails>[];
+  final List<ProductId> productIds = getProductIds();
+  bool isSubscribed = false;
+  IApEngine iApEngine = IApEngine();
+
+  Future<void> getProducts() async {
+    await iApEngine.getIsAvailable().then((exists) async {
+      if (exists) {
+        await iApEngine.queryProducts(productIds).then((response) {
+          Log.info(response.productDetails.length.toString());
+          products.addAll(response.productDetails);
+        });
+      }
+    });
+  }
+
+  void listenPurchase() {
+    iApEngine.inAppPurchase.purchaseStream.listen(
+        (List<PurchaseDetails> purchaseDetailsList) {
+      listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {}, onError: (Object error) {});
+  }
+
+  void listenToPurchaseUpdated(
+      List<PurchaseDetails> purchaseDetailsList) async {
+    if (purchaseDetailsList.isNotEmpty) {
+      for (var purchaseDetails in purchaseDetailsList) {
+        if (purchaseDetails.status == PurchaseStatus.restored ||
+            purchaseDetails.status == PurchaseStatus.purchased) {
+          Map purchaseData = json.decode(
+            purchaseDetails.verificationData.localVerificationData,
+          );
+
+          Log.info(purchaseData.toString());
+
+          if (purchaseData['acknowledged']) {
+            isSubscribed = true;
+            Log.info('restore purchase');
+          } else {
+            Log.info('first time purchase');
+            if (Platform.isAndroid) {
+              final InAppPurchaseAndroidPlatformAddition
+                  androidPlatformAddition = iApEngine.inAppPurchase
+                      .getPlatformAddition<
+                          InAppPurchaseAndroidPlatformAddition>();
+              await androidPlatformAddition
+                  .consumePurchase(purchaseDetails)
+                  .then((value) {
+                isSubscribed = true;
+                Log.info('Subscribed');
+              });
+            }
+
+            if (purchaseDetails.pendingCompletePurchase) {
+              await iApEngine.inAppPurchase
+                  .completePurchase(purchaseDetails)
+                  .then((value) {
+                isSubscribed = true;
+                Log.info('Payment Completed');
+              });
+            }
+          }
+        }
+      }
+    } else {
+      Log.info('No purchase');
+    }
+  }
+}

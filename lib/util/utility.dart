@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:google_form_manager/core/constants.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
+import 'package:onepref/onepref.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../feature/auth/domain/entities/user_profile_entity.dart';
@@ -51,3 +54,6 @@ Future<bool> checkInternet() async {
 
   return true;
 }
+
+List<ProductId> getProductIds() =>
+    Platform.isAndroid ? androidProductIds : iosProductIds;
