@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart';
+import 'package:google_form_manager/feature/premium/ui/upgrade_to_premium_page.dart';
 import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
@@ -147,7 +148,12 @@ class _FormListPageState extends State<FormListPage> {
             _buildDrawerItem(
               'assets/app_image/upgrade_to_premium.png',
               'Upgrade to premium',
-              () {},
+              () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const UpgradeToPremiumPage()));
+              },
             ),
             const Gap(16),
             _buildDrawerTitle('Support Us'),
