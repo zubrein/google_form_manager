@@ -132,18 +132,22 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
       children: [
         InkWell(
             onTap: () {
-              _upgradeToPremiumCubit.iApEngine.handlePurchase(
-                _upgradeToPremiumCubit.products[0],
-                _upgradeToPremiumCubit.productIds,
-              );
+              if (_upgradeToPremiumCubit.weeklyProducts.isNotEmpty) {
+                _upgradeToPremiumCubit.iApEngine.handlePurchase(
+                  _upgradeToPremiumCubit.weeklyProducts.first,
+                  _upgradeToPremiumCubit.weeklyProductIds,
+                );
+              }
             },
             child: Card(child: _buildTagTexts('WEEKLY', '1.99', 'per week'))),
         InkWell(
           onTap: () {
-            _upgradeToPremiumCubit.iApEngine.handlePurchase(
-              _upgradeToPremiumCubit.products[1],
-              _upgradeToPremiumCubit.productIds,
-            );
+            if (_upgradeToPremiumCubit.yearlyProducts.isNotEmpty) {
+              _upgradeToPremiumCubit.iApEngine.handlePurchase(
+                _upgradeToPremiumCubit.yearlyProducts.first,
+                _upgradeToPremiumCubit.yearlyProductIds,
+              );
+            }
           },
           child: Stack(
             alignment: Alignment.topCenter,
@@ -177,10 +181,12 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
         ),
         InkWell(
             onTap: () {
-              _upgradeToPremiumCubit.iApEngine.handlePurchase(
-                _upgradeToPremiumCubit.products[2],
-                _upgradeToPremiumCubit.productIds,
-              );
+              if (_upgradeToPremiumCubit.monthlyProducts.isNotEmpty) {
+                _upgradeToPremiumCubit.iApEngine.handlePurchase(
+                  _upgradeToPremiumCubit.monthlyProducts.first,
+                  _upgradeToPremiumCubit.monthlyProductIds,
+                );
+              }
             },
             child: Card(child: _buildTagTexts('MONTHLY', '4.99', 'per month'))),
       ],

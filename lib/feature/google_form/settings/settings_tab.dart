@@ -3,7 +3,9 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/shared/google_ad_mixin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/di/dependency_initializer.dart';
 import '../../../core/loading_hud/loading_hud_cubit.dart';
+import '../../premium/ui/cubit/upgrade_to_premium_cubit.dart';
 import '../../shared/widgets/alert_dialog_widget.dart';
 import '../edit_form/ui/cubit/form_cubit.dart';
 import '../edit_form/ui/widgets/shared/switch_widget.dart';
@@ -25,9 +27,12 @@ class SettingsTab extends StatefulWidget {
 }
 
 class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
+  late UpgradeToPremiumCubit _upgradeToPremiumCubit;
+
   @override
   void initState() {
     super.initState();
+    _upgradeToPremiumCubit = sl<UpgradeToPremiumCubit>();
     loadAd();
   }
 
@@ -84,9 +89,13 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
               const Gap(16),
               GestureDetector(
                 onTap: () async {
-                  showAdCallback(() async {
+                  if (_upgradeToPremiumCubit.isSubscribed) {
                     await _onSaveResponseButtonTapped(context);
-                  });
+                  } else {
+                    showAdCallback(() async {
+                      await _onSaveResponseButtonTapped(context);
+                    });
+                  }
                 },
                 child: Card(
                   child: Padding(
@@ -115,9 +124,13 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
               const Gap(8),
               GestureDetector(
                 onTap: () async {
-                  showAdCallback(() async {
-                    await _onGoToSheetButtonTap(context);
-                  });
+                  if (_upgradeToPremiumCubit.isSubscribed) {
+                    await _onSaveResponseButtonTapped(context);
+                  } else {
+                    showAdCallback(() async {
+                      await _onGoToSheetButtonTap(context);
+                    });
+                  }
                 },
                 child: Card(
                   child: Padding(
@@ -151,9 +164,7 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
 
   Future<void> _onGoToSheetButtonTap(BuildContext context) async {
     widget.loadingHudCubit.show();
-    await widget.formCubit
-        .sheetUrl(widget.formId)
-        .then((sheetId) {
+    await widget.formCubit.sheetUrl(widget.formId).then((sheetId) {
       widget.loadingHudCubit.cancel();
       if (sheetId.isNotEmpty) {
         _launchUrl(sheetId);

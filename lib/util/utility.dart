@@ -55,5 +55,11 @@ Future<bool> checkInternet() async {
   return true;
 }
 
-List<ProductId> getProductIds() =>
-    Platform.isAndroid ? androidProductIds : iosProductIds;
+List<ProductId> getWeeklyProductIds() =>
+    Platform.isAndroid ? androidWeeklyProductIds : iosWeeklyProductIds;
+
+List<ProductId> getMonthlyProductIds() =>
+    Platform.isAndroid ? androidMonthlyProductIds : iosMonthlyProductIds;
+
+List<ProductId> getYearlyProductIds() =>
+    Platform.isAndroid ? androidYearlyProductIds : iosYearlyProductIds;

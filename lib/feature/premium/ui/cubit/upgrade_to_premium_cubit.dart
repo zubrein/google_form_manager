@@ -16,17 +16,31 @@ part 'upgrade_to_premium_state.dart';
 class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
   UpgradeToPremiumCubit() : super(UpgradeToPremiumInitial());
 
-  late final List<ProductDetails> products = <ProductDetails>[];
-  final List<ProductId> productIds = getProductIds();
+  late final List<ProductDetails> weeklyProducts = <ProductDetails>[];
+  late final List<ProductDetails> monthlyProducts = <ProductDetails>[];
+  late final List<ProductDetails> yearlyProducts = <ProductDetails>[];
+  final List<ProductId> weeklyProductIds = getWeeklyProductIds();
+  final List<ProductId> monthlyProductIds = getMonthlyProductIds();
+  final List<ProductId> yearlyProductIds = getYearlyProductIds();
   bool isSubscribed = false;
   IApEngine iApEngine = IApEngine();
 
   Future<void> getProducts() async {
     await iApEngine.getIsAvailable().then((exists) async {
       if (exists) {
-        await iApEngine.queryProducts(productIds).then((response) {
+        await iApEngine.queryProducts(weeklyProductIds).then((response) {
           Log.info(response.productDetails.length.toString());
-          products.addAll(response.productDetails);
+          weeklyProducts.addAll(response.productDetails);
+        });
+
+        await iApEngine.queryProducts(monthlyProductIds).then((response) {
+          Log.info(response.productDetails.length.toString());
+          monthlyProducts.addAll(response.productDetails);
+        });
+
+        await iApEngine.queryProducts(yearlyProductIds).then((response) {
+          Log.info(response.productDetails.length.toString());
+          yearlyProducts.addAll(response.productDetails);
         });
       }
     });
