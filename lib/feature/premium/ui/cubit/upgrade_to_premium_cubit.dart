@@ -66,8 +66,8 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
           Log.info(purchaseData.toString());
 
           if (purchaseData['acknowledged']) {
-            isSubscribed = true;
             Log.info('restore purchase');
+            OnePref.setRemoveAds(true);
           } else {
             Log.info('first time purchase');
             if (Platform.isAndroid) {
@@ -78,8 +78,8 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
               await androidPlatformAddition
                   .consumePurchase(purchaseDetails)
                   .then((value) {
-                isSubscribed = true;
                 Log.info('Subscribed');
+                OnePref.setRemoveAds(true);
               });
             }
 
@@ -87,8 +87,8 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
               await iApEngine.inAppPurchase
                   .completePurchase(purchaseDetails)
                   .then((value) {
-                isSubscribed = true;
                 Log.info('Payment Completed');
+                OnePref.setRemoveAds(true);
               });
             }
           }

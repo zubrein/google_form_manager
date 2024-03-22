@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/ui/edit_form_page.dart';
 import 'package:google_form_manager/feature/google_form/responses/response_page.dart';
-import 'package:google_form_manager/feature/premium/ui/cubit/upgrade_to_premium_cubit.dart';
+import 'package:onepref/onepref.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/di/dependency_initializer.dart';
@@ -30,7 +30,6 @@ class FormTabPage extends StatefulWidget {
 class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
   late FormCubit _formCubit;
   late LoadingHudCubit _loadingHudCubit;
-  late UpgradeToPremiumCubit _upgradeToPremiumCubit;
 
   late StreamSubscription _formCubitSubscription;
 
@@ -40,7 +39,6 @@ class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
     loadAd();
     _formCubit = sl<FormCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
-    _upgradeToPremiumCubit = sl<UpgradeToPremiumCubit>();
     _formCubit.fetchForm(widget.formId);
     _formCubitSubscription = _formCubit.stream.listen(_onListenFormCubit);
   }
@@ -200,7 +198,7 @@ class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
   Widget _buildTopPanel() {
     return TopPanel(
       onSaveButtonTap: () async {
-        if (_upgradeToPremiumCubit.isSubscribed) {
+        if (OnePref.getRemoveAds() ?? false) {
           _loadingHudCubit.show();
           _formCubit.submitRequest(widget.formId);
         } else {
