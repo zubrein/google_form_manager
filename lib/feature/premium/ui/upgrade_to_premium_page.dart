@@ -16,6 +16,7 @@ class UpgradeToPremiumPage extends StatefulWidget {
 class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
   late LoadingHudCubit _loadingHudCubit;
   late UpgradeToPremiumCubit _upgradeToPremiumCubit;
+  ButtonType selectedButtonType = ButtonType.yearly;
 
   @override
   void initState() {
@@ -58,37 +59,65 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
                     'assets/app_image/premium_banner.png',
                   ),
                   const Gap(16),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            _buildPromoteLabels(
-                              'assets/app_image/response_refresh.png',
-                              'Unlimited responses refresh',
-                            ),
-                            const Gap(8),
-                            _buildPromoteLabels(
-                              'assets/app_image/export_to_csv.png',
-                              'Export Responses to Google Sheets',
-                            ),
-                            const Gap(8),
-                            _buildPromoteLabels(
-                              'assets/app_image/remove_ads.png',
-                              'Remove Ads',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildPromotionBanner(),
                   const Gap(16),
-                  _buildTags()
+                  _buildTags(),
+                  const Gap(16),
+                  _buildPurchaseButton()
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildPromotionBanner() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              _buildPromoteLabels(
+                'assets/app_image/response_refresh.png',
+                'Unlimited responses refresh',
+              ),
+              const Gap(8),
+              _buildPromoteLabels(
+                'assets/app_image/export_to_csv.png',
+                'Export Responses to Google Sheets',
+              ),
+              const Gap(8),
+              _buildPromoteLabels(
+                'assets/app_image/remove_ads.png',
+                'Remove Ads',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  InkWell _buildPurchaseButton() {
+    return InkWell(
+      onTap: () {
+        doSubscribe();
+      },
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: const Color(0xff6818B9),
+        ),
+        child: const Center(
+          child: Text(
+            'Purchase',
+            style: TextStyle(
+                fontWeight: FontWeight.w700, fontSize: 16, color: Colors.white),
           ),
         ),
       ),
@@ -130,74 +159,106 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        InkWell(
-            onTap: () {
-              if (_upgradeToPremiumCubit.weeklyProducts.isNotEmpty) {
-                _upgradeToPremiumCubit.iApEngine.handlePurchase(
-                  _upgradeToPremiumCubit.weeklyProducts.first,
-                  _upgradeToPremiumCubit.weeklyProductIds,
-                );
-              }
-            },
-            child: Card(child: _buildTagTexts('WEEKLY', '1.99', 'per week'))),
-        InkWell(
-          onTap: () {
-            if (_upgradeToPremiumCubit.yearlyProducts.isNotEmpty) {
-              _upgradeToPremiumCubit.iApEngine.handlePurchase(
-                _upgradeToPremiumCubit.yearlyProducts.first,
-                _upgradeToPremiumCubit.yearlyProductIds,
-              );
-            }
-          },
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xff6818B9)),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, bottom: 8),
-                      child: _buildTagTexts('ANNUAL', '29.99', 'per year'),
-                    )),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color(0xff6818B9),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                  child: Text(
-                    'Save 85%',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        InkWell(
-            onTap: () {
-              if (_upgradeToPremiumCubit.monthlyProducts.isNotEmpty) {
-                _upgradeToPremiumCubit.iApEngine.handlePurchase(
-                  _upgradeToPremiumCubit.monthlyProducts.first,
-                  _upgradeToPremiumCubit.monthlyProductIds,
-                );
-              }
-            },
-            child: Card(child: _buildTagTexts('MONTHLY', '4.99', 'per month'))),
+        _buildWeeklySubscribeButton(),
+        _buildYearlySubscribeButton(),
+        _buildMonthlySubscribeButton(),
       ],
     );
   }
 
-  Widget _buildTagTexts(
-    String title,
-    String amount,
-    String footer,
-  ) {
+  InkWell _buildMonthlySubscribeButton() {
+    return InkWell(
+        onTap: () {
+          setState(() {
+            selectedButtonType = ButtonType.monthly;
+          });
+        },
+        child: Container(
+            decoration: selectedButtonType == ButtonType.monthly
+                ? selectedDecor()
+                : unSelectedDecor(),
+            child: _buildTagTexts('MONTHLY', '4.99', 'per month')));
+  }
+
+  InkWell _buildYearlySubscribeButton() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          selectedButtonType = ButtonType.yearly;
+        });
+      },
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Container(
+                decoration: selectedButtonType == ButtonType.yearly
+                    ? selectedDecor()
+                    : unSelectedDecor(),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  child: _buildTagTexts('ANNUAL', '29.99', 'per year'),
+                )),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color(0xff6818B9),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+              child: Text(
+                'Save 85%',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  InkWell _buildWeeklySubscribeButton() {
+    return InkWell(
+        onTap: () {
+          setState(() {
+            selectedButtonType = ButtonType.weekly;
+          });
+        },
+        child: Container(
+            decoration: selectedButtonType == ButtonType.weekly
+                ? selectedDecor()
+                : unSelectedDecor(),
+            child: _buildTagTexts('WEEKLY', '1.99', 'per week')));
+  }
+
+  void doSubscribe() {
+    if (selectedButtonType == ButtonType.weekly) {
+      if (_upgradeToPremiumCubit.weeklyProducts.isNotEmpty) {
+        _upgradeToPremiumCubit.iApEngine.handlePurchase(
+          _upgradeToPremiumCubit.weeklyProducts.first,
+          _upgradeToPremiumCubit.weeklyProductIds,
+        );
+      }
+    } else if (selectedButtonType == ButtonType.yearly) {
+      if (_upgradeToPremiumCubit.yearlyProducts.isNotEmpty) {
+        _upgradeToPremiumCubit.iApEngine.handlePurchase(
+          _upgradeToPremiumCubit.yearlyProducts.first,
+          _upgradeToPremiumCubit.yearlyProductIds,
+        );
+      }
+    } else if (selectedButtonType == ButtonType.monthly) {
+      if (_upgradeToPremiumCubit.monthlyProducts.isNotEmpty) {
+        _upgradeToPremiumCubit.iApEngine.handlePurchase(
+          _upgradeToPremiumCubit.monthlyProducts.first,
+          _upgradeToPremiumCubit.monthlyProductIds,
+        );
+      }
+    }
+  }
+
+  Widget _buildTagTexts(String title, String amount, String footer) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -227,4 +288,29 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
       ),
     );
   }
+
+  BoxDecoration selectedDecor() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: const Color(0xff6818B9)),
+      color: const Color(0xff6818B9).withOpacity(.01),
+      boxShadow: [
+        BoxShadow(
+          color: const Color(0xff6818B9).withOpacity(0.15),
+          spreadRadius: 1,
+          blurRadius: 1,
+          offset: const Offset(0, 0), // changes position of shadow
+        ),
+      ],
+    );
+  }
+
+  BoxDecoration unSelectedDecor() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.black12),
+    );
+  }
 }
+
+enum ButtonType { weekly, monthly, yearly }
