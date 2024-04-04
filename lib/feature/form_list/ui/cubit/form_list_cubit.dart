@@ -27,10 +27,14 @@ class FormListCubit extends Cubit<FormListState> {
 
   Future<void> fetchFormList() async {
     final httpClient = await googleSigning.authenticatedClient();
-    token = httpClient!.credentials.accessToken.data;
-    emit(FormListFetchInitiatedState());
-    final list = await fetchFormListUseCase();
-    emit(FormListFetchSuccessState(list));
+    if (httpClient != null) {
+      token = httpClient!.credentials.accessToken.data;
+      emit(FormListFetchInitiatedState());
+      final list = await fetchFormListUseCase();
+      emit(FormListFetchSuccessState(list));
+    } else {
+      emit(const UnAuthenticateState());
+    }
   }
 
   Future<void> deleteForm(String formId) async {

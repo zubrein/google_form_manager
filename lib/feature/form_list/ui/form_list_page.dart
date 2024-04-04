@@ -265,6 +265,9 @@ class _FormListPageState extends State<FormListPage> {
       _loadingHudCubit.show();
     } else if (state is FormListFetchSuccessState) {
       _loadingHudCubit.cancel();
+    }else if (state is UnAuthenticateState) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/login', ModalRoute.withName('/'));
     }
   }
 

@@ -23,6 +23,13 @@ class FormListFetchSuccessState extends FormListState {
   List<Object?> get props => [formList];
 }
 
+class UnAuthenticateState extends FormListState {
+  const UnAuthenticateState();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class FormDeleteInitiatedState extends FormListState {
   const FormDeleteInitiatedState();
 
