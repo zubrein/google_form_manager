@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 
 import '../../../base.dart';
 import '../../../core/di/dependency_initializer.dart';
@@ -233,7 +236,14 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
             child: _buildTagTexts('WEEKLY', '1.99', 'per week')));
   }
 
-  void doSubscribe() {
+  void doSubscribe() async {
+    if (Platform.isIOS) {
+      final transactions = await SKPaymentQueueWrapper().transactions();
+      for (var transaction in transactions) {
+        await SKPaymentQueueWrapper().finishTransaction(transaction);
+      }
+    }
+
     if (selectedButtonType == ButtonType.weekly) {
       if (_upgradeToPremiumCubit.weeklyProducts.isNotEmpty) {
         _upgradeToPremiumCubit.iApEngine.handlePurchase(

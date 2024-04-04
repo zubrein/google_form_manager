@@ -41,6 +41,7 @@ dependencies:
   onepref: ^0.0.16
   in_app_purchase: ^3.1.13
   in_app_purchase_android: ^0.3.2
+  in_app_purchase_storekit: ^0.3.8+1
 
 dev_dependencies:
   flutter_test:
