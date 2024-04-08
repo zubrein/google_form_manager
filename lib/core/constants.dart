@@ -21,3 +21,6 @@ final List<ProductId> iosMonthlyProductIds = [
 final List<ProductId> iosYearlyProductIds = [
   ProductId(id: 'GFM_29.99_Yearly', isConsumable: false),
 ];
+
+const String playStoreUrl = 'http://play.google.com/store/apps/details?id=';
+const String packageName = 'com.gfm.gformmanager';

@@ -8,6 +8,7 @@ import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
 import 'package:google_form_manager/feature/google_form/edit_form/domain/constants.dart';
 import 'package:google_form_manager/util/utility.dart';
 
+import '../../premium/ui/cubit/upgrade_to_premium_cubit.dart';
 import 'cubit/login_cubit.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,6 +21,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late LoginCubit _loginCubit;
   late LoadingHudCubit _loadingHudCubit;
+  late UpgradeToPremiumCubit _upgradeToPremiumCubit;
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     GoogleAuthHelper().init();
     _loginCubit = sl<LoginCubit>();
     _loadingHudCubit = sl<LoadingHudCubit>();
+    _upgradeToPremiumCubit = sl<UpgradeToPremiumCubit>();
     _loginCubit.listenUserLoginState();
   }
 

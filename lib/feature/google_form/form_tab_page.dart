@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/di/dependency_initializer.dart';
 import '../../core/loading_hud/loading_hud_cubit.dart';
 import '../../util/utility.dart';
+import '../premium/ui/upgrade_to_premium_page.dart';
 import '../shared/google_ad_mixin.dart';
 import '../shared/widgets/alert_dialog_widget.dart';
 import 'edit_form/ui/cubit/form_cubit.dart';
@@ -77,7 +78,10 @@ class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
                 return _buildBackIcon(context);
               },
             ),
-            actions: [_buildSubscriptionButton(context)],
+            actions: [
+              if (!(OnePref.getRemoveAds() ?? false))
+                _buildSubscriptionButton(context)
+            ],
           ),
           body: DefaultTabController(
             length: 3,
@@ -112,7 +116,12 @@ class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
 
   Widget _buildSubscriptionButton(BuildContext context) {
     return IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const UpgradeToPremiumPage()));
+        },
         icon: Image.asset(
           'assets/app_image/subscription_logo.png',
           width: 28,

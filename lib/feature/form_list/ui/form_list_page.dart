@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
+import 'package:google_form_manager/core/constants.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart';
 import 'package:google_form_manager/feature/premium/ui/upgrade_to_premium_page.dart';
 import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
+import 'package:onepref/onepref.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
 import '../../google_form/form_tab_page.dart';
@@ -52,7 +56,10 @@ class _FormListPageState extends State<FormListPage> {
               return _buildMenuIcon(context);
             },
           ),
-          actions: [_buildSubscriptionButton(context)],
+          actions: [
+            if (!(OnePref.getRemoveAds() ?? false))
+              _buildSubscriptionButton(context)
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),
@@ -143,30 +150,44 @@ class _FormListPageState extends State<FormListPage> {
               color: const Color(0xff6818B9),
             ),
             const Gap(16),
-            _buildDrawerTitle('Subscription'),
-            const Gap(16),
-            _buildDrawerItem(
-              'assets/app_image/upgrade_to_premium.png',
-              'Upgrade to premium',
-              () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const UpgradeToPremiumPage()));
-              },
-            ),
-            const Gap(16),
+            if (!(OnePref.getRemoveAds() ?? false))
+              _buildDrawerTitle('Subscription'),
+            if (!(OnePref.getRemoveAds() ?? false)) const Gap(16),
+            if (!(OnePref.getRemoveAds() ?? false))
+              _buildDrawerItem(
+                'assets/app_image/upgrade_to_premium.png',
+                'Upgrade to premium',
+                () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UpgradeToPremiumPage()));
+                  Navigator.pop(context);
+                },
+              ),
+            if (!(OnePref.getRemoveAds() ?? false)) const Gap(16),
             _buildDrawerTitle('Support Us'),
             const Gap(16),
             _buildDrawerItem(
               'assets/app_image/nav_share.png',
               'Share the app link',
-              () {},
+              () async {
+                Navigator.pop(context);
+                final result = await Share.shareWithResult(
+                    'Download the app from Google plays tore \n${playStoreUrl + packageName}');
+
+                if (result.status == ShareResultStatus.success) {
+                  return;
+                }
+              },
             ),
             _buildDrawerItem(
               'assets/app_image/rate_us.png',
               'Rate us',
-              () {},
+              () {
+                Navigator.pop(context);
+                launchUrl(Uri.parse(playStoreUrl + packageName));
+              },
             ),
             const Gap(16),
             _buildDrawerTitle('Sign Out'),
@@ -265,7 +286,7 @@ class _FormListPageState extends State<FormListPage> {
       _loadingHudCubit.show();
     } else if (state is FormListFetchSuccessState) {
       _loadingHudCubit.cancel();
-    }else if (state is UnAuthenticateState) {
+    } else if (state is UnAuthenticateState) {
       Navigator.pushNamedAndRemoveUntil(
           context, '/login', ModalRoute.withName('/'));
     }
@@ -273,7 +294,13 @@ class _FormListPageState extends State<FormListPage> {
 
   Widget _buildSubscriptionButton(BuildContext context) {
     return IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const UpgradeToPremiumPage()));
+        },
         icon: Image.asset(
           'assets/app_image/subscription_logo.png',
           width: 28,
