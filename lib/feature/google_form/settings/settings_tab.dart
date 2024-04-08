@@ -99,11 +99,12 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Image.asset(
-                          'assets/app_image/subscription_logo.png',
-                          height: 24,
-                          width: 24,
-                        ),
+                        if (!(OnePref.getRemoveAds() ?? false))
+                          Image.asset(
+                            'assets/app_image/subscription_logo.png',
+                            height: 24,
+                            width: 24,
+                          ),
                         const Gap(16),
                         const Expanded(
                           child: Text(
@@ -111,7 +112,9 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
-                        )
+                        ),
+                        if ((OnePref.getRemoveAds() ?? false))
+                          _buildPurchaseButton(),
                       ],
                     ),
                   ),
@@ -134,6 +137,7 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        if (!(OnePref.getRemoveAds() ?? false))
                         Image.asset(
                           'assets/app_image/subscription_logo.png',
                           height: 24,
@@ -146,7 +150,9 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
-                        )
+                        ),
+                        if ((OnePref.getRemoveAds() ?? false))
+                          _buildPurchaseButton(),
                       ],
                     ),
                   ),
@@ -156,6 +162,22 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
             ],
           ),
         ));
+  }
+
+  Widget _buildPurchaseButton() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.deepPurple,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      height: 25,
+      width: 50,
+      child: const Center(
+          child: Text(
+        'Purchased',
+        style: TextStyle(color: Colors.white, fontSize: 10),
+      )),
+    );
   }
 
   Future<void> _onGoToSheetButtonTap(BuildContext context) async {
