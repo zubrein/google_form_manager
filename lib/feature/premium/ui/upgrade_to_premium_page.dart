@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../base.dart';
 import '../../../core/di/dependency_initializer.dart';
@@ -84,17 +85,23 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         GestureDetector(
-          onTap: () {},
-          child: Text(
-            'Terms & conditions',
-            style: TextStyle(color: const Color(0xff6818B9)),
+          onTap: () {
+            launchUrl(Uri.parse(
+                'https://monitorsjudge.com/gfm/terms-conditions.html'));
+          },
+          child: const Text(
+            'Terms of Use',
+            style: TextStyle(color: Color(0xff6818B9)),
           ),
         ),
         GestureDetector(
-          onTap: () {},
-          child: Text(
+          onTap: () {
+            launchUrl(
+                Uri.parse('https://monitorsjudge.com/gfm/privacy_policy.html'));
+          },
+          child: const Text(
             'Privacy policy',
-            style: TextStyle(color: const Color(0xff6818B9)),
+            style: TextStyle(color: Color(0xff6818B9)),
           ),
         ),
       ],

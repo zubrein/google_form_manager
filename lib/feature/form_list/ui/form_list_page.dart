@@ -149,64 +149,86 @@ class _FormListPageState extends State<FormListPage> {
   Widget _buildDrawer() {
     return Drawer(
         width: 280,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 80,
-              color: const Color(0xff6818B9),
-            ),
-            const Gap(16),
-            if (!(OnePref.getRemoveAds() ?? false))
-              _buildDrawerTitle('Subscription'),
-            if (!(OnePref.getRemoveAds() ?? false)) const Gap(16),
-            if (!(OnePref.getRemoveAds() ?? false))
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 80,
+                color: const Color(0xff6818B9),
+              ),
+              const Gap(16),
+              if (!(OnePref.getRemoveAds() ?? false))
+                _buildDrawerTitle('Subscription'),
+              if (!(OnePref.getRemoveAds() ?? false)) const Gap(16),
+              if (!(OnePref.getRemoveAds() ?? false))
+                _buildDrawerItem(
+                  'assets/app_image/upgrade_to_premium.png',
+                  'Upgrade to premium',
+                  () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const UpgradeToPremiumPage()));
+                    // Navigator.pop(context);
+                  },
+                ),
+              if (!(OnePref.getRemoveAds() ?? false)) const Gap(16),
+              _buildDrawerTitle('Support Us'),
+              const Gap(16),
               _buildDrawerItem(
-                'assets/app_image/upgrade_to_premium.png',
-                'Upgrade to premium',
-                () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const UpgradeToPremiumPage()));
+                'assets/app_image/nav_share.png',
+                'Share the app link',
+                () async {
                   // Navigator.pop(context);
+                  final result = await Share.shareWithResult(
+                      'Download the app from Google plays tore \n${playStoreUrl + packageName}');
+
+                  if (result.status == ShareResultStatus.success) {
+                    return;
+                  }
                 },
               ),
-            if (!(OnePref.getRemoveAds() ?? false)) const Gap(16),
-            _buildDrawerTitle('Support Us'),
-            const Gap(16),
-            _buildDrawerItem(
-              'assets/app_image/nav_share.png',
-              'Share the app link',
-              () async {
-                // Navigator.pop(context);
-                final result = await Share.shareWithResult(
-                    'Download the app from Google plays tore \n${playStoreUrl + packageName}');
-
-                if (result.status == ShareResultStatus.success) {
-                  return;
-                }
-              },
-            ),
-            _buildDrawerItem(
-              'assets/app_image/rate_us.png',
-              'Rate us',
-              () {
-                // Navigator.pop(context);
-                launchUrl(Uri.parse(playStoreUrl + packageName));
-              },
-            ),
-            const Gap(16),
-            _buildDrawerTitle('Sign Out'),
-            const Gap(16),
-            _buildDrawerItem(
-              'assets/app_image/logout.png',
-              'Sign out',
-              () {
-                _formListCubit.logout();
-              },
-            ),
-          ],
+              _buildDrawerItem(
+                'assets/app_image/rate_us.png',
+                'Rate us',
+                () {
+                  // Navigator.pop(context);
+                  launchUrl(Uri.parse(playStoreUrl + packageName));
+                },
+              ),
+              const Gap(16),
+              _buildDrawerTitle('Policy'),
+              const Gap(16),
+              _buildDrawerItem(
+                null,
+                'Privacy policy',
+                () {
+                  launchUrl(Uri.parse(
+                      'https://monitorsjudge.com/gfm/privacy_policy.html'));
+                },
+              ),
+              _buildDrawerItem(
+                null,
+                'Terms of Use',
+                () {
+                  launchUrl(Uri.parse(
+                      'https://monitorsjudge.com/gfm/terms-conditions.html'));
+                },
+              ),
+              const Gap(16),
+              _buildDrawerTitle('Sign Out'),
+              const Gap(16),
+              _buildDrawerItem(
+                'assets/app_image/logout.png',
+                'Sign out',
+                () {
+                  _formListCubit.logout();
+                },
+              ),
+            ],
+          ),
         ));
   }
 
@@ -225,7 +247,7 @@ class _FormListPageState extends State<FormListPage> {
   }
 
   Widget _buildDrawerItem(
-    String icon,
+    String? icon,
     String label,
     Function() onTap,
   ) {
@@ -239,11 +261,15 @@ class _FormListPageState extends State<FormListPage> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Image.asset(
-                  icon,
-                  height: 24,
-                  width: 24,
-                ),
+                icon != null
+                    ? Image.asset(
+                        icon,
+                        height: 24,
+                        width: 24,
+                      )
+                    : const SizedBox(
+                        width: 16,
+                      ),
                 const Gap(8),
                 Text(
                   label,
