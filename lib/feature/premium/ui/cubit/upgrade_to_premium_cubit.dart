@@ -56,38 +56,43 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
       for (var purchaseDetails in purchaseDetailsList) {
         if (purchaseDetails.status == PurchaseStatus.restored ||
             purchaseDetails.status == PurchaseStatus.purchased) {
-          Map purchaseData = json.decode(
-            purchaseDetails.verificationData.localVerificationData,
-          );
+          if (Platform.isAndroid) {
+            Map purchaseData = json.decode(
+              purchaseDetails.verificationData.localVerificationData,
+            );
 
-          Log.info(purchaseData.toString());
+            if (purchaseData['acknowledged']) {
+              Log.info('restore purchase');
+              OnePref.setRemoveAds(true);
+              emit(SubscribedState());
+            } else {
+              Log.info('first time purchase');
+              if (Platform.isAndroid) {
+                final InAppPurchaseAndroidPlatformAddition
+                    androidPlatformAddition = iApEngine.inAppPurchase
+                        .getPlatformAddition<
+                            InAppPurchaseAndroidPlatformAddition>();
+                await androidPlatformAddition
+                    .consumePurchase(purchaseDetails)
+                    .then((value) {
+                  Log.info('Subscribed');
+                  OnePref.setRemoveAds(true);
+                  emit(SubscribedState());
+                });
+              }
 
-          if (purchaseData['acknowledged']) {
-            Log.info('restore purchase');
+              if (purchaseDetails.pendingCompletePurchase) {
+                await iApEngine.inAppPurchase
+                    .completePurchase(purchaseDetails)
+                    .then((value) {
+                  Log.info('Payment Completed');
+                  OnePref.setRemoveAds(true);
+                });
+              }
+            }
+          }else{
             OnePref.setRemoveAds(true);
-          } else {
-            Log.info('first time purchase');
-            if (Platform.isAndroid) {
-              final InAppPurchaseAndroidPlatformAddition
-                  androidPlatformAddition = iApEngine.inAppPurchase
-                      .getPlatformAddition<
-                          InAppPurchaseAndroidPlatformAddition>();
-              await androidPlatformAddition
-                  .consumePurchase(purchaseDetails)
-                  .then((value) {
-                Log.info('Subscribed');
-                OnePref.setRemoveAds(true);
-              });
-            }
-
-            if (purchaseDetails.pendingCompletePurchase) {
-              await iApEngine.inAppPurchase
-                  .completePurchase(purchaseDetails)
-                  .then((value) {
-                Log.info('Payment Completed');
-                OnePref.setRemoveAds(true);
-              });
-            }
+            emit(SubscribedState());
           }
         }
       }

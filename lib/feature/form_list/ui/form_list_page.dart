@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/constants.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
+import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/feature/auth/ui/cubit/login_cubit.dart';
 import 'package:google_form_manager/feature/premium/ui/upgrade_to_premium_page.dart';
 import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.dart';
@@ -43,6 +44,7 @@ class _FormListPageState extends State<FormListPage> {
     _upgradeToPremiumCubit.iApEngine.inAppPurchase.restorePurchases();
     _upgradeToPremiumCubit.getProducts();
     _upgradeToPremiumCubit.listenPurchase();
+    Log.info((OnePref.getRemoveAds().toString()));
   }
 
   @override

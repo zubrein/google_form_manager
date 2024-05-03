@@ -4,3 +4,4 @@ part of 'upgrade_to_premium_cubit.dart';
 abstract class UpgradeToPremiumState {}
 
 class UpgradeToPremiumInitial extends UpgradeToPremiumState {}
+class SubscribedState extends UpgradeToPremiumState {}
