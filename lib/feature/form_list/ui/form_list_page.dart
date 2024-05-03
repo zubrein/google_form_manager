@@ -15,6 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
 import '../../google_form/form_tab_page.dart';
+import '../../premium/ui/cubit/upgrade_to_premium_cubit.dart';
 import 'cubit/form_list_cubit.dart';
 
 class FormListPage extends StatefulWidget {
@@ -29,6 +30,8 @@ class _FormListPageState extends State<FormListPage> {
   late LoadingHudCubit _loadingHudCubit;
   late MenuController menuController;
 
+  late UpgradeToPremiumCubit _upgradeToPremiumCubit;
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +39,10 @@ class _FormListPageState extends State<FormListPage> {
     _formListCubit = sl<FormListCubit>();
     _loadingHudCubit.show();
     _formListCubit.fetchFormList();
+    _upgradeToPremiumCubit = sl<UpgradeToPremiumCubit>();
+    _upgradeToPremiumCubit.iApEngine.inAppPurchase.restorePurchases();
+    _upgradeToPremiumCubit.getProducts();
+    _upgradeToPremiumCubit.listenPurchase();
   }
 
   @override
@@ -162,7 +169,7 @@ class _FormListPageState extends State<FormListPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const UpgradeToPremiumPage()));
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
                 },
               ),
             if (!(OnePref.getRemoveAds() ?? false)) const Gap(16),
@@ -172,7 +179,7 @@ class _FormListPageState extends State<FormListPage> {
               'assets/app_image/nav_share.png',
               'Share the app link',
               () async {
-                Navigator.pop(context);
+                // Navigator.pop(context);
                 final result = await Share.shareWithResult(
                     'Download the app from Google plays tore \n${playStoreUrl + packageName}');
 
@@ -185,7 +192,7 @@ class _FormListPageState extends State<FormListPage> {
               'assets/app_image/rate_us.png',
               'Rate us',
               () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
                 launchUrl(Uri.parse(playStoreUrl + packageName));
               },
             ),

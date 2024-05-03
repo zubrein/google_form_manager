@@ -29,17 +29,14 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
     await iApEngine.getIsAvailable().then((exists) async {
       if (exists) {
         await iApEngine.queryProducts(weeklyProductIds).then((response) {
-          Log.info(response.productDetails.length.toString());
           weeklyProducts.addAll(response.productDetails);
         });
 
         await iApEngine.queryProducts(monthlyProductIds).then((response) {
-          Log.info(response.productDetails.length.toString());
           monthlyProducts.addAll(response.productDetails);
         });
 
         await iApEngine.queryProducts(yearlyProductIds).then((response) {
-          Log.info(response.productDetails.length.toString());
           yearlyProducts.addAll(response.productDetails);
         });
       }
@@ -95,7 +92,7 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
         }
       }
     } else {
-      Log.info('No purchase');
+      OnePref.setRemoveAds(false);
     }
   }
 }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:google_form_manager/base.dart';
 import 'package:google_form_manager/core/di/dependency_initializer.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:google_form_manager/core/loading_hud/loading_hud_cubit.dart';
-import 'package:google_form_manager/feature/google_form/edit_form/domain/constants.dart';
 import 'package:google_form_manager/util/utility.dart';
 
 import '../../premium/ui/cubit/upgrade_to_premium_cubit.dart';
@@ -31,6 +29,9 @@ class _LoginPageState extends State<LoginPage> {
     _loadingHudCubit = sl<LoadingHudCubit>();
     _upgradeToPremiumCubit = sl<UpgradeToPremiumCubit>();
     _loginCubit.listenUserLoginState();
+    _upgradeToPremiumCubit.iApEngine.inAppPurchase.restorePurchases();
+    _upgradeToPremiumCubit.getProducts();
+    _upgradeToPremiumCubit.listenPurchase();
   }
 
   @override

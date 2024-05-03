@@ -66,13 +66,38 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
                   const Gap(16),
                   _buildTags(),
                   const Gap(16),
-                  _buildPurchaseButton()
+                  _buildPurchaseButton(),
+                  const Gap(16),
+                  _buildFooter(),
+                  const Gap(16),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        GestureDetector(
+          onTap: () {},
+          child: Text(
+            'Terms & conditions',
+            style: TextStyle(color: const Color(0xff6818B9)),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {},
+          child: Text(
+            'Privacy policy',
+            style: TextStyle(color: const Color(0xff6818B9)),
+          ),
+        ),
+      ],
     );
   }
 
@@ -149,7 +174,7 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
       padding: const EdgeInsets.only(left: 16.0),
       child: IconButton(
           onPressed: () {
-            Navigator.of(context).maybePop();
+            Navigator.of(context).pop();
           },
           icon: const Icon(
             Icons.arrow_back_ios,
@@ -180,7 +205,7 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
             decoration: selectedButtonType == ButtonType.monthly
                 ? selectedDecor()
                 : unSelectedDecor(),
-            child: _buildTagTexts('MONTHLY', '4.99', 'per month')));
+            child: _buildTagTexts('MONTHLY', '2.99', 'per month')));
   }
 
   InkWell _buildYearlySubscribeButton() {
