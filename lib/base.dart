@@ -15,9 +15,9 @@ class Base extends StatefulWidget {
 class _BaseState extends State<Base> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocBuilder<LoadingHudCubit, LoadingHudState>(
+    return Scaffold(
+      body: SafeArea(
+        child: BlocBuilder<LoadingHudCubit, LoadingHudState>(
             bloc: widget.loadingHudCubit,
             builder: (context, state) {
               return Stack(

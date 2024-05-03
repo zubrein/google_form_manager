@@ -33,46 +33,44 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Base(
-        loadingHudCubit: _loadingHudCubit,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            titleSpacing: 0.0,
-            title: const Text(
-              'Become Premium',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
-            ),
-            backgroundColor: Colors.white,
-            leading: Builder(
-              builder: (context) {
-                return _buildBackIcon(context);
-              },
-            ),
+    return Base(
+      loadingHudCubit: _loadingHudCubit,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          titleSpacing: 0.0,
+          title: const Text(
+            'Become Premium',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w700),
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/app_image/premium_banner.png',
-                  ),
-                  const Gap(16),
-                  _buildPromotionBanner(),
-                  const Gap(16),
-                  _buildTags(),
-                  const Gap(16),
-                  _buildPurchaseButton(),
-                  const Gap(16),
-                  _buildFooter(),
-                  const Gap(16),
-                ],
-              ),
+          backgroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) {
+              return _buildBackIcon(context);
+            },
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/app_image/premium_banner.png',
+                ),
+                const Gap(16),
+                _buildPromotionBanner(),
+                const Gap(16),
+                _buildTags(),
+                const Gap(16),
+                _buildPurchaseButton(),
+                const Gap(16),
+                _buildFooter(),
+                const Gap(16),
+              ],
             ),
           ),
         ),

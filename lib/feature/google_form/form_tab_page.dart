@@ -58,42 +58,40 @@ class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Base(
-        loadingHudCubit: _loadingHudCubit,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            titleSpacing: 0.0,
-            title: const Text(
-              'Edit form',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
-            ),
-            backgroundColor: Colors.white,
-            leading: Builder(
-              builder: (context) {
-                return _buildBackIcon(context);
-              },
-            ),
-            actions: [
-              if (!(OnePref.getRemoveAds() ?? false))
-                _buildSubscriptionButton(context)
-            ],
+    return Base(
+      loadingHudCubit: _loadingHudCubit,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          titleSpacing: 0.0,
+          title: const Text(
+            'Edit form',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w700),
           ),
-          body: DefaultTabController(
-            length: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildTopPanel(),
-                const Divider(height: 0),
-                _buildTabBar(),
-                _buildTabBarView(),
-              ],
-            ),
+          backgroundColor: Colors.white,
+          leading: Builder(
+            builder: (context) {
+              return _buildBackIcon(context);
+            },
+          ),
+          actions: [
+            if (!(OnePref.getRemoveAds() ?? false))
+              _buildSubscriptionButton(context)
+          ],
+        ),
+        body: DefaultTabController(
+          length: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildTopPanel(),
+              const Divider(height: 0),
+              _buildTabBar(),
+              _buildTabBarView(),
+            ],
           ),
         ),
       ),
