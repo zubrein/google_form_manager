@@ -328,7 +328,6 @@ class _FormListPageState extends State<FormListPage> {
   Widget _buildSubscriptionButton(BuildContext context) {
     return IconButton(
         onPressed: () {
-          Navigator.of(context).pop();
           Navigator.push(
               context,
               MaterialPageRoute(
