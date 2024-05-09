@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,44 +34,53 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Base(
-      loadingHudCubit: _loadingHudCubit,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          titleSpacing: 0.0,
-          title: const Text(
-            'Become Premium',
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w700),
-          ),
+    return BlocListener<UpgradeToPremiumCubit, UpgradeToPremiumState>(
+      listener: (context, state) {
+        if (state is SubscribedState) {
+          Navigator.pushNamedAndRemoveUntil(context, '/formList',
+                  (Route route) => route.settings.name == 'login');
+        }
+      },
+      bloc: _upgradeToPremiumCubit,
+      child: Base(
+        loadingHudCubit: _loadingHudCubit,
+        child: Scaffold(
           backgroundColor: Colors.white,
-          leading: Builder(
-            builder: (context) {
-              return _buildBackIcon(context);
-            },
+          appBar: AppBar(
+            titleSpacing: 0.0,
+            title: const Text(
+              'Become Premium',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700),
+            ),
+            backgroundColor: Colors.white,
+            leading: Builder(
+              builder: (context) {
+                return _buildBackIcon(context);
+              },
+            ),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Image.asset(
-                  'assets/app_image/premium_banner.png',
-                ),
-                const Gap(16),
-                _buildPromotionBanner(),
-                const Gap(16),
-                _buildTags(),
-                const Gap(16),
-                _buildPurchaseButton(),
-                const Gap(16),
-                _buildFooter(),
-                const Gap(16),
-              ],
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/app_image/premium_banner.png',
+                  ),
+                  const Gap(16),
+                  _buildPromotionBanner(),
+                  const Gap(16),
+                  _buildTags(),
+                  const Gap(16),
+                  _buildPurchaseButton(),
+                  const Gap(16),
+                  _buildFooter(),
+                  const Gap(16),
+                ],
+              ),
             ),
           ),
         ),
@@ -138,7 +148,7 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
   InkWell _buildPurchaseButton() {
     return InkWell(
       onTap: () {
-        doSubscribe();
+        _doSubscribe();
       },
       child: Container(
         height: 50,
@@ -266,7 +276,7 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
             child: _buildTagTexts('WEEKLY', '1.99', 'per week')));
   }
 
-  void doSubscribe() async {
+  void _doSubscribe() async {
     if (Platform.isIOS) {
       final transactions = await SKPaymentQueueWrapper().transactions();
       for (var transaction in transactions) {
