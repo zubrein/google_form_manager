@@ -38,7 +38,7 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
       listener: (context, state) {
         if (state is SubscribedState) {
           Navigator.pushNamedAndRemoveUntil(context, '/formList',
-                  (Route route) => route.settings.name == 'login');
+              (Route route) => route.settings.name == 'login');
         }
       },
       bloc: _upgradeToPremiumCubit,
@@ -102,6 +102,17 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
             style: TextStyle(color: Color(0xff6818B9)),
           ),
         ),
+        if (Platform.isIOS)
+          GestureDetector(
+            onTap: () {
+              _upgradeToPremiumCubit.iApEngine.inAppPurchase.restorePurchases();
+            },
+            child: const Text(
+              'Restore Purchase',
+              style: TextStyle(
+                  color: Color(0xff6818B9), fontWeight: FontWeight.w700),
+            ),
+          ),
         GestureDetector(
           onTap: () {
             launchUrl(
