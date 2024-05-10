@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -183,7 +185,8 @@ class _FormListPageState extends State<FormListPage> {
                 () async {
                   // Navigator.pop(context);
                   final result = await Share.shareWithResult(
-                      'Download the app from Google plays tore \n${playStoreUrl + packageName}');
+                    'Download the app from ${Platform.isIOS?'App Store':'Google Play Store'} \n${Platform.isIOS ? appStoreShareLink : playStoreShareLink}',
+                  );
 
                   if (result.status == ShareResultStatus.success) {
                     return;
@@ -194,8 +197,11 @@ class _FormListPageState extends State<FormListPage> {
                 'assets/app_image/rate_us.png',
                 'Rate us',
                 () {
-                  // Navigator.pop(context);
-                  launchUrl(Uri.parse(playStoreUrl + packageName));
+                  if (Platform.isAndroid) {
+                    launchUrl(Uri.parse(playStoreShareLink));
+                  } else if (Platform.isIOS) {
+                    launchUrl(Uri.parse(appStoreRatingLink));
+                  }
                 },
               ),
               const Gap(16),

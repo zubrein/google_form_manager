@@ -22,5 +22,9 @@ final List<ProductId> iosYearlyProductIds = [
   ProductId(id: 'GFM_29.99_Yearly', isConsumable: false),
 ];
 
-const String playStoreUrl = 'http://play.google.com/store/apps/details?id=';
-const String packageName = 'com.gfm.gformmanager';
+const String playStoreShareLink =
+    'http://play.google.com/store/apps/details?id=com.gfm.gformmanager';
+const String appStoreShareLink =
+    'https://apps.apple.com/us/app/forms-manager-for-google-forms/id6479591930';
+const String appStoreRatingLink =
+    'itms-apps://itunes.apple.com/app/id6479591930';
