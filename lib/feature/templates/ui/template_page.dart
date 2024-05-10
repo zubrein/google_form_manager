@@ -11,6 +11,7 @@ import 'package:google_form_manager/feature/templates/ui/constants.dart';
 import 'package:google_form_manager/feature/templates/ui/create_form_name_input_dialog.dart';
 import 'package:google_form_manager/feature/templates/ui/cubit/create_form_cubit.dart';
 import 'package:google_form_manager/feature/templates/ui/template_button.dart';
+import 'package:onepref/onepref.dart';
 
 import '../../google_form/edit_form/domain/constants.dart';
 import 'template_pages/event_feedback_template.dart';
@@ -58,7 +59,10 @@ class _TemplatePageState extends State<TemplatePage> {
               return _buildBackIcon(context);
             },
           ),
-          actions: [_buildSubscriptionButton(context)],
+          actions: [
+            if (!(OnePref.getRemoveAds() ?? false))
+              _buildSubscriptionButton(context)
+          ],
         ),
         body: BlocConsumer<CreateFormCubit, CreateFormState>(
           bloc: _createFormCubit,
