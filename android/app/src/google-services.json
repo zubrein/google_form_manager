@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "865701173369",
-    "project_id": "gformsmanager-a47d9",
-    "storage_bucket": "gformsmanager-a47d9.appspot.com"
+    "project_number": "137400792336",
+    "project_id": "gformmanager",
+    "storage_bucket": "gformmanager.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:865701173369:android:0a4e2e131f10051cfb5ca8",
+        "mobilesdk_app_id": "1:137400792336:android:995d6543d524187896e195",
         "android_client_info": {
           "package_name": "com.gfm.gformmanager"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDco7aBNoaNXTD8XlzVENphS31r-VlzKm8"
+          "current_key": "AIzaSyDQ1w1rRqaOwpgVjOTu9cCqKUdl1miPUsY"
         }
       ],
       "services": {
