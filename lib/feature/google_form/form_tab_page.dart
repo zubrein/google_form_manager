@@ -209,8 +209,8 @@ class _FormTabPageState extends State<FormTabPage> with GoogleAdMixin {
           _loadingHudCubit.show();
           _formCubit.submitRequest(widget.formId);
         } else {
+          _loadingHudCubit.show();
           showAdCallback(() {
-            _loadingHudCubit.show();
             _formCubit.submitRequest(widget.formId);
           });
         }
