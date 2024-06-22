@@ -212,7 +212,7 @@ class _FormListPageState extends State<FormListPage> {
                 'Privacy policy',
                 () {
                   launchUrl(Uri.parse(
-                      'https://monitorsjudge.com/gfm/privacy_policy.html'));
+                      'https://codecrew360.xyz/gformsmanager-privacy-policy/'));
                 },
               ),
               _buildDrawerItem(
@@ -220,7 +220,7 @@ class _FormListPageState extends State<FormListPage> {
                 'Terms of Use',
                 () {
                   launchUrl(Uri.parse(
-                      'https://monitorsjudge.com/gfm/terms-conditions.html'));
+                      'https://codecrew360.xyz/terms-conditions/'));
                 },
               ),
               const Gap(16),
