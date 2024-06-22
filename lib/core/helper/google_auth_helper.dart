@@ -6,7 +6,7 @@ import 'package:googleapis/youtube/v3.dart';
 final GoogleSignIn googleSigning = GoogleSignIn(scopes: [
   FormsApi.driveScope,
   FormsApi.formsBodyScope,
-  YouTubeApi.youtubeScope,
+  YouTubeApi.youtubeReadonlyScope,
   SheetsApi.spreadsheetsScope,
 ]);
 
