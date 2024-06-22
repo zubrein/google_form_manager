@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:google_form_manager/core/helper/logger.dart';
 import 'package:google_form_manager/util/utility.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
@@ -62,11 +61,9 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
             );
 
             if (purchaseData['acknowledged']) {
-              Log.info('restore purchase');
               OnePref.setRemoveAds(true);
               emit(SubscribedState());
             } else {
-              Log.info('first time purchase');
               if (Platform.isAndroid) {
                 final InAppPurchaseAndroidPlatformAddition
                     androidPlatformAddition = iApEngine.inAppPurchase
@@ -75,7 +72,6 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
                 await androidPlatformAddition
                     .consumePurchase(purchaseDetails)
                     .then((value) {
-                  Log.info('Subscribed');
                   OnePref.setRemoveAds(true);
                   emit(SubscribedState());
                 });
@@ -85,7 +81,6 @@ class UpgradeToPremiumCubit extends Cubit<UpgradeToPremiumState> {
                 await iApEngine.inAppPurchase
                     .completePurchase(purchaseDetails)
                     .then((value) {
-                  Log.info('Payment Completed');
                   OnePref.setRemoveAds(true);
                   emit(SubscribedState());
                 });
