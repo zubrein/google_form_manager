@@ -14,6 +14,7 @@ import 'package:google_form_manager/feature/templates/ui/template_button.dart';
 import 'package:onepref/onepref.dart';
 
 import '../../google_form/edit_form/domain/constants.dart';
+import '../../premium/ui/upgrade_to_premium_page.dart';
 import 'template_pages/event_feedback_template.dart';
 import 'template_pages/event_registration_template.dart';
 import 'template_pages/event_rsvp_template.dart';
@@ -250,7 +251,12 @@ class _TemplatePageState extends State<TemplatePage> {
 
   Widget _buildSubscriptionButton(BuildContext context) {
     return IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const UpgradeToPremiumPage()));
+        },
         icon: Image.asset(
           'assets/app_image/subscription_logo.png',
           width: 28,
