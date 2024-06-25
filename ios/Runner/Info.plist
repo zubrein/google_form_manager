@@ -29,7 +29,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.865701173369-qstd1ahemisurmdrq65n6r42mk6o3q6g</string>
+				<string>com.googleusercontent.apps.137400792336-tq3hljdpn0t12b8lgrh0rc79hdrhd9lb</string>
 			</array>
 		</dict>
 	</array>
@@ -58,5 +58,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>GFormsManager needs to access your camera or photo gallry to upload photo. </string>
 </dict>
 </plist>
