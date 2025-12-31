@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "137400792336",
-    "project_id": "gformmanager",
-    "storage_bucket": "gformmanager.appspot.com"
+    "project_number": "497352297726",
+    "project_id": "form-manager-58dcd",
+    "storage_bucket": "form-manager-58dcd.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:137400792336:android:995d6543d524187896e195",
+        "mobilesdk_app_id": "1:497352297726:android:7d83a9dcb8d61c96d5a9af",
         "android_client_info": {
-          "package_name": "com.gfm.gformmanager"
+          "package_name": "com.fm.formmanager"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "497352297726-jjofbacgi0commhchfuvglsa34jha88l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDQ1w1rRqaOwpgVjOTu9cCqKUdl1miPUsY"
+          "current_key": "AIzaSyCTWCKC3AEQtP2gCt_GetZNHGSgyRMYuDs"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497352297726-jjofbacgi0commhchfuvglsa34jha88l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

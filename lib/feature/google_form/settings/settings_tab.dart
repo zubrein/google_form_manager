@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_form_manager/feature/shared/google_ad_mixin.dart';
 import 'package:onepref/onepref.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
 import '../../shared/widgets/alert_dialog_widget.dart';
@@ -247,9 +247,9 @@ class _SettingsTabState extends State<SettingsTab> with GoogleAdMixin {
   }
 
   Future<void> _launchUrl(String sheetId) async {
-    if (!await launchUrl(
-        Uri.parse('https://docs.google.com/spreadsheets/d/$sheetId'))) {
-      throw Exception('Could not launch url');
-    }
+    // if (!await launchUrl(
+    //     Uri.parse('https://docs.google.com/spreadsheets/d/$sheetId'))) {
+    //   throw Exception('Could not launch url');
+    // }
   }
 }

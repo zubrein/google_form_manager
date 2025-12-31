@@ -12,8 +12,8 @@ import 'package:google_form_manager/feature/shared/widgets/alert_dialog_widget.d
 import 'package:google_form_manager/feature/templates/ui/template_page.dart';
 import 'package:googleapis/drive/v2.dart';
 import 'package:onepref/onepref.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:share_plus/share_plus.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/loading_hud/loading_hud_cubit.dart';
 import '../../google_form/form_tab_page.dart';
@@ -184,13 +184,13 @@ class _FormListPageState extends State<FormListPage> {
                 'Share the app link',
                 () async {
                   // Navigator.pop(context);
-                  final result = await Share.shareWithResult(
-                    'Download the app from ${Platform.isIOS?'App Store':'Google Play Store'} \n${Platform.isIOS ? appStoreShareLink : playStoreShareLink}',
-                  );
-
-                  if (result.status == ShareResultStatus.success) {
-                    return;
-                  }
+                  // final result = await Share.shareWithResult(
+                  //   'Download the app from ${Platform.isIOS?'App Store':'Google Play Store'} \n${Platform.isIOS ? appStoreShareLink : playStoreShareLink}',
+                  // );
+                  //
+                  // if (result.status == ShareResultStatus.success) {
+                  //   return;
+                  // }
                 },
               ),
               _buildDrawerItem(
@@ -198,9 +198,9 @@ class _FormListPageState extends State<FormListPage> {
                 'Rate us',
                 () {
                   if (Platform.isAndroid) {
-                    launchUrl(Uri.parse(playStoreShareLink));
+                    // launchUrl(Uri.parse(playStoreShareLink));
                   } else if (Platform.isIOS) {
-                    launchUrl(Uri.parse(appStoreRatingLink));
+                    // launchUrl(Uri.parse(appStoreRatingLink));
                   }
                 },
               ),
@@ -211,16 +211,16 @@ class _FormListPageState extends State<FormListPage> {
                 null,
                 'Privacy policy',
                 () {
-                  launchUrl(Uri.parse(
-                      'https://codecrew360.xyz/gformsmanager-privacy-policy/'));
+                  // launchUrl(Uri.parse(
+                  //     'https://codecrew360.xyz/gformsmanager-privacy-policy/'));
                 },
               ),
               _buildDrawerItem(
                 null,
                 'Terms of Use',
                 () {
-                  launchUrl(Uri.parse(
-                      'https://codecrew360.xyz/terms-conditions/'));
+                  // launchUrl(Uri.parse(
+                  //     'https://codecrew360.xyz/terms-conditions/'));
                 },
               ),
               const Gap(16),

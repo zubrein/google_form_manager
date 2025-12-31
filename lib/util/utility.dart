@@ -5,7 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:google_form_manager/core/constants.dart';
 import 'package:google_form_manager/core/helper/google_auth_helper.dart';
 import 'package:onepref/onepref.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 
 import '../feature/auth/domain/entities/user_profile_entity.dart';
 
@@ -39,11 +39,11 @@ String updateMaskBuilder(Set updateMask) {
 }
 
 Future<void> shareForm(String url) async {
-  final result = await Share.shareWithResult('Please fill out the form \n$url');
-
-  if (result.status == ShareResultStatus.success) {
-    return;
-  }
+  // final result = await Share.shareWithResult('Please fill out the form \n$url');
+  //
+  // if (result.status == ShareResultStatus.success) {
+  //   return;
+  // }
 }
 
 Future<bool> checkInternet() async {

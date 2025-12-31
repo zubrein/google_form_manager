@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../../../base.dart';
 import '../../../core/di/dependency_initializer.dart';
@@ -94,8 +94,8 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
       children: [
         GestureDetector(
           onTap: () {
-            launchUrl(Uri.parse(
-                'https://monitorsjudge.com/gfm/terms-conditions.html'));
+            // launchUrl(Uri.parse(
+            //     'https://monitorsjudge.com/gfm/terms-conditions.html'));
           },
           child: const Text(
             'Terms of Use',
@@ -115,8 +115,8 @@ class _UpgradeToPremiumPageState extends State<UpgradeToPremiumPage> {
           ),
         GestureDetector(
           onTap: () {
-            launchUrl(
-                Uri.parse('https://monitorsjudge.com/gfm/privacy_policy.html'));
+            // launchUrl(
+            //     Uri.parse('https://monitorsjudge.com/gfm/privacy_policy.html'));
           },
           child: const Text(
             'Privacy policy',

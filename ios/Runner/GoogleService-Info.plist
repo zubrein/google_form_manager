@@ -2,33 +2,35 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>497352297726-qg5053jrjrsr8psaord6mnuf0k5hd14r.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.497352297726-qg5053jrjrsr8psaord6mnuf0k5hd14r</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>497352297726-pn6fu2r9t1cotdtfna8i4r0i66kclf55.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCXD1NNVFd8FNIyXI1dRN5aQL5O-tfLlEo</string>
+	<string>AIzaSyAgzM7X1kw9CSZD0gwAmv7J270R6-izs6Q</string>
 	<key>GCM_SENDER_ID</key>
-	<string>137400792336</string>
+	<string>497352297726</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.gfm.gformmanager</string>
+	<string>com.fm.formmanager</string>
 	<key>PROJECT_ID</key>
-	<string>gformmanager</string>
+	<string>form-manager-58dcd</string>
 	<key>STORAGE_BUCKET</key>
-	<string>gformmanager.appspot.com</string>
+	<string>form-manager-58dcd.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:137400792336:ios:296235ab1324c1c796e195</string>
-	<key>CLIENT_ID</key>
-	<string>137400792336-tq3hljdpn0t12b8lgrh0rc79hdrhd9lb.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.137400792336-tq3hljdpn0t12b8lgrh0rc79hdrhd9lb</string>
+	<string>1:497352297726:ios:a60539c294b56e0fd5a9af</string>
 </dict>
 </plist>
